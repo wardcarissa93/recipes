@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
 import { serveStatic } from 'hono/bun'
-import { expensesRoute } from './routes/expenses'
+import { recipesRoute } from './routes/recipes'
 
 const app = new Hono()
 
@@ -11,7 +11,7 @@ app.get("/test", c => {
     return c.json({"message": "test"})
 })
 
-const apiRoutes = app.basePath("/api").route("/expenses", expensesRoute)
+const apiRoutes = app.basePath("/api").route("/recipes", recipesRoute)
 
 app.get('*', serveStatic({ root: './frontend/dist' }))
 app.get('*', serveStatic({ path: './frontend/dist/index.html' }))
