@@ -10,18 +10,53 @@ import { z } from 'zod'
 
 const recipeSchema = z.object({
     id: z.number().int().positive().min(1),
-    title: z.string().min(3).max(100),
-    amount: z.number().positive()
-})
+    title: z.string(),
+    description: z.string().optional(),
+    prepTime: z.number().int().positive().optional(),
+    cookTime: z.number().int().positive().optional(),
+    totalTime: z.number().positive(),
+    servings: z.number().int().positive(),
+    instructions: z.string(),
+    url: z.string().optional()
+});
 
 type Recipe = z.infer<typeof recipeSchema>
 
 const createPostSchema = recipeSchema.omit({id: true})
 
 const fakeRecipes: Recipe[] = [
-    { id: 1, title: "Expense 1", amount: 100},
-    { id: 2, title: "Expense 2", amount: 200},
-    { id: 3, title: "Expense 3", amount: 300}
+    {
+        id: 1,
+        title: "Spaghetti Bolognese",
+        description: "A classic Italian pasta dish.",
+        prepTime: 10,
+        cookTime: 30,
+        totalTime: 40,
+        servings: 4,
+        url: undefined,
+        instructions: "1. Cook the pasta. 2. Prepare the sauce. 3. Combine and serve.",
+        // ingredients: [
+        //     { id: 1, name: "Spaghetti", quantity: 400, unit: "g" },
+        //     { id: 2, name: "Ground Beef", quantity: 500, unit: "g" },
+        //     { id: 3, name: "Tomato Sauce", quantity: 1, unit: "cup" },
+        // ]
+    },
+    {
+        id: 2,
+        title: "Ravioli",
+        description: "Another classic Italian pasta dish.",
+        prepTime: 10,
+        cookTime: 30,
+        totalTime: 40,
+        servings: 4,
+        url: undefined,
+        instructions: "1. Cook the pasta. 2. Prepare the sauce. 3. Combine and serve.",
+        // ingredients: [
+        //     { id: 1, name: "Spaghetti", quantity: 400, unit: "g" },
+        //     { id: 2, name: "Ground Beef", quantity: 500, unit: "g" },
+        //     { id: 3, name: "Tomato Sauce", quantity: 1, unit: "cup" },
+        // ]
+    }
 ];
 
 export const recipesRoute = new Hono()
