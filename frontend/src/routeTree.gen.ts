@@ -15,6 +15,7 @@ import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedRecipesImport } from './routes/_authenticated/recipes'
+import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedCreateRecipeImport } from './routes/_authenticated/create-recipe'
 
 // Create/Update Routes
@@ -39,6 +40,11 @@ const AuthenticatedRecipesRoute = AuthenticatedRecipesImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 const AuthenticatedCreateRecipeRoute = AuthenticatedCreateRecipeImport.update({
   path: '/create-recipe',
   getParentRoute: () => AuthenticatedRoute,
@@ -60,6 +66,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCreateRecipeImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/profile': {
+      preLoaderRoute: typeof AuthenticatedProfileImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/recipes': {
       preLoaderRoute: typeof AuthenticatedRecipesImport
       parentRoute: typeof AuthenticatedImport
@@ -76,6 +86,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   AuthenticatedRoute.addChildren([
     AuthenticatedCreateRecipeRoute,
+    AuthenticatedProfileRoute,
     AuthenticatedRecipesRoute,
     AuthenticatedIndexRoute,
   ]),
