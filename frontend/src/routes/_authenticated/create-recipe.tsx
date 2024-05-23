@@ -6,7 +6,7 @@ import { useForm } from '@tanstack/react-form'
 import { api } from '@/lib/api'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 
-export const Route = createFileRoute('/create-recipe')({
+export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
 })
 

@@ -11,52 +11,62 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as RecipesImport } from './routes/recipes'
-import { Route as CreateRecipeImport } from './routes/create-recipe'
 import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedRecipesImport } from './routes/_authenticated/recipes'
+import { Route as AuthenticatedCreateRecipeImport } from './routes/_authenticated/create-recipe'
 
 // Create/Update Routes
-
-const RecipesRoute = RecipesImport.update({
-  path: '/recipes',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateRecipeRoute = CreateRecipeImport.update({
-  path: '/create-recipe',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const AboutRoute = AboutImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
-  path: '/',
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
+  path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedRecipesRoute = AuthenticatedRecipesImport.update({
+  path: '/recipes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedCreateRecipeRoute = AuthenticatedCreateRecipeImport.update({
+  path: '/create-recipe',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
     '/about': {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/create-recipe': {
-      preLoaderRoute: typeof CreateRecipeImport
-      parentRoute: typeof rootRoute
+    '/_authenticated/create-recipe': {
+      preLoaderRoute: typeof AuthenticatedCreateRecipeImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/recipes': {
-      preLoaderRoute: typeof RecipesImport
-      parentRoute: typeof rootRoute
+    '/_authenticated/recipes': {
+      preLoaderRoute: typeof AuthenticatedRecipesImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/': {
+      preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
@@ -64,10 +74,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  IndexRoute,
+  AuthenticatedRoute.addChildren([
+    AuthenticatedCreateRecipeRoute,
+    AuthenticatedRecipesRoute,
+    AuthenticatedIndexRoute,
+  ]),
   AboutRoute,
-  CreateRecipeRoute,
-  RecipesRoute,
 ])
 
 /* prettier-ignore-end */

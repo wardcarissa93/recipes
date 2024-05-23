@@ -11,7 +11,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { api } from '@/lib/api'
 import { useQuery } from '@tanstack/react-query'
 
-export const Route = createFileRoute('/recipes')({
+export const Route = createFileRoute('/_authenticated/recipes')({
     component: Recipes
 })
 
