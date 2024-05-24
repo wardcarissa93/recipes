@@ -30,6 +30,9 @@ function NavBar() {
                 <Link to="/create-recipe" className="[&.active]:font-bold">
                     Create Recipe
                 </Link>
+                <Link to="/ingredients" className="[&.active]:font-bold">
+                    My Ingredients
+                </Link>
                 <Link to="/profile" className="[&.active]:font-bold">
                     Profile
                 </Link>
