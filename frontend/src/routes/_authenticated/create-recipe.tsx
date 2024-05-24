@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useForm } from '@tanstack/react-form'
 import { api } from '@/lib/api'
 import { zodValidator } from '@tanstack/zod-form-adapter'
+import { createRecipeSchema } from '../../../../server/sharedTypes'
 
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
@@ -45,6 +46,9 @@ function CreateRecipe() {
             >
                 <form.Field 
                     name="title"
+                    validators={{
+                        onChange: createRecipeSchema.shape.title
+                    }}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Title</Label>
@@ -63,6 +67,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="description"
+                    validators={({
+                        onChange: createRecipeSchema.shape.description
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Description</Label>
@@ -81,6 +88,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="prepTime"
+                    validators={({
+                        onChange: createRecipeSchema.shape.prepTime
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Prep Time</Label>
@@ -100,6 +110,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="cookTime"
+                    validators={({
+                        onChange: createRecipeSchema.shape.cookTime
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Cook Time</Label>
@@ -119,6 +132,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="totalTime"
+                    validators={({
+                        onChange: createRecipeSchema.shape.totalTime
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Total Time</Label>
@@ -138,6 +154,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="servings"
+                    validators={({
+                        onChange: createRecipeSchema.shape.servings
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Servings</Label>
@@ -157,6 +176,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="instructions"
+                    validators={({
+                        onChange: createRecipeSchema.shape.instructions
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Instructions</Label>
@@ -175,6 +197,9 @@ function CreateRecipe() {
                 />
                 <form.Field 
                     name="url"
+                    validators={({
+                        onChange: createRecipeSchema.shape.url
+                    })}
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>URL</Label>

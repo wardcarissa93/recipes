@@ -9,10 +9,10 @@ export const recipes = pgTable(
         userId: text("user_id").notNull(),
         title: text("title").notNull(),
         description: text("description"),
-        prepTime: numeric("prep_time", { precision: 6, scale: 1 }),
-        cookTime: numeric("cook_time", { precision: 6, scale: 1 }),
-        totalTime: numeric("total_time", { precision: 6, scale: 1 }).notNull(),
-        servings: numeric("servings", { precision: 2, scale: 1 }).notNull(),
+        prepTime: numeric("prep_time", { precision: 6, scale: 0 }),
+        cookTime: numeric("cook_time", { precision: 6, scale: 0 }),
+        totalTime: numeric("total_time", { precision: 6, scale: 0 }).notNull(),
+        servings: numeric("servings", { precision: 2, scale: 0 }).notNull(),
         instructions: text("instructions").notNull(),
         url: text("url"),
         createdAt: timestamp('created_at').defaultNow()
@@ -27,12 +27,12 @@ export const recipes = pgTable(
 export const insertRecipesSchema = createInsertSchema(recipes, {
     title: z.string(),
     description: z.string().optional(),
-    prepTime: z.string().regex(/^\d+(\.\d{1})?$/, { message: "Prep time must be a valid number with up to one decimal place" }).optional(),
-    cookTime: z.string().regex(/^\d+(\.\d{1})?$/, { message: "Cook time must be a valid number with up to one decimal place" }).optional(),
-    totalTime: z.string().regex(/^\d+(\.\d{1})?$/, { message: "Total time must be a valid number with up to one decimal place" }),
-    servings: z.string().regex(/^\d+(\.\d{1})?$/, { message: "Servings must be a valid number with up to one decimal place" }),
+    prepTime: z.number().optional(),
+    cookTime: z.number().optional(),
+    totalTime: z.number(),
+    servings: z.number(),
     instructions: z.string(),
-    url: z.string().url().optional()
+    url: z.string().optional()
 });
 
 export const selectRecipesSchema = createSelectSchema(recipes);
