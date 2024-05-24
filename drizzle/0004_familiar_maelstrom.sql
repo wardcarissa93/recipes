@@ -1,0 +1,1 @@
+ALTER TABLE "ingredients" ADD COLUMN "user_id" text NOT NULL;
