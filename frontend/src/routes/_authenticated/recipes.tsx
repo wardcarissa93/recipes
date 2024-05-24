@@ -16,6 +16,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_authenticated/recipes')({
     component: Recipes
@@ -33,6 +34,7 @@ function Recipes() {
                         <TableHead className="w-[100px]">Id</TableHead>
                         <TableHead>Title</TableHead>
                         <TableHead>Servings</TableHead>
+                        <TableHead>Delete</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -78,10 +80,14 @@ function RecipeDeleteButton({ id }: { id: number }) {
     const mutation = useMutation({
         mutationFn: deleteRecipe,
         onError: () => {
-            console.log("error")
+            toast("Error", {
+                description: `Failed to delete recipe: ${id}`,
+            });
         },
         onSuccess: () => {
-            console.log("success")
+            toast("Recipe Deleted", {
+                description: `Successfully deleted recipe: ${id}`,
+            })
             queryClient.setQueryData(
                 getAllRecipesQueryOptions.queryKey,
                 (existingRecipes) => ({
@@ -93,7 +99,12 @@ function RecipeDeleteButton({ id }: { id: number }) {
     });
 
     return (
-        <Button>
+        <Button
+            disabled={mutation.isPending}
+            onClick={() => mutation.mutate({ id })}
+            variant="outline"
+            size="icon"
+        >
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>
     );

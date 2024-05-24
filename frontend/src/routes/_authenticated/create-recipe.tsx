@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 import { useForm } from '@tanstack/react-form'
 import { 
     createRecipe,
@@ -47,9 +48,13 @@ function CreateRecipe() {
                     ...existingRecipes,
                     recipes: [newRecipe, ...existingRecipes.recipes],
                 });
-                console.log("success")
+                toast("Recipe Created", {
+                    description: `Successfully created new recipe: ${newRecipe.id}`,
+                })
             } catch (error) {
-                console.log("error")
+                toast("Error", {
+                    description: `Failed to create new recipe`,
+                })
             } finally {
                 queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {});
             }

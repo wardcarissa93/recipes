@@ -1,4 +1,9 @@
-import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router'
+import { 
+    createRootRouteWithContext, 
+    Link, 
+    Outlet 
+} from '@tanstack/react-router'
+import { Toaster } from '@/components/ui/sonner'
 import { type QueryClient } from "@tanstack/react-query"
 
 interface MyRouterContext {
@@ -41,6 +46,7 @@ function Root() {
             <div className="p-2 max-w-2xl m-auto">
                 <Outlet/>
             </div>
+            <Toaster />
         </>
     )
 }
