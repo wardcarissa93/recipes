@@ -3,7 +3,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
 import { useForm } from '@tanstack/react-form'
-import { api } from '@/lib/api'
+import { 
+    createRecipe,
+    getAllRecipesQueryOptions,
+    loadingCreateRecipeQueryOptions
+} from "@/lib/api"
+import { useQueryClient } from "@tanstack/react-query"
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { createRecipeSchema } from '../../../../server/sharedTypes'
 
@@ -12,6 +17,7 @@ export const Route = createFileRoute('/_authenticated/create-recipe')({
 })
 
 function CreateRecipe() {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -26,13 +32,29 @@ function CreateRecipe() {
             url: ''
         },
         onSubmit: async ({ value }) => {
-            const res = await api.recipes.$post({ json: value });
-            if (!res.ok) {
-                throw new Error("server error")
+            const existingRecipes = await queryClient.ensureQueryData(
+                getAllRecipesQueryOptions
+            );
+            navigate({to: "/recipes"});
+
+            queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {
+                recipe: value,
+            });
+
+            try {
+                const newRecipe = await createRecipe({ value });
+                queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
+                    ...existingRecipes,
+                    recipes: [newRecipe, ...existingRecipes.recipes],
+                });
+                console.log("success")
+            } catch (error) {
+                console.log("error")
+            } finally {
+                queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {});
             }
-            navigate({to: "/recipes"})
-        }
-    })
+        },
+    });
     return (
         <div className="p-2">
             <h2>Create Recipe</h2>
