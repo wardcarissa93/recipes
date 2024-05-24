@@ -24,6 +24,8 @@ export const recipes = pgTable(
     }
 );
 
+
+
 export const insertRecipesSchema = createInsertSchema(recipes, {
     title: z.string(),
     description: z.string().optional(),

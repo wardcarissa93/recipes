@@ -28,7 +28,7 @@ function NavBar() {
                     Recipes
                 </Link>
                 <Link to="/create-recipe" className="[&.active]:font-bold">
-                    Create
+                    Create Recipe
                 </Link>
                 <Link to="/profile" className="[&.active]:font-bold">
                     Profile
