@@ -25,10 +25,16 @@ function NavBar() {
                     About
                 </Link>
                 <Link to="/recipes" className="[&.active]:font-bold">
-                    Recipes
+                    My Recipes
                 </Link>
                 <Link to="/create-recipe" className="[&.active]:font-bold">
                     Create Recipe
+                </Link>
+                <Link to="/ingredients" className="[&.active]:font-bold">
+                    My Ingredients
+                </Link>
+                <Link to="/create-ingredient" className="[&.active]:font-bold">
+                    Create Ingredient
                 </Link>
                 <Link to="/profile" className="[&.active]:font-bold">
                     Profile

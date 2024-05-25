@@ -16,7 +16,9 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedRecipesImport } from './routes/_authenticated/recipes'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedIngredientsImport } from './routes/_authenticated/ingredients'
 import { Route as AuthenticatedCreateRecipeImport } from './routes/_authenticated/create-recipe'
+import { Route as AuthenticatedCreateIngredientImport } from './routes/_authenticated/create-ingredient'
 
 // Create/Update Routes
 
@@ -45,10 +47,21 @@ const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedIngredientsRoute = AuthenticatedIngredientsImport.update({
+  path: '/ingredients',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 const AuthenticatedCreateRecipeRoute = AuthenticatedCreateRecipeImport.update({
   path: '/create-recipe',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const AuthenticatedCreateIngredientRoute =
+  AuthenticatedCreateIngredientImport.update({
+    path: '/create-ingredient',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -62,8 +75,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/create-ingredient': {
+      preLoaderRoute: typeof AuthenticatedCreateIngredientImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/create-recipe': {
       preLoaderRoute: typeof AuthenticatedCreateRecipeImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/ingredients': {
+      preLoaderRoute: typeof AuthenticatedIngredientsImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/profile': {
@@ -85,7 +106,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   AuthenticatedRoute.addChildren([
+    AuthenticatedCreateIngredientRoute,
     AuthenticatedCreateRecipeRoute,
+    AuthenticatedIngredientsRoute,
     AuthenticatedProfileRoute,
     AuthenticatedRecipesRoute,
     AuthenticatedIndexRoute,
