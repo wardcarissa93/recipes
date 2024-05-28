@@ -40,6 +40,30 @@ export const getAllRecipesQueryOptions = queryOptions({
     staleTime: 1000 * 60 * 5,
 });
 
+
+export async function getRecipeById(id: string) {
+    const res = await api.recipes[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+// export const getRecipeByIdQueryOptions = (id: number) => queryOptions({
+//     queryKey: ["get-recipe-by-id", id],
+//     queryFn: () => getRecipeById(id),
+//     staleTime: 1000 * 60 * 5,
+// });
+
+export function getRecipeByIdQueryOptions(id: string) {
+    return queryOptions({
+        queryKey: ['get-recipe-by-id', id],
+        queryFn: () => getRecipeById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
 export async function createRecipe({ value }: { value: CreateRecipe }) {
     await new Promise((r) => setTimeout(r, 2000));
     const res = await api.recipes.$post({ json: value });

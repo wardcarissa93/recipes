@@ -50,7 +50,7 @@ export const recipesRoute = new Hono()
         if (!recipe) {
             return c.notFound();
         }
-        return c.json({ })
+        return c.json({recipe: recipe})
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"));

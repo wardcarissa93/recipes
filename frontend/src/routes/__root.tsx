@@ -24,7 +24,7 @@ function NavBar() {
                 <Link to="/about" className="[&.active]:font-bold">
                     About
                 </Link>
-                <Link to="/recipes" className="[&.active]:font-bold">
+                <Link to="/my-recipes" className="[&.active]:font-bold">
                     My Recipes
                 </Link>
                 <Link to="/create-recipe" className="[&.active]:font-bold">

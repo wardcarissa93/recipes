@@ -7,7 +7,7 @@ import {
     TableRow
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { 
     getAllRecipesQueryOptions,
     loadingCreateRecipeQueryOptions,
@@ -18,11 +18,11 @@ import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
 import { toast } from 'sonner';
 
-export const Route = createFileRoute('/_authenticated/recipes')({
-    component: Recipes
+export const Route = createFileRoute('/_authenticated/my-recipes')({
+    component: MyRecipes
 })
 
-function Recipes() {
+function MyRecipes() {
     const { isPending, error, data } = useQuery(getAllRecipesQueryOptions);
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
     if (error) return 'An error has occurred: ' + error.message
@@ -62,7 +62,11 @@ function Recipes() {
                     : data?.recipes.map((recipe) => (
                         <TableRow key={recipe.id}>
                             <TableCell className="font-medium">{recipe.id}</TableCell>
-                            <TableCell>{recipe.title}</TableCell>
+                            <TableCell>
+                                <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
+                                    {recipe.title}
+                                </Link>
+                            </TableCell>
                             <TableCell>{recipe.servings}</TableCell>
                             <TableCell>
                                 <RecipeDeleteButton id={recipe.id}/>
