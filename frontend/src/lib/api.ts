@@ -41,9 +41,8 @@ export const getAllRecipesQueryOptions = queryOptions({
 });
 
 
-export async function getRecipeById(id: number) {
+export async function getRecipeById(id: string) {
     const res = await api.recipes[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
-    console.log("res: ", res)
     if (!res.ok) {
         throw new Error("server error");
     }
@@ -57,7 +56,7 @@ export async function getRecipeById(id: number) {
 //     staleTime: 1000 * 60 * 5,
 // });
 
-export function getRecipeByIdQueryOptions(id: number) {
+export function getRecipeByIdQueryOptions(id: string) {
     return queryOptions({
         queryKey: ['get-recipe-by-id', id],
         queryFn: () => getRecipeById(id),
