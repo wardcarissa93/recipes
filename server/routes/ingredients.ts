@@ -52,6 +52,19 @@ export const ingredientsRoute = new Hono()
         }
         return c.json({ })
     })
+    .get("/name/:name", getUser, async (c) => {
+        const name = c.req.param("name");
+        const user = c.var.user;
+        const ingredient = await db
+            .select()
+            .from(ingredientTable)
+            .where(and(eq(ingredientTable.userId, user.id), eq(ingredientTable.name, name)))
+            .then((res) => res[0]);
+        if (!ingredient) {
+            return c.notFound();
+        }
+        return c.json({ id: ingredient.id });
+    })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"))
         const user = c.var.user;

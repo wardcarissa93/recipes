@@ -7,6 +7,7 @@ import { useForm } from '@tanstack/react-form'
 import { 
     createRecipe,
     createRecipeIngredient,
+    getIngredientIdByName,
     getAllRecipesQueryOptions,
     loadingCreateRecipeQueryOptions
 } from "@/lib/api"
@@ -22,7 +23,7 @@ export const Route = createFileRoute('/_authenticated/create-recipe')({
 function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const [ingredients, setIngredients] = useState([{ ingredientId: 0, quantity: 0, unit: '' }]);
+    const [ingredients, setIngredients] = useState([{ name: '', quantity: 0, unit: '' }]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -55,7 +56,7 @@ function CreateRecipe() {
                 url: value.url
             }
             const ingredients = value.ingredients.map(ingredient => ({
-                ingredientId: ingredient.ingredientId,
+                name: ingredient.name,
                 quantity: ingredient.quantity,
                 unit: ingredient.unit,
             }));
@@ -74,13 +75,15 @@ function CreateRecipe() {
                 // } });
                 const createdRecipeIngredients = [];
                 for (const ingredient of ingredients) {
+                    const ingredientId = await getIngredientIdByName(ingredient.name);
                     const newRecipeIngredient = await createRecipeIngredient({ value: {
                         quantity: ingredient.quantity,
                         unit: ingredient.unit,
-                        ingredientId: ingredient.ingredientId,
+                        ingredientId: ingredientId,
                         recipeId: newRecipe.id
                     } });
                     createdRecipeIngredients.push(newRecipeIngredient);
+                    console.log(getIngredientIdByName("Water"));
                 }
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
@@ -100,7 +103,7 @@ function CreateRecipe() {
     });
 
     const addIngredient = () => {
-        setIngredients([...ingredients, { ingredientId: 0, quantity: 0, unit: '' }]);
+        setIngredients([...ingredients, { name: '', quantity: 0, unit: '' }]);
     };
 
     return (
@@ -292,17 +295,16 @@ function CreateRecipe() {
                 {ingredients.map((ingredient, index) => (
                     <div key={index} className="flex gap-4 ingredient-input">
                         <form.Field 
-                            name={`ingredients[${index}].ingredientId`}
+                            name={`ingredients[${index}].name`}
                             children={((field) => (
                                 <>
-                                    <Label htmlFor={field.name}>Ingredient ID</Label>
+                                    <Label htmlFor={field.name}>Name</Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}
                                         value={field.state.value ?? ''}
                                         onBlur={field.handleBlur}
-                                        type="number"
-                                        onChange={(e) => field.handleChange(Number(e.target.value))}
+                                        onChange={(e) => field.handleChange(e.target.value)}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>

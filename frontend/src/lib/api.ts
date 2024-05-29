@@ -105,6 +105,25 @@ export const getAllIngredientsQueryOptions = queryOptions({
     staleTime: 1000 * 60 * 5,
 });
 
+export async function getIngredientIdByName(name: string) {
+    const res = await api.ingredients["name/:name"].$get({
+        param: { name: name }
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data.id;
+}
+
+export function getIngredientIdByNameQueryOptions(name: string) {
+    return queryOptions({
+        queryKey: ['get-ingredient-id-by-name', name],
+        queryFn: () => getIngredientIdByName(name),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
 export async function createIngredient({ value }: { value: CreateIngredient }) {
     await new Promise((r) => setTimeout(r, 2000));
     const res = await api.ingredients.$post({ json: value });
