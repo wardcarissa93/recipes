@@ -28,8 +28,7 @@ export const recipesRoute = new Hono()
         const user = c.var.user;
         const validatedRecipe = insertRecipesSchema.parse({
             ...recipe,
-            userId: user.id,
-            totalTime: String(recipe.totalTime)
+            userId: user.id
         });
         const result = await db
             .insert(recipeTable)

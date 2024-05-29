@@ -62,6 +62,7 @@ export function getRecipeByIdQueryOptions(id: string) {
 export async function createRecipe({ value }: { value: CreateRecipe }) {
     await new Promise((r) => setTimeout(r, 2000));
     const res = await api.recipes.$post({ json: value });
+    
     if (!res.ok) {
         throw new Error("server error");
     }
@@ -167,8 +168,9 @@ export function getRecipeIngredientByIdQueryOptions(id: string) {
 }
 
 export async function createRecipeIngredient({ value }: { value: CreateRecipeIngredient }) {
-    await new Promise((r) => setTimeout(r, 2000));
+    console.log("value: ", value)
     const res = await api.recipeIngredients.$post({ json: value });
+    console.log("res: ", res)
     if (!res.ok) {
         throw new Error("server error");
     }

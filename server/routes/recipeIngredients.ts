@@ -26,9 +26,9 @@ import {
         const recipeIngredient = await c.req.valid("json");
         const user = c.var.user;
         const validatedRecipeIngredient = insertRecipeIngredientsSchema.parse({
-            ...recipeIngredientTable,
+            ...recipeIngredient,
             userId: user.id,
-            quantity: String(recipeIngredient.quantity)
+            // quantity: String(recipeIngredient.quantity)
         });
         const result = await db
             .insert(recipeIngredientTable)

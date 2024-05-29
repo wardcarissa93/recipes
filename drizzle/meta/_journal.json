@@ -43,6 +43,13 @@
       "when": 1716942985009,
       "tag": "0005_stiff_phantom_reporter",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1716954991822,
+      "tag": "0006_first_silverclaw",
+      "breakpoints": true
     }
   ]
 }
