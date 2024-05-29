@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { useForm } from '@tanstack/react-form'
 import { 
     createRecipe,
+    createRecipeIngredient,
     getAllRecipesQueryOptions,
     loadingCreateRecipeQueryOptions
 } from "@/lib/api"
@@ -30,20 +31,57 @@ function CreateRecipe() {
             totalTime: 0,
             servings: 0,
             instructions: '',
-            url: ''
+            url: '',
+            ingredients: [{ ingredientId: 0, quantity: 0, unit: '' }]
         },
         onSubmit: async ({ value }) => {
+            console.log("onSubmit value: ", value)
             const existingRecipes = await queryClient.ensureQueryData(
                 getAllRecipesQueryOptions
             );
-            navigate({to: "/recipes"});
+            navigate({to: "/my-recipes"});
 
-            queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {
-                recipe: value,
-            });
+            const recipe = {
+                title: value.title,
+                description: value.description,
+                prepTime: value.prepTime,
+                cookTime: value.cookTime,
+                totalTime: value.totalTime,
+                servings: value.servings,
+                instructions: value.instructions,
+                url: value.url
+            }
+            const ingredients = value.ingredients.map(ingredient => ({
+                ingredientId: ingredient.ingredientId,
+                quantity: ingredient.quantity,
+                unit: ingredient.unit,
 
+            }));
+            console.log("recipe: ", recipe)
+            console.log("ingredients: ", ingredients)
+
+            queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });
+            
             try {
-                const newRecipe = await createRecipe({ value });
+                const newRecipe = await createRecipe({ value: recipe });
+                // await Promise.all(
+                //     ingredients.map(ingredient =>
+                //         createRecipeIngredient({  
+                //             value: {
+                //                 quantity: ingredient.quantity,
+                //                 unit: ingredient.unit,
+                //                 ingredientId: ingredient.ingredientId,
+                //                 recipeId: newRecipe.id
+                //             }
+                //         })
+                //     )
+                // );
+                await createRecipeIngredient({ value: {
+                    quantity: ingredients[0].quantity,
+                    unit: ingredients[0].unit,
+                    ingredientId: ingredients[0].ingredientId,
+                    recipeId: newRecipe.id
+                } });
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: [newRecipe, ...existingRecipes.recipes],
@@ -243,6 +281,65 @@ function CreateRecipe() {
                         </>
                     ))}
                 />
+                {/* Single row for adding an ingredient */}
+                <div className="flex gap-4">
+                    <form.Field 
+                        name="ingredients[0].ingredientId"
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Ingredient ID</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field 
+                        name="ingredients[0].quantity"
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Quantity</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field 
+                        name="ingredients[0].unit"
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Unit</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                </div>
                 <form.Subscribe
                     selector={(state) => [state.canSubmit, state.isSubmitting]}
                     children={([canSubmit, isSubmitting]) => (

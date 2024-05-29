@@ -7,7 +7,7 @@ export const ingredients = pgTable(
     {
         id: serial("id").primaryKey(),
         userId: text("user_id").notNull(),
-        name: text("name").notNull(),
+        name: text("name").notNull().unique(),
         createdAt: timestamp('created_at').defaultNow()
     }
 )
