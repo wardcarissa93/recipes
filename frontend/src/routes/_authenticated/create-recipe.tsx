@@ -36,7 +36,7 @@ function CreateRecipe() {
             const existingRecipes = await queryClient.ensureQueryData(
                 getAllRecipesQueryOptions
             );
-            navigate({to: "/recipes"});
+            navigate({to: "/my-recipes"});
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {
                 recipe: value,
