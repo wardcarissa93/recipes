@@ -299,9 +299,6 @@ function CreateRecipe() {
                         </>
                     ))}
                 />
-                <Button type="button" onClick={addIngredient} className="mb-4">
-                    Add another ingredient
-                </Button>
                 {ingredients.map((ingredient, index) => (
                     <div key={index} className="flex gap-4 ingredient-input">
                         <form.Field 
@@ -367,7 +364,10 @@ function CreateRecipe() {
                         />
                     </div>
                 ))}
-                <Button type="submit">Create</Button>
+                <Button id="add-ingredient-button" type="button" onClick={addIngredient} className="mb-4">
+                    Add another ingredient
+                </Button>
+                <Button id="create-recipe-button" type="submit">Create</Button>
             </form>
         </div>
     )

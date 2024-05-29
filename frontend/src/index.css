@@ -78,3 +78,9 @@
   .ingredient-name {
     color: black;
   }
+
+#add-ingredient-button, 
+#create-recipe-button {
+    margin: 1rem auto;
+    display: flex;
+}
