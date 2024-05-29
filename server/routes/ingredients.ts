@@ -50,7 +50,7 @@ export const ingredientsRoute = new Hono()
         if (!ingredient) {
             return c.notFound();
         }
-        return c.json({ })
+        return c.json({ ingredient: ingredient })
     })
     .get("/name/:name", getUser, async (c) => {
         const name = c.req.param("name");

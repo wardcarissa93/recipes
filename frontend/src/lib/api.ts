@@ -90,6 +90,13 @@ export async function deleteRecipe({ id }: { id: number }) {
     }
 }
 
+
+
+
+
+
+
+
 export async function getAllIngredients() {
     const res = await api.ingredients.$get();
     if (!res.ok) {
@@ -104,6 +111,23 @@ export const getAllIngredientsQueryOptions = queryOptions({
     queryFn: getAllIngredients,
     staleTime: 1000 * 60 * 5,
 });
+
+export async function getIngredientById(id: string) {
+    const res = await api.ingredients[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getIngredientByIdQueryOptions(id: string) {
+    return queryOptions({
+        queryKey: ['get-ingredient-by-id', id],
+        queryFn: () => getIngredientById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
 
 export async function getIngredientIdByName(name: string) {
     const res = await api.ingredients["name/:name"].$get({
@@ -153,6 +177,12 @@ export async function deleteIngredient({ id }: { id: number }) {
         throw new Error("server error");
     }
 }
+
+
+
+
+
+
 
 export async function getAllRecipeIngredients() {
     const res = await api.recipeIngredients.$get();
