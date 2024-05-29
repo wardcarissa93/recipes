@@ -42,7 +42,7 @@ function CreateRecipe() {
             const existingRecipes = await queryClient.ensureQueryData(
                 getAllRecipesQueryOptions
             );
-            navigate({to: "/my-recipes"});
+            navigate({ to: "/my-recipes" });
 
             const recipe = {
                 title: value.title,
@@ -58,7 +58,6 @@ function CreateRecipe() {
                 ingredientId: ingredient.ingredientId,
                 quantity: ingredient.quantity,
                 unit: ingredient.unit,
-
             }));
             console.log("recipe: ", recipe)
             console.log("ingredients: ", ingredients)
@@ -67,12 +66,22 @@ function CreateRecipe() {
             
             try {
                 const newRecipe = await createRecipe({ value: recipe });
-                await createRecipeIngredient({ value: {
-                    quantity: ingredients[0].quantity,
-                    unit: ingredients[0].unit,
-                    ingredientId: ingredients[0].ingredientId,
-                    recipeId: newRecipe.id
-                } });
+                // await createRecipeIngredient({ value: {
+                //     quantity: ingredients[0].quantity,
+                //     unit: ingredients[0].unit,
+                //     ingredientId: ingredients[0].ingredientId,
+                //     recipeId: newRecipe.id
+                // } });
+                const createdRecipeIngredients = [];
+                for (const ingredient of ingredients) {
+                    const newRecipeIngredient = await createRecipeIngredient({ value: {
+                        quantity: ingredient.quantity,
+                        unit: ingredient.unit,
+                        ingredientId: ingredient.ingredientId,
+                        recipeId: newRecipe.id
+                    } });
+                    createdRecipeIngredients.push(newRecipeIngredient);
+                }
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: [newRecipe, ...existingRecipes.recipes],
@@ -290,7 +299,7 @@ function CreateRecipe() {
                                     <Input
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value}
+                                        value={field.state.value ?? ''}
                                         onBlur={field.handleBlur}
                                         type="number"
                                         onChange={(e) => field.handleChange(Number(e.target.value))}
@@ -309,7 +318,7 @@ function CreateRecipe() {
                                     <Input
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value}
+                                        value={field.state.value ?? ''}
                                         onBlur={field.handleBlur}
                                         type="number"
                                         onChange={(e) => field.handleChange(Number(e.target.value))}
@@ -328,7 +337,7 @@ function CreateRecipe() {
                                     <Input
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value}
+                                        value={field.state.value ?? ''}
                                         onBlur={field.handleBlur}
                                         onChange={(e) => field.handleChange(e.target.value)}
                                     />
@@ -340,8 +349,10 @@ function CreateRecipe() {
                         />
                     </div>
                 ))}
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Create</Button>
             </form>
         </div>
     )
 }
+
+export default CreateRecipe;
