@@ -9,12 +9,13 @@ import {
     createRecipeIngredient,
     getIngredientIdByName,
     getAllRecipesQueryOptions,
+    getAllIngredientsQueryOptions,
     loadingCreateRecipeQueryOptions
 } from "@/lib/api"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQueryClient, useQuery } from "@tanstack/react-query"
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { createRecipeSchema } from '../../../../server/sharedTypes'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
@@ -24,6 +25,15 @@ function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const [ingredients, setIngredients] = useState([{ name: '', quantity: 0, unit: '' }]);
+    const [ingredientList, setIngredientList] = useState(['']);
+    const { data } = useQuery(getAllIngredientsQueryOptions);
+
+
+    useEffect(() => {
+        if (data) {
+            setIngredientList(data.ingredients.map(ingredient => ingredient.name));
+        }
+    }, [data]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -298,14 +308,20 @@ function CreateRecipe() {
                             name={`ingredients[${index}].name`}
                             children={((field) => (
                                 <>
-                                    <Label htmlFor={field.name}>Name</Label>
-                                    <Input
+                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    <select
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value ?? ''}
+                                        value={field.state.value}
                                         onBlur={field.handleBlur}
                                         onChange={(e) => field.handleChange(e.target.value)}
-                                    />
+                                        className="ingredient-name"
+                                    >
+                                        <option value="">Select Ingredient</option>
+                                        {ingredientList.map((ingredient, i) => (
+                                            <option key={i} value={ingredient}>{ingredient}</option>
+                                        ))}
+                                    </select>
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
                                     ) : null}
