@@ -51,7 +51,7 @@ import { reduceEachTrailingCommentRange } from 'typescript'
         }
         return c.json({ recipeIngredient: recipeIngredient });
     })
-    .get("/:recipeId{[0-9]+}", getUser, async (c) => {
+    .get("/byRecipeId/:recipeId{[0-9]+}", getUser, async (c) => {
         const recipeId = Number.parseInt(c.req.param("recipeId"));
         const user = c.var.user;
         const recipeIngredients = await db
