@@ -1,15 +1,15 @@
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
-import { z } from 'zod'
 import { getUser } from '../kinde'
 import { db } from '../db'
 import { 
     recipeIngredients as recipeIngredientTable,
     insertRecipeIngredientsSchema
  } from '../db/schema/recipeIngredients'
- import { eq, desc, and } from 'drizzle-orm'
+import { eq, desc, and } from 'drizzle-orm'
 
- import { createRecipeIngredientSchema } from '../sharedTypes'
+import { createRecipeIngredientSchema } from '../sharedTypes'
+import { reduceEachTrailingCommentRange } from 'typescript'
 
  export const recipeIngredientsRoute = new Hono()
     .get("/", getUser, async (c) => {
@@ -50,6 +50,19 @@ import {
             return c.notFound();
         }
         return c.json({ recipeIngredient: recipeIngredient });
+    })
+    .get("/byRecipeId/:recipeId{[0-9]+}", getUser, async (c) => {
+        const recipeId = Number.parseInt(c.req.param("recipeId"));
+        const user = c.var.user;
+        const recipeIngredients = await db
+            .select()
+            .from(recipeIngredientTable)
+            .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.recipeId, recipeId)))
+            .then((res) => res);
+        if (!recipeIngredients) {
+            return c.notFound();
+        }
+        return c.json({ recipeIngredients: recipeIngredients });
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"));

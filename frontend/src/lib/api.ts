@@ -90,6 +90,13 @@ export async function deleteRecipe({ id }: { id: number }) {
     }
 }
 
+
+
+
+
+
+
+
 export async function getAllIngredients() {
     const res = await api.ingredients.$get();
     if (!res.ok) {
@@ -104,6 +111,23 @@ export const getAllIngredientsQueryOptions = queryOptions({
     queryFn: getAllIngredients,
     staleTime: 1000 * 60 * 5,
 });
+
+export async function getIngredientById(id: string) {
+    const res = await api.ingredients[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getIngredientByIdQueryOptions(id: string) {
+    return queryOptions({
+        queryKey: ['get-ingredient-by-id', id],
+        queryFn: () => getIngredientById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
 
 export async function getIngredientIdByName(name: string) {
     const res = await api.ingredients["name/:name"].$get({
@@ -154,6 +178,12 @@ export async function deleteIngredient({ id }: { id: number }) {
     }
 }
 
+
+
+
+
+
+
 export async function getAllRecipeIngredients() {
     const res = await api.recipeIngredients.$get();
     if (!res.ok) {
@@ -170,7 +200,7 @@ export const getAllRecipeIngredientsQueryOptions = queryOptions({
 });
 
 export async function getRecipeIngredientById(id: string) {
-    const res = await api.recipes[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    const res = await api.recipeIngredients[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
     if (!res.ok) {
         throw new Error("server error");
     }
@@ -182,6 +212,23 @@ export function getRecipeIngredientByIdQueryOptions(id: string) {
     return queryOptions({
         queryKey: ['get-recipe-ingredient-by-id', id],
         queryFn: () => getRecipeIngredientById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+export async function getRecipeIngredientsByRecipeId(recipeId: string) {
+    const res = await api.recipeIngredients[`byRecipeId/:recipeId{[0-9]+}`].$get({ param: { recipeId: recipeId.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipeIngredientsByRecipeIdQueryOptions(recipeId: string) {
+    return queryOptions({
+        queryKey: ['get-recipe-ingredients-by-recipe-id', recipeId],
+        queryFn: () => getRecipeIngredientsByRecipeId(recipeId),
         staleTime: 1000 * 60 * 5,
     })
 }

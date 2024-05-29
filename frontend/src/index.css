@@ -84,3 +84,7 @@
     margin: 1rem auto;
     display: flex;
 }
+
+.ingredient-li {
+  list-style-type: circle;
+}
