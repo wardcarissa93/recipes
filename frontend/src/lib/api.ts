@@ -3,7 +3,8 @@ import { type ApiRoutes } from '../../../server/app'
 import { queryOptions } from '@tanstack/react-query'
 import { 
     type CreateRecipe,
-    type CreateIngredient 
+    type CreateIngredient, 
+    CreateRecipeIngredient
 } from '../../../server/sharedTypes'
 
 const client = hc<ApiRoutes>('/')
@@ -49,12 +50,6 @@ export async function getRecipeById(id: string) {
     const data = await res.json();
     return data;
 }
-
-// export const getRecipeByIdQueryOptions = (id: number) => queryOptions({
-//     queryKey: ["get-recipe-by-id", id],
-//     queryFn: () => getRecipeById(id),
-//     staleTime: 1000 * 60 * 5,
-// });
 
 export function getRecipeByIdQueryOptions(id: string) {
     return queryOptions({
@@ -132,6 +127,68 @@ export const loadingCreateIngredientQueryOptions = queryOptions<{
 export async function deleteIngredient({ id }: { id: number }) {
     await new Promise((r) => setTimeout(r, 3000));
     const res = await api.ingredients[":id{[0-9]+}"].$delete({
+        param: { id: id.toString() },
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+}
+
+export async function getAllRecipeIngredients() {
+    const res = await api.recipeIngredients.$get();
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export const getAllRecipeIngredientsQueryOptions = queryOptions({
+    queryKey: ["get-all-recipe-ingredients"],
+    queryFn: getAllRecipeIngredients,
+    staleTime: 1000 * 60 * 5,
+});
+
+export async function getRecipeIngredientById(id: string) {
+    const res = await api.recipes[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipeIngredientByIdQueryOptions(id: string) {
+    return queryOptions({
+        queryKey: ['get-recipe-ingredient-by-id', id],
+        queryFn: () => getRecipeIngredientById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+export async function createRecipeIngredient({ value }: { value: CreateRecipeIngredient }) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await api.recipeIngredients.$post({ json: value });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const newRecipeIngredient = await res.json();
+    return newRecipeIngredient;
+}
+
+export const loadingCreateRecipeIngredientQueryOptions = queryOptions<{
+    recipeIngredient?: CreateRecipeIngredient;
+}>({
+    queryKey: ["loading-create-recipe-ingredient"],
+    queryFn: async () => {
+        return {};
+    },
+    staleTime: Infinity,
+});
+
+export async function deleteRecipeIngredient({ id }: { id: number }) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const res = await api.recipeIngredients[":id{[0-9]+}"].$delete({
         param: { id: id.toString() },
     });
     if (!res.ok) {
