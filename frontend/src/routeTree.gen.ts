@@ -14,6 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedSearchResultsImport } from './routes/_authenticated/search-results'
+import { Route as AuthenticatedSearchImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedMyRecipesImport } from './routes/_authenticated/my-recipes'
 import { Route as AuthenticatedIngredientsImport } from './routes/_authenticated/ingredients'
@@ -35,6 +37,18 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedSearchResultsRoute = AuthenticatedSearchResultsImport.update(
+  {
+    path: '/search-results',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
+
+const AuthenticatedSearchRoute = AuthenticatedSearchImport.update({
+  path: '/search',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -102,6 +116,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/search': {
+      preLoaderRoute: typeof AuthenticatedSearchImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/search-results': {
+      preLoaderRoute: typeof AuthenticatedSearchResultsImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/': {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedImport
@@ -122,6 +144,8 @@ export const routeTree = rootRoute.addChildren([
     AuthenticatedIngredientsRoute,
     AuthenticatedMyRecipesRoute,
     AuthenticatedProfileRoute,
+    AuthenticatedSearchRoute,
+    AuthenticatedSearchResultsRoute,
     AuthenticatedIndexRoute,
     AuthenticatedRecipeRecipeIdRoute,
   ]),
