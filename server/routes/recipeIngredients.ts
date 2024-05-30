@@ -11,7 +11,6 @@ import { recipes as recipeTable } from '../db/schema/recipes'
 import { eq, desc, and } from 'drizzle-orm'
 
 import { createRecipeIngredientSchema } from '../sharedTypes'
-import { reduceEachTrailingCommentRange } from 'typescript'
 
  export const recipeIngredientsRoute = new Hono()
     .get("/", getUser, async (c) => {
@@ -57,8 +56,13 @@ import { reduceEachTrailingCommentRange } from 'typescript'
         const recipeId = Number.parseInt(c.req.param("recipeId"));
         const user = c.var.user;
         const recipeIngredients = await db
-            .select()
+            .select({
+                name: ingredientTable.name,
+                quantity: recipeIngredientTable.quantity,
+                unit: recipeIngredientTable.unit
+            })
             .from(recipeIngredientTable)
+            .fullJoin(ingredientTable, eq(recipeIngredientTable.ingredientId, ingredientTable.id))
             .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.recipeId, recipeId)))
             .then((res) => res);
         if (!recipeIngredients) {
@@ -66,23 +70,10 @@ import { reduceEachTrailingCommentRange } from 'typescript'
         }
         return c.json({ recipeIngredients: recipeIngredients });
     })
-    // .get("/byIngredientId/:ingredientId{[0-9]+}", getUser, async (c) => {
-    //     const ingredientId = Number.parseInt(c.req.param("ingredientId"));
-    //     const user = c.var.user;
-    //     const recipeIngredients = await db
-    //         .select()
-    //         .from(recipeIngredientTable)
-    //         .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.ingredientId, ingredientId)))
-    //         .then((res) => res);
-    //     if (!recipeIngredients) {
-    //         return c.notFound();
-    //     }
-    //     return c.json({ recipeIngredients: recipeIngredients });
-    // })
     .get("byIngredientName/:name", getUser, async (c) => {
         const ingredientName = c.req.param("name");
         const user = c.var.user;
-        const recipeIngredients = await db
+        const recipes = await db
             .select({
                 id: recipeTable.id,
                 title: recipeTable.title,
@@ -93,10 +84,10 @@ import { reduceEachTrailingCommentRange } from 'typescript'
             .fullJoin(recipeTable, eq(recipeIngredientTable.recipeId, recipeTable.id))
             .where(and(eq(recipeIngredientTable.userId, user.id), eq(ingredientTable.name, ingredientName)))
             .then((res) => res);
-        if (!recipeIngredients) {
+        if (!recipes) {
             return c.notFound();
         }
-        return c.json({ recipes: recipeIngredients });
+        return c.json({ recipes: recipes });
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"));
