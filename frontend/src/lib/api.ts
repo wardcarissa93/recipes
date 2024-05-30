@@ -4,7 +4,7 @@ import { queryOptions } from '@tanstack/react-query'
 import { 
     type CreateRecipe,
     type CreateIngredient, 
-    CreateRecipeIngredient
+    type CreateRecipeIngredient
 } from '../../../server/sharedTypes'
 
 const client = hc<ApiRoutes>('/')
@@ -262,4 +262,26 @@ export async function deleteRecipeIngredient({ id }: { id: number }) {
     if (!res.ok) {
         throw new Error("server error");
     }
+}
+
+
+
+
+export async function getRecipesByIngredientName(name: string) {
+    const res = await api.recipeIngredients[`byIngredientName/:name`].$get({
+        param: { name: name },
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipesByIngredientNameQueryOptions(name: string) {
+    return queryOptions({
+        queryKey: ['get-recipes-by-ingredient-name', name],
+        queryFn: () => getRecipesByIngredientName(name),
+        staleTime: 1000 * 60 * 5,
+    })
 }
