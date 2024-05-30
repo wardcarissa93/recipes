@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { 
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
-    getIngredientById
+    // getIngredientById
  } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+
+interface Ingredient {
+    name: string,
+    quantity: number,
+    unit: string
+}
 
 export const Route = createFileRoute('/_authenticated/recipe/$recipeId')({
     component: RecipeDetails
@@ -20,29 +26,30 @@ function RecipeDetails() {
 
     const recipe = recipeData?.recipe;
     console.log("recipe: ", recipe);
-    const ingredients = ingredientsData?.recipeIngredients;
+    const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;
+    console.log("ingredientsPending: ",ingredientsPending);
     console.log("ingredients: ", ingredients);
 
-    const [ingredientNames, setIngredientNames] = useState([]);
+    // const [ingredientNames, setIngredientNames] = useState([]);
     
-    useEffect(() => {
-        const fetchIngredientNames = async () => {
-            if (ingredients) {
-                const names = await Promise.all(
-                    ingredients.map(async (ingredient) => {
-                        const { ingredient: ingredientData } = await getIngredientById(ingredient.ingredientId);
-                        return ingredientData.name;
-                    })
-                );
-                console.log("names: ", names);
-                setIngredientNames(names);
-            }
-        };
-        fetchIngredientNames();
-    }, [ingredients]);
+    // useEffect(() => {
+    //     const fetchIngredientNames = async () => {
+    //         if (ingredients) {
+    //             const names = await Promise.all(
+    //                 ingredients.map(async (ingredient) => {
+    //                     const { ingredient: ingredientData } = await getIngredientById(ingredient.ingredientId);
+    //                     return ingredientData.name;
+    //                 })
+    //             );
+    //             console.log("names: ", names);
+    //             setIngredientNames(names);
+    //         }
+    //     };
+    //     fetchIngredientNames();
+    // }, [ingredients]);
 
-    console.log("ingredientNames: ", ingredientNames);
-    console.log("ingredientNames[0]: ", ingredientNames[0]);
+    // console.log("ingredientNames: ", ingredientNames);
+    // console.log("ingredientNames[0]: ", ingredientNames[0]);
 
     if (recipeError) return 'An error has occurred: ' + recipeError.message;
     if (ingredientsError) return 'An error has occurred: ' + ingredientsError.message;
@@ -54,12 +61,12 @@ function RecipeDetails() {
                     <h1 className="text-2xl font-bold">{recipe.title}</h1>
                     <p>Servings: {recipe.servings}</p>
                     <p>Total Time: {recipe.totalTime}</p>
-                    {(!ingredientsPending && ingredientNames.length > 0) && (
+                    {(!ingredientsPending) && (
                         <div>
                             <h3>Ingredients:</h3>
                             <ul>
-                                {ingredientNames.map((name, index) => (
-                                    <li key={index} className="ingredient-li">{name}</li>
+                                {ingredients.map((ingredient: Ingredient) => (
+                                    <li className="ingredient-li">{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
                                 ))}
                             </ul>
                         </div>
