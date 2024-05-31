@@ -5,9 +5,11 @@ import { z } from 'zod'
 import { getUser } from '../kinde'
 
 import { db } from '../db'
-import { ingredients as ingredientTable,
+import { 
+    ingredients as ingredientTable,
     insertIngredientsSchema
 } from '../db/schema/ingredients'
+import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
 import { eq, desc, and } from 'drizzle-orm'
 
 import { createIngredientSchema } from '../sharedTypes'
@@ -77,6 +79,9 @@ export const ingredientsRoute = new Hono()
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"))
         const user = c.var.user;
+        await db
+            .delete(recipeIngredientTable)
+            .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.ingredientId, id)));
         const ingredient = await db
             .delete(ingredientTable)
             .where(and(eq(ingredientTable.userId, user.id), eq(ingredientTable.id, id)))

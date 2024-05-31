@@ -264,15 +264,15 @@ export const loadingCreateRecipeIngredientQueryOptions = queryOptions<{
     staleTime: Infinity,
 });
 
-export async function deleteRecipeIngredient({ id }: { id: number }) {
-    await new Promise((r) => setTimeout(r, 3000));
-    const res = await api.recipeIngredients[":id{[0-9]+}"].$delete({
-        param: { id: id.toString() },
-    });
-    if (!res.ok) {
-        throw new Error("server error");
-    }
-}
+// export async function deleteRecipeIngredient({ id }: { id: number }) {
+//     await new Promise((r) => setTimeout(r, 3000));
+//     const res = await api.recipeIngredients[":id{[0-9]+}"].$delete({
+//         param: { id: id.toString() },
+//     });
+//     if (!res.ok) {
+//         throw new Error("server error");
+//     }
+// }
 
 
 
