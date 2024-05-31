@@ -57,7 +57,7 @@ function Ingredients() {
                         </TableRow>
                     ))
                     : data?.ingredients.map((ingredient) => (
-                        <TableRow>
+                        <TableRow key={ingredient.id}>
                             <TableCell className="font-medium">{ingredient.id}</TableCell>
                             <TableCell>{ingredient.name}</TableCell>
                             <TableCell>
@@ -75,12 +75,14 @@ function IngredientDeleteButton({ id }: { id: number }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteIngredient,
-        onError: () => {
+        onError: (error) => {
+            console.error('Error deleting ingredient:', error);
             toast("Error", {
                 description: `Failed to delete ingredient: ${id}`,
             });
         },
         onSuccess: () => {
+            console.log('Ingredient deleted successfully:', id);
             toast("Ingredient Deleted", {
                 description: `Successfully deleted ingredient: ${id}`,
             })
@@ -94,8 +96,13 @@ function IngredientDeleteButton({ id }: { id: number }) {
         },
     });
 
+    const handleDelete = () => {
+        console.log('Deleting ingredient with id:', id);
+        mutation.mutate({ id });
+    };
+
     return (
-        <Button>
+        <Button onClick={handleDelete}>
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>
     )
