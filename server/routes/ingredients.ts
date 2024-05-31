@@ -11,7 +11,6 @@ import { ingredients as ingredientTable,
 import { eq, desc, and } from 'drizzle-orm'
 
 import { createIngredientSchema } from '../sharedTypes'
-import { UserIdentitiesInnerFromJSON } from '@kinde-oss/kinde-typescript-sdk'
 
 export const ingredientsRoute = new Hono()
     .get("/", getUser, async (c) => {
@@ -27,6 +26,16 @@ export const ingredientsRoute = new Hono()
     .post("/", getUser, zValidator("json", createIngredientSchema), async (c) => {
         const ingredient = await c.req.valid("json");
         const user = c.var.user;
+        const existingIngredient = await db
+            .select()
+            .from(ingredientTable)
+            .where(and(eq(ingredientTable.userId, user.id), eq(ingredientTable.name, ingredient.name)))
+            .then((res) => res[0]);
+
+        if (existingIngredient) {
+            c.status(409);
+            return c.json({ message: "Ingredient already in database" });
+        }
         const validatedIngredient = insertIngredientsSchema.parse({
             ...ingredient,
             userId: user.id

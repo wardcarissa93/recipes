@@ -29,7 +29,6 @@ function CreateIngredient() {
             const existingIngredients = await queryClient.ensureQueryData(
                 getAllIngredientsQueryOptions
             );
-            navigate({to: "/ingredients"});
 
             queryClient.setQueryData(loadingCreateIngredientQueryOptions.queryKey, {
                 ingredient: value,
@@ -42,12 +41,13 @@ function CreateIngredient() {
                     ingredients: [newIngredient, ...existingIngredients.ingredients],
                 });
                 toast("Ingredient Created", {
-                    description: `Successfully created new ingredient: ${newIngredient.id}`,
-                })
+                    description: `Successfully created new ingredient: ${newIngredient.name}`,
+                });
+                navigate({ to: "/ingredients" });
             } catch (error) {
                 toast("Error", {
-                    description: `Failed to created new ingredient`
-                })
+                    description: `Ingredient is already in database`,
+                });
             } finally {
                 queryClient.setQueryData(loadingCreateIngredientQueryOptions.queryKey, {});
             }
@@ -98,3 +98,5 @@ function CreateIngredient() {
         </div>
     )
 }
+
+export default CreateIngredient;

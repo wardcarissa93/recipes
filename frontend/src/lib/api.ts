@@ -140,20 +140,30 @@ export async function getIngredientIdByName(name: string) {
     return data.id;
 }
 
-export function getIngredientIdByNameQueryOptions(name: string) {
-    return queryOptions({
-        queryKey: ['get-ingredient-id-by-name', name],
-        queryFn: () => getIngredientIdByName(name),
-        staleTime: 1000 * 60 * 5,
-    })
-}
+// export function getIngredientIdByNameQueryOptions(name: string) {
+//     return queryOptions({
+//         queryKey: ['get-ingredient-id-by-name', name],
+//         queryFn: () => getIngredientIdByName(name),
+//         staleTime: 1000 * 60 * 5,
+//     })
+// }
 
 export async function createIngredient({ value }: { value: CreateIngredient }) {
     await new Promise((r) => setTimeout(r, 2000));
     const res = await api.ingredients.$post({ json: value });
+    console.log("createIngredient res: ", res);
+
     if (!res.ok) {
+        const errorData = await res.json();
+        if (res.status === 409) {
+            if ('message' in errorData) {
+                throw new Error(errorData.message || 'Ingredient already in database');
+            }
+            throw new Error('Ingredient already in database');
+        }
         throw new Error("server error");
     }
+
     const newIngredient = await res.json();
     return newIngredient;
 }
