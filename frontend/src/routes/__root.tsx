@@ -16,7 +16,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function NavBar() {
     return (
-        <div className="p-2 flex justify-between max-w-2xl m-auto items-baseline">
+        <div className="p-2 flex justify-between max-w-4xl m-auto items-baseline">
             <Link to="/">
                 <h1 className="text-2xl font-bold">Home</h1>
             </Link>
@@ -49,7 +49,7 @@ function Root() {
         <>
             <NavBar/>
             <hr />
-            <div className="p-2 max-w-2xl m-auto">
+            <div className="p-2 max-w-4xl m-auto">
                 <Outlet/>
             </div>
             <Toaster />

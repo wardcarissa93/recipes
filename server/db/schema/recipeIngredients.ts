@@ -11,8 +11,9 @@ export const recipeIngredients = pgTable(
         userId: text("user_id").notNull(),
         recipeId: integer("recipe_id").references(() => recipes.id),
         ingredientId: integer("ingredient_id").references(() => ingredients.id),
-        quantity: numeric("quantity", { precision: 6, scale: 2 }).notNull(),
+        quantity: numeric("quantity").notNull(),
         unit: text("unit").notNull(),
+        details: text("details"),
         createdAt: timestamp('created_at').defaultNow()
     }
 );
@@ -21,7 +22,8 @@ export const insertRecipeIngredientsSchema = createInsertSchema(recipeIngredient
     recipeId: z.number(),
     ingredientId: z.number(),
     quantity: z.number(),
-    unit: z.string()
+    unit: z.string(),
+    details: z.string()
 });
 
 export const selectRecipeIngredientsSchema = createSelectSchema(recipeIngredients);

@@ -88,3 +88,7 @@
 .ingredient-li {
   list-style-type: circle;
 }
+
+ul {
+  padding-left: 2rem;
+}
