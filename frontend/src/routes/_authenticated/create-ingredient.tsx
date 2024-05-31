@@ -26,6 +26,8 @@ function CreateIngredient() {
             name: ''
         },
         onSubmit: async ({ value }) => {
+            value.name = value.name.trim().toLowerCase();
+
             const existingIngredients = await queryClient.ensureQueryData(
                 getAllIngredientsQueryOptions
             );
