@@ -59,7 +59,8 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
             .select({
                 name: ingredientTable.name,
                 quantity: recipeIngredientTable.quantity,
-                unit: recipeIngredientTable.unit
+                unit: recipeIngredientTable.unit,
+                details: recipeIngredientTable.details
             })
             .from(recipeIngredientTable)
             .fullJoin(ingredientTable, eq(recipeIngredientTable.ingredientId, ingredientTable.id))

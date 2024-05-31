@@ -24,7 +24,7 @@ export const Route = createFileRoute('/_authenticated/create-recipe')({
 function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const [ingredients, setIngredients] = useState([{ name: '', quantity: 0, unit: '' }]);
+    const [ingredients, setIngredients] = useState([{ name: '', quantity: 0, unit: '', details: null }]);
     const [ingredientList, setIngredientList] = useState(['']);
     const { data } = useQuery(getAllIngredientsQueryOptions);
 
@@ -69,6 +69,7 @@ function CreateRecipe() {
                 name: ingredient.name,
                 quantity: ingredient.quantity,
                 unit: ingredient.unit,
+                details: ingredient.details
             }));
             console.log("recipe: ", recipe)
             console.log("ingredients: ", ingredients)
@@ -89,11 +90,11 @@ function CreateRecipe() {
                     const newRecipeIngredient = await createRecipeIngredient({ value: {
                         quantity: ingredient.quantity,
                         unit: ingredient.unit,
+                        details: ingredient.details,
                         ingredientId: ingredientId,
                         recipeId: newRecipe.id
                     } });
                     createdRecipeIngredients.push(newRecipeIngredient);
-                    console.log(getIngredientIdByName("Water"));
                 }
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
@@ -113,14 +114,14 @@ function CreateRecipe() {
     });
 
     const addIngredient = () => {
-        setIngredients([...ingredients, { name: '', quantity: 0, unit: '' }]);
+        setIngredients([...ingredients, { name: '', quantity: 0, unit: '', details: null }]);
     };
 
     return (
         <div className="p-2">
             <h2>Create Recipe</h2>
             <form 
-                className='max-w-xl m-auto'
+                className='m-auto'
                 onSubmit={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
@@ -349,6 +350,24 @@ function CreateRecipe() {
                             children={((field) => (
                                 <>
                                     <Label htmlFor={field.name}>Unit</Label>
+                                    <Input
+                                        id={field.name}
+                                        name={field.name}
+                                        value={field.state.value ?? ''}
+                                        onBlur={field.handleBlur}
+                                        onChange={(e) => field.handleChange(e.target.value)}
+                                    />
+                                    {field.state.meta.touchedErrors ? (
+                                        <em>{field.state.meta.touchedErrors}</em>
+                                    ) : null}
+                                </>
+                            ))}
+                        />
+                        <form.Field 
+                            name={`ingredients[${index}].details`}
+                            children={((field) => (
+                                <>
+                                    <Label htmlFor={field.name}>Details</Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}

@@ -11,7 +11,8 @@ import { Button } from '@/components/ui/button';
 interface Ingredient {
     name: string,
     quantity: number,
-    unit: string
+    unit: string,
+    details?: string | null
 }
 
 export const Route = createFileRoute('/_authenticated/recipe/$recipeId')({
@@ -66,7 +67,10 @@ function RecipeDetails() {
                             <h3>Ingredients:</h3>
                             <ul>
                                 {ingredients.map((ingredient: Ingredient) => (
-                                    <li className="ingredient-li">{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
+                                    <li key={ingredient.name} className="ingredient-li">
+                                        {ingredient.name} - {ingredient.quantity} {ingredient.unit}
+                                        {ingredient.details && (<span> - {ingredient.details}</span>)}
+                                    </li>
                                 ))}
                             </ul>
                         </div>
