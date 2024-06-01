@@ -17,3 +17,7 @@ export const insertIngredientsSchema = createInsertSchema(ingredients, {
 });
 
 export const selectIngredientsSchema = createSelectSchema(ingredients);
+
+export const updateIngredientSchema = z.object({
+    name: z.string()
+});
