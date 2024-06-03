@@ -52,7 +52,7 @@ function EditIngredient() {
                 });
                 await queryClient.invalidateQueries({ queryKey: getAllIngredientsQueryOptions.queryKey});
                 toast("Ingredient Updated", {
-                    description: `Successfully updated ingredient '${updatedIngredient.name}'`,
+                    description: `Successfully updated ingredient '${value.name}'`,
                 });
                 navigate({ to: "/ingredients" });
             } catch (error) {
