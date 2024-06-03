@@ -13,7 +13,7 @@ import {
     loadingEditIngredientQueryOptions 
 } from '@/lib/api'
 
-export const Route = createFileRoute('/_authenticated/edit-ingredient')({
+export const Route = createFileRoute('/_authenticated/edit-ingredient/$ingredientId')({
   component: EditIngredient
 })
 
@@ -27,7 +27,9 @@ type UpdatedIngredient = {
 function EditIngredient() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const id = '28';
+    const { ingredientId } = Route.useParams();
+    const id = ingredientId;
+    console.log("ingredient id: ", id);
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
