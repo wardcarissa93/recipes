@@ -28,7 +28,7 @@ function Ingredients() {
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
     if (error) return 'An error has occurred: ' + error.message
     return (
-        <div className="p-2 max-w-3xl m-auto">
+        <div className="p-2 max-w-2xl m-auto">
             <Table>
                 <TableHeader>
                     <TableRow>
