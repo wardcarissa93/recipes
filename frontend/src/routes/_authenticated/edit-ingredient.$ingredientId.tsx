@@ -1,15 +1,18 @@
+import { useState, useEffect } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { editIngredientSchema } from '../../../../server/sharedTypes'
 import { 
     editIngredient,
+    getIngredientById,
     getAllIngredientsQueryOptions,
+    getIngredientByIdQueryOptions,
     loadingEditIngredientQueryOptions 
 } from '@/lib/api'
 
@@ -30,6 +33,21 @@ function EditIngredient() {
     const { ingredientId } = Route.useParams();
     const id = ingredientId;
     console.log("ingredient id: ", id);
+
+    const [ingredientName, setIngredientName] = useState('');
+    useEffect(() => {
+        const fetchIngredient = async () => {
+            try {
+                const fetchedIngredient = await getIngredientById(id);
+                setIngredientName(fetchedIngredient.ingredient.name);
+            } catch (error) {
+                console.error("Error fetching ingredient:", error);
+            }
+        };
+    
+        fetchIngredient();
+    });
+
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
@@ -66,9 +84,14 @@ function EditIngredient() {
             }
         },
     });
+
+    const { isLoading } = useQuery(getIngredientByIdQueryOptions(id));
+
+    if (isLoading) return <div>Loading...</div>;
+    
     return (
         <div className="p-2">
-            <h2>Edit Ingredient</h2>
+            <h2>Edit Ingredient '{ingredientName}'</h2>
                 <form
                     className="max-w-xl m-auto"
                     onSubmit={(e) => {
