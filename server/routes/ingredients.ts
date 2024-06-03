@@ -7,7 +7,8 @@ import { getUser } from '../kinde'
 import { db } from '../db'
 import { 
     ingredients as ingredientTable,
-    insertIngredientsSchema
+    insertIngredientsSchema,
+    updateIngredientSchema
 } from '../db/schema/ingredients'
 import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
 import { eq, desc, and } from 'drizzle-orm'
@@ -75,6 +76,30 @@ export const ingredientsRoute = new Hono()
             return c.notFound();
         }
         return c.json({ id: ingredient.id });
+    })
+    .put("/:id{[0-9]+}", getUser, zValidator("json", updateIngredientSchema), async (c) => {
+        const id = Number.parseInt(c.req.param("id"));
+        const { name } = await c.req.valid("json");
+        const user = c.var.user;
+        const existingIngredient = await db
+            .select()
+            .from(ingredientTable)
+            .where(and(eq(ingredientTable.userId, user.id), eq(ingredientTable.name, name)))
+            .then((res) => res[0]);
+        if (existingIngredient) {
+            c.status(409);
+            return c.json({ message: "Ingredient already in database" });
+        }
+        const ingredient = await db
+            .update(ingredientTable)
+            .set({ name })
+            .where(and(eq(ingredientTable.userId, user.id), eq(ingredientTable.id, id)))
+            .returning()
+            .then((res) => res[0]);
+        if (!ingredient) {
+            return c.notFound();
+        }
+        return c.json({ ingredient: ingredient });
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"))

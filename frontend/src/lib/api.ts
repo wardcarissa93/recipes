@@ -4,12 +4,17 @@ import { queryOptions } from '@tanstack/react-query'
 import { 
     type CreateRecipe,
     type CreateIngredient, 
-    type CreateRecipeIngredient
+    type CreateRecipeIngredient,
+    type EditIngredient
 } from '../../../server/sharedTypes'
 
 const client = hc<ApiRoutes>('/')
 
 export const api = client.api
+
+type ErrorResponse = {
+    message?: string;
+}
 
 async function getCurrentUser() {
     const res = await api.me.$get();
@@ -151,7 +156,6 @@ export async function getIngredientIdByName(name: string) {
 export async function createIngredient({ value }: { value: CreateIngredient }) {
     await new Promise((r) => setTimeout(r, 2000));
     const res = await api.ingredients.$post({ json: value });
-    console.log("createIngredient res: ", res);
 
     if (!res.ok) {
         const errorData = await res.json();
@@ -172,6 +176,44 @@ export const loadingCreateIngredientQueryOptions = queryOptions<{
     ingredient?: CreateIngredient;
 }>({
     queryKey: ["loading-create-ingredient"],
+    queryFn: async () => {
+        return {};
+    },
+    staleTime: Infinity,
+});
+
+export async function editIngredient({ id, value }: {id: string, value: EditIngredient }) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await api.ingredients[`:id{[0-9]+}`].$put({
+        param: { id: id },
+        json: value
+    });
+    if (!res.ok) {
+        const errorData: ErrorResponse = await res.json();
+        if (res.status === 409) {
+            if ('message' in errorData) {
+                throw new Error(errorData.message || 'Ingredient already in database');
+            }
+            throw new Error('Ingredient already in database');
+        }
+        throw new Error("server error");
+    }
+    const updatedIngredient = await res.json();
+    return updatedIngredient;
+}
+
+export function editIngredientQueryOptions(id: string, value: EditIngredient) {
+    return queryOptions({
+        queryKey: ['edit-ingredient', id],
+        queryFn: () => editIngredient({ id, value }),
+        staleTime: 1000 * 60 * 5,
+    });
+}
+
+export const loadingEditIngredientQueryOptions = queryOptions<{
+    ingredient?: EditIngredient;
+}>({
+    queryKey: ["loading-edit-ingredient"],
     queryFn: async () => {
         return {};
     },

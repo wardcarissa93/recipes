@@ -22,6 +22,7 @@ import { Route as AuthenticatedIngredientsImport } from './routes/_authenticated
 import { Route as AuthenticatedCreateRecipeImport } from './routes/_authenticated/create-recipe'
 import { Route as AuthenticatedCreateIngredientImport } from './routes/_authenticated/create-ingredient'
 import { Route as AuthenticatedRecipeRecipeIdImport } from './routes/_authenticated/recipe.$recipeId'
+import { Route as AuthenticatedEditIngredientIngredientIdImport } from './routes/_authenticated/edit-ingredient.$ingredientId'
 
 // Create/Update Routes
 
@@ -84,6 +85,12 @@ const AuthenticatedRecipeRecipeIdRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedEditIngredientIngredientIdRoute =
+  AuthenticatedEditIngredientIngredientIdImport.update({
+    path: '/edit-ingredient/$ingredientId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -128,6 +135,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/edit-ingredient/$ingredientId': {
+      preLoaderRoute: typeof AuthenticatedEditIngredientIngredientIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/recipe/$recipeId': {
       preLoaderRoute: typeof AuthenticatedRecipeRecipeIdImport
       parentRoute: typeof AuthenticatedImport
@@ -147,6 +158,7 @@ export const routeTree = rootRoute.addChildren([
     AuthenticatedSearchRoute,
     AuthenticatedSearchResultsRoute,
     AuthenticatedIndexRoute,
+    AuthenticatedEditIngredientIngredientIdRoute,
     AuthenticatedRecipeRecipeIdRoute,
   ]),
   AboutRoute,
