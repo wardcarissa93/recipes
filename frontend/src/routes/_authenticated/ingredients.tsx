@@ -24,6 +24,7 @@ export const Route = createFileRoute('/_authenticated/ingredients')({
 
 function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
+    console.log("ingredients.tsx data: ", data)
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
     if (error) return 'An error has occurred: ' + error.message
     return (

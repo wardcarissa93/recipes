@@ -17,10 +17,17 @@ export const Route = createFileRoute('/_authenticated/edit-ingredient')({
   component: EditIngredient
 })
 
+type UpdatedIngredient = {
+    id: number,
+    userId: string,
+    name: string,
+    createdAt: string | null
+};
+
 function EditIngredient() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const id = '21';
+    const id = '28';
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
@@ -35,18 +42,19 @@ function EditIngredient() {
             });
 
             try {
-                const updatedIngredient = await editIngredient({ id, value });
+                const updatedIngredient: UpdatedIngredient = await editIngredient({ id, value });
                 console.log("updatedIngredient: ", updatedIngredient);
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,
-                    ingredients: [updatedIngredient, ...existingIngredients.ingredients],
+                    ingredients: existingIngredients.ingredients.map(ingredient =>
+                        ingredient.id === updatedIngredient.id ? updatedIngredient : ingredient
+                    ),
                 });
+                await queryClient.invalidateQueries({ queryKey: getAllIngredientsQueryOptions.queryKey});
                 toast("Ingredient Updated", {
                     description: `Successfully updated ingredient '${updatedIngredient.name}'`,
-                }),
+                });
                 navigate({ to: "/ingredients" });
-                // Refetch the data after successful edit
-                queryClient.invalidateQueries(getAllIngredientsQueryOptions.queryKey);
             } catch (error) {
                 toast("Error", {
                     description: `Ingredient could not be updated.`
@@ -57,47 +65,47 @@ function EditIngredient() {
         },
     });
     return (
-<div className="p-2">
-        <h2>Edit Ingredient</h2>
-            <form
-                className="max-w-xl m-auto"
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    void form.handleSubmit()
-                }}
-            >
-                <form.Field 
-                    name="name"
-                    validators={{
-                        onChange: editIngredientSchema.shape.name
+        <div className="p-2">
+            <h2>Edit Ingredient</h2>
+                <form
+                    className="max-w-xl m-auto"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        void form.handleSubmit()
                     }}
-                    children={((field) => (
-                        <>
-                            <Label htmlFor={field.name}>Ingredient Name</Label>
-                            <Input
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                onChange={(e) => field.handleChange(e.target.value)}
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </>
-                    ))}
-                />
-                <form.Subscribe
-                    selector={(state) => [state.canSubmit, state.isSubmitting]}
-                    children={([canSubmit, isSubmitting]) => (
-                        <Button className="mt-4" type="submit" disabled={!canSubmit}>
-                            {isSubmitting ? "..." : "Submit"}
-                        </Button>
-                    )}
                 >
-                </form.Subscribe>
-            </form>
+                    <form.Field 
+                        name="name"
+                        validators={{
+                            onChange: editIngredientSchema.shape.name
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Ingredient Name</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Subscribe
+                        selector={(state) => [state.canSubmit, state.isSubmitting]}
+                        children={([canSubmit, isSubmitting]) => (
+                            <Button className="mt-4" type="submit" disabled={!canSubmit}>
+                                {isSubmitting ? "..." : "Submit"}
+                            </Button>
+                        )}
+                    >
+                    </form.Subscribe>
+                </form>
         </div>
     )
-}
+}   
