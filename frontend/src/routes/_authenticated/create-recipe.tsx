@@ -117,6 +117,11 @@ function CreateRecipe() {
         setIngredients([...ingredients, { name: '', quantity: 0, unit: '', details: null }]);
     };
 
+    const removeIngredient = (indexToRemove: number) => {
+        console.log("index to remove: ", indexToRemove)
+        setIngredients(ingredients.filter((_, index) => index !== indexToRemove))
+    }
+
     return (
         <div className="p-2">
             <h2>Create Recipe</h2>
@@ -381,6 +386,15 @@ function CreateRecipe() {
                                 </>
                             ))}
                         />
+                        {ingredients.length > 1 && (
+                            <Button
+                                type="button"
+                                onClick={() => removeIngredient(index)}
+                                className="mb-4"
+                            >
+                                Remove
+                            </Button>
+                        )}
                     </div>
                 ))}
                 <Button id="add-ingredient-button" type="button" onClick={addIngredient} className="mb-4">
