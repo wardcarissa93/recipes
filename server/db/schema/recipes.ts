@@ -38,3 +38,14 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
 });
 
 export const selectRecipesSchema = createSelectSchema(recipes);
+
+export const updateRecipesSchema = z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    prepTime: z.number().optional(),
+    cookTime: z.number().optional(),
+    totalTime: z.number(),
+    servings: z.number(),
+    instructions: z.string(),
+    url: z.string().optional()
+})
