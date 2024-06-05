@@ -2,9 +2,11 @@ import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import { getUser } from '../kinde'
 import { db } from '../db'
-import { recipes as recipeTable,
+import { 
+    recipes as recipeTable,
     insertRecipesSchema
 } from '../db/schema/recipes'
+import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
 import { eq, desc, and } from 'drizzle-orm'
 
 import { createRecipeSchema } from '../sharedTypes'
@@ -51,6 +53,9 @@ export const recipesRoute = new Hono()
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"));
         const user = c.var.user;
+        await db
+            .delete(recipeIngredientTable)
+            .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.recipeId, id)));
         const recipe = await db
             .delete(recipeTable)
             .where(and(eq(recipeTable.userId, user.id), eq(recipeTable.id, id)))
