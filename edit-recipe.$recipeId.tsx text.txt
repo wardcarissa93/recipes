@@ -1,0 +1,341 @@
+// edit-recipe.$recipeId.tsx
+
+import { useState, useEffect } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import { useForm } from '@tanstack/react-form'
+import { useQueryClient, useQuery } from '@tanstack/react-query'
+import { zodValidator } from '@tanstack/zod-form-adapter'
+import { editRecipeSchema } from '../../../../server/sharedTypes'
+import { 
+    editRecipe,
+    getRecipeById,
+    getAllRecipesQueryOptions,
+    loadingEditRecipeQueryOptions,
+    getRecipeByIdQueryOptions
+ } from '@/lib/api'
+
+export const Route = createFileRoute('/_authenticated/edit-recipe/$recipeId')({
+    component: EditRecipe
+})
+
+type UpdatedRecipe = {
+    id: number,
+    userId: string,
+    title: string,
+    description: string | null,
+    prepTime: number | null,
+    cookTime: number | null,
+    totalTime: number,
+    servings: number,
+    instructions: string,
+    url: string | null,
+    createdAt: string | null
+}
+
+type Recipe = {
+    id: number,
+    userId: string,
+    title: string,
+    description: string | null,
+    prepTime: number | null,
+    cookTime: number | null,
+    totalTime: number,
+    servings: number,
+    instructions: string,
+    url: string | null,
+    createdAt: string | null
+}
+
+function EditRecipe() {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const { recipeId } = Route.useParams();
+    const id = recipeId;
+    console.log("recipe id: ", id);
+
+    const [oldRecipe, setOldRecipe] = useState<Recipe>({
+        id: 0,
+        userId: '',
+        title: '',
+        description: '',
+        prepTime: null,
+        cookTime: null,
+        totalTime: 0,
+        servings: 0,
+        instructions: '',
+        url: null,
+        createdAt: null
+    });
+
+    useEffect(() => {
+        const fetchRecipe = async () => {
+            try {
+                const fetchedRecipe = await getRecipeById(id);
+                console.log("fetchedRecipe: ", fetchedRecipe)
+                setOldRecipe({
+                    id: fetchedRecipe.recipe.id,
+                    userId: fetchedRecipe.recipe.userId,
+                    title: fetchedRecipe.recipe.title,
+                    description: fetchedRecipe.recipe.description,
+                    prepTime: fetchedRecipe.recipe.prepTime,
+                    cookTime: fetchedRecipe.recipe.cookTime,
+                    totalTime: fetchedRecipe.recipe.totalTime,
+                    servings: fetchedRecipe.recipe.servings,
+                    instructions: fetchedRecipe.recipe.instructions,
+                    url: fetchedRecipe.recipe.url,
+                    createdAt: fetchedRecipe.recipe.createdAt
+                });
+                console.log("oldRecipe: ", oldRecipe)
+            } catch (error) {
+                console.error("Error fetching recipe: ", error);
+            }
+        };
+
+        fetchRecipe();
+    }, [id]);
+
+    const form = useForm({
+        validatorAdapter: zodValidator,
+        defaultValues: {
+            title: oldRecipe.title,
+            description: oldRecipe.description,
+            prepTime: oldRecipe.prepTime,
+            cookTime: oldRecipe.cookTime,
+            totalTime: oldRecipe.totalTime,
+            servings: oldRecipe.servings,
+            instructions: oldRecipe.instructions,
+            url: oldRecipe.url
+        },
+        onSubmit: async ({ value }) => {
+            const existingRecipes = await queryClient.ensureQueryData(getAllRecipesQueryOptions);
+
+            queryClient.setQueryData(loadingEditRecipeQueryOptions.queryKey, {
+                recipe: value
+            });
+
+            try {
+                const updatedRecipe: UpdatedRecipe = await editRecipe({ id, value });
+
+                console.log("updatedRecipe: ", updatedRecipe);
+
+                queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
+                    ...existingRecipes,
+                    recipes: existingRecipes.recipes.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe : recipe),
+                });
+                await queryClient.invalidateQueries({ queryKey: getAllRecipesQueryOptions.queryKey });
+                toast("Recipe Updated", {
+                    description: `Successfully updated recipe '${value.title}'`,
+                });
+                navigate({ to: "/my-recipes" });
+            } catch (error) {
+                toast("Error", {
+                    description: `Recipe could not be updated.`
+                });
+            } finally {
+                queryClient.setQueryData(loadingEditRecipeQueryOptions.queryKey, {});
+            }
+        },
+    });
+
+    const { isLoading } = useQuery(getRecipeByIdQueryOptions(id));
+
+    if (isLoading) return <div>Loading...</div>
+
+    return (
+        <div className="p-2">
+            <h2>Edit Recipe '{oldRecipe.title}'</h2>
+                <form
+                    className='max-w-xl m-auto'
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        void form.handleSubmit()
+                    }}
+                >
+                    <form.Field
+                        name="title"
+                        validators={{
+                            onChange: editRecipeSchema.shape.title
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Title</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="description"
+                        validators={{
+                            onChange: editRecipeSchema.shape.description
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Description</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="prepTime"
+                        validators={{
+                            onChange: editRecipeSchema.shape.prepTime
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Prep Time</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="cookTime"
+                        validators={{
+                            onChange: editRecipeSchema.shape.cookTime
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Cook Time</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="totalTime"
+                        validators={{
+                            onChange: editRecipeSchema.shape.totalTime
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Total Time</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="servings"
+                        validators={{
+                            onChange: editRecipeSchema.shape.servings
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Servings</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="instructions"
+                        validators={{
+                            onChange: editRecipeSchema.shape.instructions
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>Instructions</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <form.Field
+                        name="url"
+                        validators={{
+                            onChange: editRecipeSchema.shape.url
+                        }}
+                        children={((field) => (
+                            <>
+                                <Label htmlFor={field.name}>URL</Label>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </>
+                        ))}
+                    />
+                    <Button
+                        type='submit'
+                        className="mt-2"
+                        children="Update Recipe"
+                    />
+                </form>
+        </div>
+    );
+}
+
+export default EditRecipe;
