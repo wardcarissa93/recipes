@@ -15,6 +15,19 @@ import {
     editRecipe,
     loadingEditRecipeQueryOptions
 } from '@/lib/api'
+
+type FetchedRecipe = {
+    recipe: {
+        title: string;
+        description: string;
+        prepTime: string;
+        cookTime: string;
+        totalTime: string;
+        servings: string;
+        instructions: string;
+        url: string;
+    }
+};
  
 export const Route = createFileRoute('/_authenticated/edit-recipe/$recipeId')({
     component: EditRecipe
@@ -38,7 +51,7 @@ function EditRecipe() {
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
-                const fetchedRecipe = await getRecipeById(recipeId);
+                const fetchedRecipe: FetchedRecipe = await getRecipeById(recipeId);
                 setOldRecipe({
                     title: fetchedRecipe.recipe.title,
                     description: fetchedRecipe.recipe.description,
@@ -84,6 +97,7 @@ function EditRecipe() {
                     recipes: existingRecipes.recipes.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe: recipe)
                 });
                 await queryClient.invalidateQueries({ queryKey: getAllRecipesQueryOptions.queryKey });
+                await queryClient.invalidateQueries({ queryKey: getRecipeByIdQueryOptions(recipeId).queryKey });
                 toast("Recipe Updated", {
                     description: `Successfully updated recipe '${value.title}'`,
                 });

@@ -15,8 +15,9 @@ import {
  } from '@/lib/api'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
-import { Trash } from 'lucide-react'
+import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
+import { useNavigate } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/my-recipes')({
     component: MyRecipes
@@ -34,6 +35,7 @@ function MyRecipes() {
                         <TableHead className="w-[100px]">Id</TableHead>
                         <TableHead>Title</TableHead>
                         <TableHead>Servings</TableHead>
+                        <TableHead>Edit</TableHead>
                         <TableHead>Delete</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -45,6 +47,9 @@ function MyRecipes() {
                             </TableCell>
                             <TableCell>{loadingCreateRecipe?.recipe.title}</TableCell>
                             <TableCell>{loadingCreateRecipe?.recipe.servings}</TableCell>
+                            <TableCell>
+                                <Skeleton className='h-4'/>
+                            </TableCell>
                             <TableCell className='font-medium'>
                                 <Skeleton className="h-4"/>
                             </TableCell>
@@ -54,6 +59,7 @@ function MyRecipes() {
                     ? Array(3).fill(0).map((_, i) => (
                         <TableRow key={i}>
                             <TableCell className="font-medium"><Skeleton className="h-4"></Skeleton></TableCell>
+                            <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
@@ -69,6 +75,9 @@ function MyRecipes() {
                             </TableCell>
                             <TableCell>{recipe.servings}</TableCell>
                             <TableCell>
+                                <RecipeEditButton id={recipe.id}/>
+                            </TableCell>
+                            <TableCell>
                                 <RecipeDeleteButton id={recipe.id}/>
                             </TableCell>
                         </TableRow>
@@ -76,6 +85,22 @@ function MyRecipes() {
                 </TableBody>
             </Table>
         </div>
+    )
+}
+
+function RecipeEditButton({ id }: { id: number }) {
+    const navigate = useNavigate();
+    const handleEdit = () => {
+        navigate({
+            to: `/edit-recipe/$recipeId`,
+            params: { recipeId: id.toString() }
+        });
+    };
+
+    return (
+        <Button onClick={handleEdit}>
+            <Edit className="h-4 w-4"/>
+        </Button>
     )
 }
 
