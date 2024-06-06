@@ -6,7 +6,8 @@ import {
     type CreateIngredient, 
     type CreateRecipeIngredient,
     type EditIngredient,
-    type EditRecipe
+    type EditRecipe,
+    type EditRecipeIngredient
 } from '../../../server/sharedTypes'
 
 const client = hc<ApiRoutes>('/')
@@ -317,6 +318,25 @@ export function getRecipeIngredientsByRecipeIdQueryOptions(recipeId: string) {
     })
 }
 
+export async function getRecipesByIngredientName(name: string) {
+    const res = await api.recipeIngredients[`byIngredientName/:name`].$get({
+        param: { name: name },
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipesByIngredientNameQueryOptions(name: string) {
+    return queryOptions({
+        queryKey: ['get-recipes-by-ingredient-name', name],
+        queryFn: () => getRecipesByIngredientName(name),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
 export async function createRecipeIngredient({ value }: { value: CreateRecipeIngredient }) {
     console.log("value: ", value)
     const res = await api.recipeIngredients.$post({ json: value });
@@ -338,6 +358,37 @@ export const loadingCreateRecipeIngredientQueryOptions = queryOptions<{
     staleTime: Infinity,
 });
 
+export async function editRecipeIngredient({ id, value }: {id: string, value: EditRecipeIngredient }){
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await api.recipeIngredients[`:id{[0-9]+}`].$put({
+        param: { id: id },
+        json: value
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const updatedRecipeIngredient = await res.json();
+    return updatedRecipeIngredient;
+}
+
+export function editRecipeIngredientQueryOptions(id: string, value: EditRecipeIngredient ){
+    return queryOptions({
+        queryKey: ['edit-recipe-ingredient', id],
+        queryFn: () => editRecipeIngredient({ id, value }),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+export const loadingEditRecipeIngredientQueryOptions = queryOptions<{
+    recipeIngredient?: EditRecipeIngredient;
+}>({
+    queryKey: ['loading-edit-recipe-ingredient'],
+    queryFn: async () => {
+        return {};
+    },
+    staleTime: Infinity,
+})
+
 // export async function deleteRecipeIngredient({ id }: { id: number }) {
 //     await new Promise((r) => setTimeout(r, 3000));
 //     const res = await api.recipeIngredients[":id{[0-9]+}"].$delete({
@@ -347,25 +398,3 @@ export const loadingCreateRecipeIngredientQueryOptions = queryOptions<{
 //         throw new Error("server error");
 //     }
 // }
-
-
-
-
-export async function getRecipesByIngredientName(name: string) {
-    const res = await api.recipeIngredients[`byIngredientName/:name`].$get({
-        param: { name: name },
-    });
-    if (!res.ok) {
-        throw new Error("server error");
-    }
-    const data = await res.json();
-    return data;
-}
-
-export function getRecipesByIngredientNameQueryOptions(name: string) {
-    return queryOptions({
-        queryKey: ['get-recipes-by-ingredient-name', name],
-        queryFn: () => getRecipesByIngredientName(name),
-        staleTime: 1000 * 60 * 5,
-    })
-}
