@@ -4,7 +4,8 @@ import { getUser } from '../kinde'
 import { db } from '../db'
 import { 
     recipes as recipeTable,
-    insertRecipesSchema
+    insertRecipesSchema,
+    updateRecipesSchema
 } from '../db/schema/recipes'
 import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
 import { eq, desc, and } from 'drizzle-orm'
@@ -49,6 +50,34 @@ export const recipesRoute = new Hono()
             return c.notFound();
         }
         return c.json({recipe: recipe})
+    })
+    .put("/:id{[0-9]+}", getUser, zValidator("json", updateRecipesSchema), async (c) => {
+        const id = Number.parseInt(c.req.param("id"));
+        const user = c.var.user;
+        const { title, description, prepTime, cookTime, totalTime, servings, instructions, url } = await c.req.valid("json");
+        const prepTimeAsString = prepTime?.toString();
+        const cookTimeAsString = cookTime?.toString();
+        const totalTimeAsString = totalTime.toString();
+        const servingsAsString = servings.toString();
+        const recipe = await db
+            .update(recipeTable)
+            .set({ 
+                title, 
+                description,
+                prepTime: prepTimeAsString,
+                cookTime: cookTimeAsString,
+                totalTime: totalTimeAsString,
+                servings: servingsAsString,
+                instructions,
+                url 
+            })
+            .where(and(eq(recipeTable.userId, user.id), eq(recipeTable.id, id)))
+            .returning()
+            .then((res) => res[0]);
+        if (!recipe) {
+            return c.notFound();
+        }
+        return c.json({ recipe: recipe });
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"));

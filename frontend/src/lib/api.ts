@@ -5,7 +5,8 @@ import {
     type CreateRecipe,
     type CreateIngredient, 
     type CreateRecipeIngredient,
-    type EditIngredient
+    type EditIngredient,
+    type EditRecipe
 } from '../../../server/sharedTypes'
 
 const client = hc<ApiRoutes>('/')
@@ -84,6 +85,37 @@ export const loadingCreateRecipeQueryOptions = queryOptions<{
     },
     staleTime: Infinity,
 });
+
+export async function editRecipe({ id, value }: {id: string, value: EditRecipe }){
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await api.recipes[`:id{[0-9]+}`].$put({
+        param: { id: id },
+        json: value
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const updatedRecipe = await res.json();
+    return updatedRecipe;
+}
+
+export function editRecipeQueryOptions(id: string, value: EditRecipe){
+    return queryOptions({
+        queryKey: ['edit-recipe', id],
+        queryFn: () => editRecipe({ id, value }),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+export const loadingEditRecipeQueryOptions = queryOptions<{
+    recipe?: EditRecipe;
+}>({
+    queryKey: ['loading-edit-recipe'],
+    queryFn: async () => {
+        return {};
+    },
+    staleTime: Infinity,
+})
 
 export async function deleteRecipe({ id }: { id: number }) {
     await new Promise((r) => setTimeout(r, 3000));
