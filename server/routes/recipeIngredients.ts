@@ -4,7 +4,8 @@ import { getUser } from '../kinde'
 import { db } from '../db'
 import { 
     recipeIngredients as recipeIngredientTable,
-    insertRecipeIngredientsSchema
+    insertRecipeIngredientsSchema,
+    updateRecipeIngredientSchema
  } from '../db/schema/recipeIngredients'
 import { ingredients as ingredientTable } from '../db/schema/ingredients'
 import { recipes as recipeTable } from '../db/schema/recipes'
@@ -89,6 +90,27 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
             return c.notFound();
         }
         return c.json({ recipes: recipes });
+    })
+    .put("/:id{[0-9]+}", getUser, zValidator("json", updateRecipeIngredientSchema), async (c) => {
+        const id = Number.parseInt(c.req.param("id"));
+        const user = c.var.user;
+        const { recipeId, ingredientId, quantity, unit, details } = await c.req.valid("json");
+        const quantityAsString = quantity.toString();
+        const recipeIngredient = await db
+            .update(recipeIngredientTable)
+            .set({
+                ingredientId,
+                quantity: quantityAsString,
+                unit,
+                details
+            })
+            .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.id, id), eq(recipeIngredientTable.recipeId, recipeId)))
+            .returning()
+            .then((res) => res[0]);
+        if (!recipeIngredient) {
+            return c.notFound();
+        }
+        return c.json({ recipeIngredient: recipeIngredient });
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
         const id = Number.parseInt(c.req.param("id"));
