@@ -23,6 +23,7 @@ import { Route as AuthenticatedCreateRecipeImport } from './routes/_authenticate
 import { Route as AuthenticatedCreateIngredientImport } from './routes/_authenticated/create-ingredient'
 import { Route as AuthenticatedRecipeRecipeIdImport } from './routes/_authenticated/recipe.$recipeId'
 import { Route as AuthenticatedEditRecipeRecipeIdImport } from './routes/_authenticated/edit-recipe.$recipeId'
+import { Route as AuthenticatedEditRecipeIngredientRecipeIngredientIdImport } from './routes/_authenticated/edit-recipe-ingredient.$recipeIngredientId'
 import { Route as AuthenticatedEditIngredientIngredientIdImport } from './routes/_authenticated/edit-ingredient.$ingredientId'
 
 // Create/Update Routes
@@ -92,6 +93,12 @@ const AuthenticatedEditRecipeRecipeIdRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedEditRecipeIngredientRecipeIngredientIdRoute =
+  AuthenticatedEditRecipeIngredientRecipeIngredientIdImport.update({
+    path: '/edit-recipe-ingredient/$recipeIngredientId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedEditIngredientIngredientIdRoute =
   AuthenticatedEditIngredientIngredientIdImport.update({
     path: '/edit-ingredient/$ingredientId',
@@ -146,6 +153,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEditIngredientIngredientIdImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/edit-recipe-ingredient/$recipeIngredientId': {
+      preLoaderRoute: typeof AuthenticatedEditRecipeIngredientRecipeIngredientIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/edit-recipe/$recipeId': {
       preLoaderRoute: typeof AuthenticatedEditRecipeRecipeIdImport
       parentRoute: typeof AuthenticatedImport
@@ -170,6 +181,7 @@ export const routeTree = rootRoute.addChildren([
     AuthenticatedSearchResultsRoute,
     AuthenticatedIndexRoute,
     AuthenticatedEditIngredientIngredientIdRoute,
+    AuthenticatedEditRecipeIngredientRecipeIngredientIdRoute,
     AuthenticatedEditRecipeRecipeIdRoute,
     AuthenticatedRecipeRecipeIdRoute,
   ]),
