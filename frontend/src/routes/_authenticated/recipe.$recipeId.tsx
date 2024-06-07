@@ -1,6 +1,6 @@
 // import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { 
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
@@ -8,7 +8,8 @@ import {
  } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 
-interface Ingredient {
+type Ingredient = {
+    id: number,
     name: string,
     quantity: number,
     unit: string,
@@ -70,6 +71,10 @@ function RecipeDetails() {
                                     <li key={ingredient.name} className="ingredient-li">
                                         {ingredient.name} - {ingredient.quantity} {ingredient.unit}
                                         {ingredient.details && (<span> - {ingredient.details}</span>)}
+                                        <span> - </span>
+                                        <Link to="/edit-recipe-ingredient/$recipeIngredientId" params={{ recipeIngredientId: ingredient.id.toLocaleString() }}>
+                                            Edit
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>

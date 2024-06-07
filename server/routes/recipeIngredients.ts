@@ -67,7 +67,7 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
         const user = c.var.user;
         const recipeIngredients = await db
             .select({
-                id: ingredientTable.id,
+                id: recipeIngredientTable.id,
                 name: ingredientTable.name,
                 quantity: recipeIngredientTable.quantity,
                 unit: recipeIngredientTable.unit,
