@@ -44,8 +44,17 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
         const id = Number.parseInt(c.req.param("id"));
         const user = c.var.user;
         const recipeIngredient = await db
-            .select()
+            .select({
+                id: recipeIngredientTable.id,
+                recipeId: recipeIngredientTable.recipeId,
+                ingredientId: recipeIngredientTable.ingredientId,
+                name: ingredientTable.name,
+                quantity: recipeIngredientTable.quantity,
+                unit: recipeIngredientTable.unit,
+                details: recipeIngredientTable.details
+            })
             .from(recipeIngredientTable)
+            .fullJoin(ingredientTable, eq(recipeIngredientTable.ingredientId, ingredientTable.id))
             .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.id, id)))
             .then((res) => res[0]);
         if (!recipeIngredient) {
@@ -58,6 +67,7 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
         const user = c.var.user;
         const recipeIngredients = await db
             .select({
+                id: ingredientTable.id,
                 name: ingredientTable.name,
                 quantity: recipeIngredientTable.quantity,
                 unit: recipeIngredientTable.unit,
