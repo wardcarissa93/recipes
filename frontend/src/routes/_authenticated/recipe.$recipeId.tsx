@@ -1,12 +1,15 @@
 // import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { 
+    deleteRecipeIngredient,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
     // getIngredientById
  } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { Trash, Edit } from 'lucide-react';
+import { toast } from 'sonner';
 
 type Ingredient = {
     id: number,
@@ -72,9 +75,9 @@ function RecipeDetails() {
                                         {ingredient.name} - {ingredient.quantity} {ingredient.unit}
                                         {ingredient.details && (<span> - {ingredient.details}</span>)}
                                         <span> - </span>
-                                        <Link to="/edit-recipe-ingredient/$recipeIngredientId" params={{ recipeIngredientId: ingredient.id.toLocaleString() }}>
-                                            Edit
-                                        </Link>
+                                        <RecipeIngredientEditButton id={ingredient.id}/>
+                                        <span> - </span>
+                                        <RecipeIngredientDeleteButton id={ingredient.id} recipeId={recipeId} />
                                     </li>
                                 ))}
                             </ul>
@@ -91,4 +94,53 @@ function RecipeDetails() {
     );
 }
 
-export default RecipeDetails;
+function RecipeIngredientEditButton({ id }: { id: number }) {
+    const navigate = useNavigate();
+    const handleEdit = () => {
+        navigate({
+            to: "/edit-recipe-ingredient/$recipeIngredientId",
+            params: { recipeIngredientId: id.toString() }
+        });
+    };
+
+    return (
+        <Button onClick={handleEdit}>
+            <Edit className="h-4 w-4"/>
+        </Button>
+    )
+}
+
+function RecipeIngredientDeleteButton({ id, recipeId }: { id: number, recipeId: string }) {
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: deleteRecipeIngredient,
+        onError: () => {
+            toast("Error", {
+                description: `Failed to delete ingredient: ${id}`,
+            });
+        },
+        onSuccess: () => {
+            toast("Ingredient Deleted", {
+                description: `Successfully deleted ingredient: ${id}`,
+            })
+            queryClient.setQueryData(
+                getRecipeIngredientsByRecipeIdQueryOptions(recipeId).queryKey,
+                (existingRecipeIngredients) => ({
+                    ...existingRecipeIngredients,
+                    recipeIngredients: existingRecipeIngredients!.recipeIngredients.filter((e) => e.id !== id),
+                })
+            );
+        },
+    });
+
+    return (
+        <Button
+            disabled={mutation.isPending}
+            onClick={() => mutation.mutate({ id })}
+            variant="outline"
+            size="icon"
+        >
+            {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
+        </Button>
+    );
+}
