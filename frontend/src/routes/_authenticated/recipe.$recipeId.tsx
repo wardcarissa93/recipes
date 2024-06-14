@@ -85,13 +85,32 @@ function RecipeDetails() {
                     )}
                     <h3>Instructions: </h3>
                     <p>{recipe.instructions}</p>
-                    <Button variant="outline" size="icon" onClick={() => window.history.back()}>
-                        Back
-                    </Button>
+                    <div className="flex w-[500px] justify-around align-center">
+                        <Button variant="outline" size="icon" onClick={() => window.history.back()}>
+                            Back
+                        </Button>
+                        <RecipeEditButton id={recipe.id} />
+                    </div>
                 </div>
             )}
         </div>
     );
+}
+
+function RecipeEditButton({ id }: { id: number }) {
+    const navigate = useNavigate();
+    const handleEdit = () => {
+        navigate({
+            to: `/edit-recipe/$recipeId`,
+            params: { recipeId: id.toString() }
+        });
+    };
+
+    return (
+        <Button onClick={handleEdit}>
+            <p>Edit Recipe</p>
+        </Button>
+    )
 }
 
 function RecipeIngredientEditButton({ id }: { id: number }) {
