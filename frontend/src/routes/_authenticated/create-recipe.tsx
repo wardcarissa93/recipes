@@ -79,7 +79,9 @@ function CreateRecipe() {
                 const newRecipe = await createRecipe({ value: recipe });
                 const createdRecipeIngredients = [];
                 for (const ingredient of ingredients) {
+                    console.log("INGREDIENT NAME: ", ingredient.name)
                     const ingredientId = await getIngredientIdByName(ingredient.name);
+                    console.log("INGREDIENT ID: ", ingredientId)
                     const newRecipeIngredient = await createRecipeIngredient({ value: {
                         quantity: ingredient.quantity,
                         unit: ingredient.unit,
@@ -115,16 +117,26 @@ function CreateRecipe() {
         setIngredients(ingredients.filter((ingredient) => ingredient.name !== ingredientToRemove));
     };
 
+    // const handleIngredientChange = (index: number, field: string, value: any) => {
+    //     console.log("index: ", index)
+    //     console.log("field: ", field)
+    //     console.log("value: ", value)
+    //     const updatedIngredients = ingredients.map((ingredient, i) => 
+    //         i === index ? { ...ingredient, [field]: value } : ingredient 
+    //     );
+    //     console.log("updatedIngredients: ", updatedIngredients)
+    //     setIngredients(updatedIngredients);
+    // };
+
     const handleIngredientChange = (index: number, field: string, value: any) => {
-        console.log("index: ", index)
-        console.log("field: ", field)
-        console.log("value: ", value)
-        const updatedIngredients = ingredients.map((ingredient, i) => 
-            i === index ? { ...ingredient, [field]: value } : ingredient 
-        );
-        console.log("updatedIngredients: ", updatedIngredients)
-        setIngredients(updatedIngredients);
-    };
+        setIngredients((prevIngredients) => {
+            const updatedIngredients = prevIngredients.map((ingredient, i) => 
+                i === index ? { ...ingredient, [field]: value } : ingredient 
+            );
+            console.log("updatedIngredients: ", updatedIngredients);
+            return updatedIngredients;
+        });
+    };    
 
     return (
         <div className="p-2">
