@@ -22,7 +22,7 @@ type Ingredient = {
     quantity: number;
     unit: string;
     details: '';
-    [key: string]: any;
+    // [key: string]: any;
 };
 
 export const Route = createFileRoute('/_authenticated/create-recipe')({
@@ -40,7 +40,8 @@ function CreateRecipe() {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
-    }, [data]);
+        console.log("INGREDIENTS: ", ingredients);
+    }, [data, ingredients]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -120,21 +121,25 @@ function CreateRecipe() {
         setIngredients([...ingredients, { name: '', quantity: 0, unit: '', details: '' }]);
     };
 
-    const removeIngredient = (ingredientToRemove: string) => {
-        console.log("ingredientToRemove: ", ingredientToRemove)
-        setIngredients(ingredients.filter((ingredient) => ingredient.name !== ingredientToRemove));
+    const removeIngredient = (indexToRemove: number) => {
+        console.log("indexToRemove: ", indexToRemove);
+        const remainingIngredients = ingredients.filter((_, index) => index !== indexToRemove);
+        console.log("remainingIngredients: ", remainingIngredients);
+        setIngredients(remainingIngredients);
+        form.setFieldValue('ingredients', remainingIngredients);
     };
 
-    // const handleIngredientChange = (index: number, field: string, value: any) => {
-    //     console.log("index: ", index)
-    //     console.log("field: ", field)
-    //     console.log("value: ", value)
-    //     const updatedIngredients = ingredients.map((ingredient, i) => 
-    //         i === index ? { ...ingredient, [field]: value } : ingredient 
-    //     );
-    //     console.log("updatedIngredients: ", updatedIngredients)
-    //     setIngredients(updatedIngredients);
-    // };
+    const handleIngredientChange = (index: number, field: string, value: any) => {
+        console.log("index: ", index)
+        console.log("field: ", field)
+        console.log("value: ", value)
+        const updatedIngredients = ingredients.map((ingredient, i) => 
+            i === index ? { ...ingredient, [field]: value } : ingredient 
+        );
+        console.log("updatedIngredients: ", updatedIngredients)
+        setIngredients(updatedIngredients);
+        form.setFieldValue('ingredients', updatedIngredients);
+    };
 
     // const handleIngredientChange = (index: number, field: string, value: any) => {
     //     setIngredients((prevIngredients) => {
@@ -443,9 +448,12 @@ function CreateRecipe() {
                                     <select
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value}
+                                        value={ingredient.name}
                                         onBlur={field.handleBlur}
-                                        onChange={(e) => field.handleChange(e.target.value)}
+                                        onChange={(e) => {
+                                            field.handleChange(e.target.value)
+                                            handleIngredientChange(index, 'name', e.target.value)
+                                        }}
                                         className="ingredient-name"
                                     >
                                         <option value="">Select Ingredient</option>
@@ -467,10 +475,13 @@ function CreateRecipe() {
                                     <Input
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value ?? ''}
+                                        value={ingredient.quantity}
                                         onBlur={field.handleBlur}
                                         type="number"
-                                        onChange={(e) => field.handleChange(Number(e.target.value))}
+                                        onChange={(e) => {
+                                            field.handleChange(Number(e.target.value))
+                                            handleIngredientChange(index, 'quantity', Number(e.target.value))
+                                        }}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -486,9 +497,12 @@ function CreateRecipe() {
                                     <Input
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value ?? ''}
+                                        value={ingredient.unit}
                                         onBlur={field.handleBlur}
-                                        onChange={(e) => field.handleChange(e.target.value)}
+                                        onChange={(e) => {
+                                            field.handleChange(e.target.value)
+                                            handleIngredientChange(index, 'unit', e.target.value)
+                                        }}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -504,9 +518,12 @@ function CreateRecipe() {
                                     <Input
                                         id={field.name}
                                         name={field.name}
-                                        value={field.state.value ?? ''}
+                                        value={ingredient.details}
                                         onBlur={field.handleBlur}
-                                        onChange={(e) => field.handleChange(e.target.value)}
+                                        onChange={(e) => {
+                                            field.handleChange(e.target.value)
+                                            handleIngredientChange(index, 'details', e.target.value)
+                                        }}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -517,7 +534,7 @@ function CreateRecipe() {
                         {ingredients.length > 1 && (
                             <Button
                                 type="button"
-                                onClick={() => removeIngredient(ingredient.name)}
+                                onClick={() => removeIngredient(index)}
                                 className="mb-4"
                             >
                                 Remove
