@@ -6,6 +6,8 @@ import {
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
     // getIngredientById
+    deleteRecipe,
+    getAllRecipesQueryOptions
  } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Trash, Edit } from 'lucide-react';
@@ -90,6 +92,7 @@ function RecipeDetails() {
                             Back
                         </Button>
                         <RecipeEditButton id={recipe.id} />
+                        <RecipeDeleteButton id={recipe.id} />
                     </div>
                 </div>
             )}
@@ -107,10 +110,48 @@ function RecipeEditButton({ id }: { id: number }) {
     };
 
     return (
-        <Button onClick={handleEdit}>
+        <Button 
+            onClick={handleEdit}
+            variant="outline"
+        >
             <p>Edit Recipe</p>
         </Button>
     )
+}
+
+function RecipeDeleteButton({ id }: { id: number }) {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: deleteRecipe,
+        onError: () => {
+            toast("Error", {
+                description: `Failed to delete recipe: ${id}`,
+            });
+        },
+        onSuccess: () => {
+            toast("Recipe Deleted", {
+                description: `Successfully deleted recipe: ${id}`,
+            })
+            queryClient.setQueryData(
+                getAllRecipesQueryOptions.queryKey,
+                (existingRecipes) => ({
+                    ...existingRecipes,
+                    recipes: existingRecipes!.recipes.filter((e) => e.id !== id),
+                })
+            );
+            navigate({to: '/my-recipes'});
+        },
+    });
+
+    return (
+        <Button
+            onClick={() => mutation.mutate({ id })}
+            variant="outline"
+        >
+            {mutation.isPending ? "..." : <p>Delete Recipe</p>}
+        </Button>
+    );
 }
 
 function RecipeIngredientEditButton({ id }: { id: number }) {
@@ -123,7 +164,11 @@ function RecipeIngredientEditButton({ id }: { id: number }) {
     };
 
     return (
-        <Button onClick={handleEdit}>
+        <Button 
+            onClick={handleEdit}
+            variant="outline"
+            size="icon"
+        >
             <Edit className="h-4 w-4"/>
         </Button>
     )

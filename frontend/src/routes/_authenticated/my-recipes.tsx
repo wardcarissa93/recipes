@@ -98,7 +98,11 @@ function RecipeEditButton({ id }: { id: number }) {
     };
 
     return (
-        <Button onClick={handleEdit}>
+        <Button 
+            onClick={handleEdit}
+            variant="outline"
+            size="icon"
+        >
             <Edit className="h-4 w-4"/>
         </Button>
     )
