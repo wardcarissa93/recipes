@@ -17,6 +17,13 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
 import { useState, useEffect } from 'react';
 
+type Ingredient = {
+    name: string;
+    quantity: number;
+    unit: string;
+    details: '';
+};
+
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
 });
@@ -24,7 +31,7 @@ export const Route = createFileRoute('/_authenticated/create-recipe')({
 function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const [ingredients, setIngredients] = useState([{ name: '', quantity: 0, unit: '', details: null }]);
+    const [ingredients, setIngredients] = useState<Ingredient[]>([{ name: '', quantity: 0, unit: '', details: '' }]);
     const [ingredientList, setIngredientList] = useState(['']);
     const { data } = useQuery(getAllIngredientsQueryOptions);
 
@@ -32,7 +39,7 @@ function CreateRecipe() {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
-    }, [data]);
+    }, [data, ingredients]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -48,7 +55,6 @@ function CreateRecipe() {
             ingredients: ingredients
         },
         onSubmit: async ({ value }) => {
-            console.log("onSubmit value: ", value);
             const existingRecipes = await queryClient.ensureQueryData(
                 getAllRecipesQueryOptions
             );
@@ -70,8 +76,6 @@ function CreateRecipe() {
                 unit: ingredient.unit,
                 details: ingredient.details
             }));
-            console.log("recipe: ", recipe);
-            console.log("ingredients: ", ingredients);
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });
             
@@ -107,23 +111,21 @@ function CreateRecipe() {
     });
 
     const addIngredient = () => {
-        setIngredients([...ingredients, { name: '', quantity: 0, unit: '', details: null }]);
+        setIngredients([...ingredients, { name: '', quantity: 0, unit: '', details: '' }]);
     };
 
-    const removeIngredient = (ingredientToRemove: string) => {
-        console.log("ingredientToRemove: ", ingredientToRemove)
-        setIngredients(ingredients.filter((ingredient) => ingredient.name !== ingredientToRemove));
+    const removeIngredient = (indexToRemove: number) => {
+        const remainingIngredients = ingredients.filter((_, index) => index !== indexToRemove);
+        setIngredients(remainingIngredients);
+        form.setFieldValue('ingredients', remainingIngredients);
     };
 
     const handleIngredientChange = (index: number, field: string, value: any) => {
-        console.log("index: ", index)
-        console.log("field: ", field)
-        console.log("value: ", value)
         const updatedIngredients = ingredients.map((ingredient, i) => 
             i === index ? { ...ingredient, [field]: value } : ingredient 
         );
-        console.log("updatedIngredients: ", updatedIngredients)
         setIngredients(updatedIngredients);
+        form.setFieldValue('ingredients', updatedIngredients);
     };
 
     return (
@@ -309,7 +311,6 @@ function CreateRecipe() {
                         </>
                     ))}
                 />
-                <h3>Ingredients</h3>
                 {ingredients.map((ingredient, index) => (
                     <div key={index} className="flex gap-4 ingredient-input">
                         <form.Field 
@@ -322,7 +323,10 @@ function CreateRecipe() {
                                         name={field.name}
                                         value={ingredient.name}
                                         onBlur={field.handleBlur}
-                                        onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
+                                        onChange={(e) => {
+                                            field.handleChange(e.target.value)
+                                            handleIngredientChange(index, 'name', e.target.value)
+                                        }}
                                         className="ingredient-name"
                                     >
                                         <option value="">Select Ingredient</option>
@@ -348,6 +352,7 @@ function CreateRecipe() {
                                         onBlur={field.handleBlur}
                                         type="number"
                                         onChange={(e) => {
+                                            field.handleChange(Number(e.target.value))
                                             handleIngredientChange(index, 'quantity', Number(e.target.value))
                                         }}
                                     />
@@ -367,7 +372,10 @@ function CreateRecipe() {
                                         name={field.name}
                                         value={ingredient.unit}
                                         onBlur={field.handleBlur}
-                                        onChange={(e) => handleIngredientChange(index, 'unit', e.target.value)}
+                                        onChange={(e) => {
+                                            field.handleChange(e.target.value)
+                                            handleIngredientChange(index, 'unit', e.target.value)
+                                        }}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -385,7 +393,10 @@ function CreateRecipe() {
                                         name={field.name}
                                         value={ingredient.details}
                                         onBlur={field.handleBlur}
-                                        onChange={(e) => handleIngredientChange(index, 'details', e.target.value)}
+                                        onChange={(e) => {
+                                            field.handleChange(e.target.value)
+                                            handleIngredientChange(index, 'details', e.target.value)
+                                        }}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -396,7 +407,7 @@ function CreateRecipe() {
                         {ingredients.length > 1 && (
                             <Button
                                 type="button"
-                                onClick={() => removeIngredient(ingredient.name)}
+                                onClick={() => removeIngredient(index)}
                                 className="mb-4"
                             >
                                 Remove
