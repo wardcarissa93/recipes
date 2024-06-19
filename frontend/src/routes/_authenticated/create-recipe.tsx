@@ -39,6 +39,7 @@ function CreateRecipe() {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
+        console.log("INGREDIENTS: ", ingredients);
     }, [data, ingredients]);
 
     const form = useForm({
@@ -360,7 +361,10 @@ function CreateRecipe() {
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                     />
                                     <select
-                                        value=""
+                                        id={field.name}
+                                        name={field.name}
+                                        value={ingredient.name}
+                                        onBlur={field.handleBlur}
                                         onChange={(e) => {
                                             const selectedIngredient = e.target.value;
                                             if (selectedIngredient) {

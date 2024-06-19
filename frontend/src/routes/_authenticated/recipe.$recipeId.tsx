@@ -68,22 +68,26 @@ function RecipeDetails() {
                     <h1 className="text-2xl font-bold">{recipe.title}</h1>
                     <p>Servings: {recipe.servings}</p>
                     <p>Total Time: {recipe.totalTime}</p>
-                    {(!ingredientsPending) && (
+                    {(ingredientsPending) ? (
                         <div>
-                            <h3>Ingredients:</h3>
-                            <ul>
-                                {ingredients.map((ingredient: Ingredient) => (
-                                    <li key={ingredient.name} className="ingredient-li">
-                                        {ingredient.name} - {ingredient.quantity} {ingredient.unit}
-                                        {ingredient.details && (<span> - {ingredient.details}</span>)}
-                                        <span> - </span>
-                                        <RecipeIngredientEditButton id={ingredient.id}/>
-                                        <span> - </span>
-                                        <RecipeIngredientDeleteButton id={ingredient.id} recipeId={recipeId} />
-                                    </li>
-                                ))}
-                            </ul>
+                            <p>Ingredients loading...</p>
                         </div>
+                    ) : (
+                        <div>
+                        <h3>Ingredients:</h3>
+                        <ul>
+                            {ingredients.map((ingredient: Ingredient) => (
+                                <li key={ingredient.name} className="ingredient-li">
+                                    {ingredient.name} - {ingredient.quantity} {ingredient.unit}
+                                    {ingredient.details && (<span> - {ingredient.details}</span>)}
+                                    <span> - </span>
+                                    <RecipeIngredientEditButton id={ingredient.id}/>
+                                    <span> - </span>
+                                    <RecipeIngredientDeleteButton id={ingredient.id} recipeId={recipeId} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     )}
                     <h3>Instructions: </h3>
                     <p>{recipe.instructions}</p>
