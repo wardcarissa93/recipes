@@ -39,6 +39,7 @@ function CreateRecipe() {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
+        console.log("INGREDIENTS: ", ingredients);
     }, [data, ingredients]);
 
     const form = useForm({
@@ -128,8 +129,24 @@ function CreateRecipe() {
         form.setFieldValue('ingredients', updatedIngredients);
     };
 
+
+    // State for search query and filtered ingredient list
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredIngredients, setFilteredIngredients] = useState<string[]>(ingredientList);
+
+    // Filter ingredients based on search query
+    useEffect(() => {
+        if (searchQuery.trim() === '') {
+            setFilteredIngredients(ingredientList);
+        } else {
+            const filtered = ingredientList.filter(ingredient => ingredient.toLowerCase().includes(searchQuery.toLowerCase()));
+            setFilteredIngredients(filtered);
+        }
+    }, [searchQuery, ingredientList]);
+
+
     return (
-        <div className="p-2">
+        <div className="p-1">
             <h2>Create Recipe</h2>
             <form 
                 className='m-auto'
@@ -317,7 +334,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].name`}
                             children={((field) => (
                                 <>
-                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    {/* <Label htmlFor={field.name}>Ingredient Name</Label>
                                     <select
                                         id={field.name}
                                         name={field.name}
@@ -336,7 +353,33 @@ function CreateRecipe() {
                                     </select>
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
-                                    ) : null}
+                                    ) : null} */}
+                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    <Input 
+                                        placeholder="Search for ingredient..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    <select
+                                        id={field.name}
+                                        name={field.name}
+                                        value={ingredient.name}
+                                        onBlur={field.handleBlur}
+                                        onChange={(e) => {
+                                            const selectedIngredient = e.target.value;
+                                            if (selectedIngredient) {
+                                                handleIngredientChange(index, 'name', selectedIngredient);
+                                            }
+                                        }}
+                                        className="ingredient-name"
+                                    >
+                                        <option value="" disabled hidden>
+                                            Select Ingredient
+                                        </option>
+                                        {filteredIngredients.map((ingredient, i) => (
+                                            <option key={i} value={ingredient}>{ingredient}</option>
+                                        ))}
+                                    </select>
                                 </>
                             ))}
                         />

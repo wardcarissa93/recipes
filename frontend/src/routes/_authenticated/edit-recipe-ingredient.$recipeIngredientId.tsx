@@ -71,20 +71,47 @@ function EditRecipeIngredient() {
                     unit: fetchedRecipeIngredient.recipeIngredient.unit,
                     details: fetchedRecipeIngredient.recipeIngredient.details
                 });
-                if (oldRecipeIngredient.recipeId) {
-                    const fetchedRecipe: FetchedRecipe = await getRecipeById(oldRecipeIngredient.recipeId.toString());
-                    setRecipeTitle(fetchedRecipe.recipe.title);
-                }
             } catch (error) {
                 console.error("Error fetching recipe's ingredient: ", error);
             }
         };
 
         fetchRecipeIngredient();
+    }, [recipeIngredientId]);
+
+    useEffect(() => {
+        if (oldRecipeIngredient.recipeId) {
+            const fetchRecipe = async () => {
+                try {
+                    const fetchedRecipe: FetchedRecipe = await getRecipeById(oldRecipeIngredient.recipeId.toString());
+                    setRecipeTitle(fetchedRecipe.recipe.title);
+                } catch (error) {
+                    console.error("Error fetching recipe: ", error);
+                }
+            };
+            fetchRecipe();
+        }
+    }, [oldRecipeIngredient.recipeId])
+
+    useEffect(() => {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
-    }, [recipeIngredientId, data, oldRecipeIngredient.recipeId]);
+    }, [data]);
+
+    // State for search query and filtered ingredient list
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredIngredients, setFilteredIngredients] = useState<string[]>(ingredientList);
+
+    // Filter ingredients based on search query
+    useEffect(() => {
+        if (searchQuery.trim() === '') {
+            setFilteredIngredients(ingredientList);
+        } else {
+            const filtered = ingredientList.filter(ingredient => ingredient.toLowerCase().includes(searchQuery.toLowerCase()));
+            setFilteredIngredients(filtered);
+        }
+    }, [searchQuery, ingredientList]);
 
     console.log("oldRecipeIngredient: ", oldRecipeIngredient)
 
@@ -150,7 +177,40 @@ function EditRecipeIngredient() {
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Ingredient Name</Label>
+                            <Input 
+                                placeholder="Search for ingredient..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                             <select
+                                id={field.name}
+                                name={field.name}
+                                value={field.state.value}
+                                onBlur={field.handleBlur}
+                                onChange={(e) => {
+                                    const selectedIngredient = e.target.value;
+                                    console.log("selectedIngredient: ", selectedIngredient)
+                                    if (selectedIngredient) {
+                                        field.handleChange(selectedIngredient);
+                                    }
+                                    setOldRecipeIngredient(prevState => ({
+                                        ...prevState,
+                                        name: selectedIngredient
+                                    }));
+                                }}
+                                className="ingredient-name"
+                            >
+                                <option value="" disabled hidden>
+                                    Select Ingredient
+                                </option>
+                                {filteredIngredients.map((ingredient, i) => (
+                                    <option key={i} value={ingredient}>{ingredient}</option>
+                                ))}
+                            </select>
+                            {field.state.meta.touchedErrors ? (
+                                <em>{field.state.meta.touchedErrors}</em>
+                            ) : null}
+                            {/* <select
                                 id={field.name}
                                 name={field.name}
                                 value={field.state.value}
@@ -165,7 +225,7 @@ function EditRecipeIngredient() {
                             </select>
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
+                            ) : null} */}
                         </>
                     ))}
                 />

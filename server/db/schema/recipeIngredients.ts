@@ -23,7 +23,7 @@ export const insertRecipeIngredientsSchema = createInsertSchema(recipeIngredient
     ingredientId: z.number(),
     quantity: z.number(),
     unit: z.string(),
-    details: z.string()
+    details: z.string().nullable()
 });
 
 export const selectRecipeIngredientsSchema = createSelectSchema(recipeIngredients);
@@ -33,5 +33,5 @@ export const updateRecipeIngredientSchema = z.object({
     ingredientId: z.number(),
     quantity: z.number(),
     unit: z.string(),
-    details: z.string().optional()
+    details: z.string().nullable()
 })
