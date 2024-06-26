@@ -45,8 +45,7 @@ function CreateRecipe() {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
-        console.log("INGREDIENTS: ", ingredients);
-    }, [data, ingredients]);
+    }, [data]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
