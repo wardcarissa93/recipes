@@ -16,12 +16,18 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
 import { useState, useEffect } from 'react';
+import Select from 'react-select';
 
 type Ingredient = {
     name: string;
     quantity: number;
     unit: string;
     details: '';
+};
+
+type IngredientOption = {
+    label: string;
+    value: string;
 };
 
 export const Route = createFileRoute('/_authenticated/create-recipe')({
@@ -39,8 +45,7 @@ function CreateRecipe() {
         if (data) {
             setIngredientList(data.ingredients.map(ingredient => ingredient.name));
         }
-        console.log("INGREDIENTS: ", ingredients);
-    }, [data, ingredients]);
+    }, [data]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -130,20 +135,24 @@ function CreateRecipe() {
     };
 
 
-    // State for search query and filtered ingredient list
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredIngredients, setFilteredIngredients] = useState<string[]>(ingredientList);
+    // // State for search query and filtered ingredient list
+    // const [searchQuery, setSearchQuery] = useState('');
+    // const [filteredIngredients, setFilteredIngredients] = useState<string[]>(ingredientList);
 
-    // Filter ingredients based on search query
-    useEffect(() => {
-        if (searchQuery.trim() === '') {
-            setFilteredIngredients(ingredientList);
-        } else {
-            const filtered = ingredientList.filter(ingredient => ingredient.toLowerCase().includes(searchQuery.toLowerCase()));
-            setFilteredIngredients(filtered);
-        }
-    }, [searchQuery, ingredientList]);
+    // // Filter ingredients based on search query
+    // useEffect(() => {
+    //     if (searchQuery.trim() === '') {
+    //         setFilteredIngredients(ingredientList);
+    //     } else {
+    //         const filtered = ingredientList.filter(ingredient => ingredient.toLowerCase().includes(searchQuery.toLowerCase()));
+    //         setFilteredIngredients(filtered);
+    //     }
+    // }, [searchQuery, ingredientList]);
 
+    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
+        label: ingredient,
+        value: ingredient,
+    }));
 
     return (
         <div className="p-1">
@@ -333,9 +342,9 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].name`}
                             children={((field) => (
-                                <>
-                                    {/* <Label htmlFor={field.name}>Ingredient Name</Label>
-                                    <select
+                                <div className="flex-col">
+                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    {/* <select
                                         id={field.name}
                                         name={field.name}
                                         value={ingredient.name}
@@ -350,11 +359,22 @@ function CreateRecipe() {
                                         {ingredientList.map((ingredient, i) => (
                                             <option key={i} value={ingredient}>{ingredient}</option>
                                         ))}
-                                    </select>
+                                    </select> */}
+                                    <Select<IngredientOption>
+                                        options={ingredientOptions}
+                                        value={ingredientOptions.find(option => option.value === ingredient.name)}
+                                        onChange={(selectedOption) => {
+                                            if (selectedOption) {
+                                                handleIngredientChange(index, 'name', selectedOption.value);
+                                            }
+                                        }}
+                                        placeholder="Select Ingredient"
+                                        className="ingredient-name"
+                                    />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
-                                    ) : null} */}
-                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    ) : null}
+                                    {/* <Label htmlFor={field.name}>Ingredient Name</Label>
                                     <Input 
                                         placeholder="Search for ingredient..."
                                         value={searchQuery}
@@ -379,14 +399,14 @@ function CreateRecipe() {
                                         {filteredIngredients.map((ingredient, i) => (
                                             <option key={i} value={ingredient}>{ingredient}</option>
                                         ))}
-                                    </select>
-                                </>
+                                    </select> */}
+                                </div>
                             ))}
                         />
                         <form.Field 
                             name={`ingredients[${index}].quantity`}
                             children={((field) => (
-                                <>
+                                <div className="flex-col">
                                     <Label htmlFor={field.name}>Quantity</Label>
                                     <Input
                                         id={field.name}
@@ -402,13 +422,13 @@ function CreateRecipe() {
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
                                     ) : null}
-                                </>
+                                </div>
                             ))}
                         />
                         <form.Field 
                             name={`ingredients[${index}].unit`}
                             children={((field) => (
-                                <>
+                                <div className="flex-col">
                                     <Label htmlFor={field.name}>Unit</Label>
                                     <Input
                                         id={field.name}
@@ -423,13 +443,13 @@ function CreateRecipe() {
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
                                     ) : null}
-                                </>
+                                </div>
                             ))}
                         />
                         <form.Field 
                             name={`ingredients[${index}].details`}
                             children={((field) => (
-                                <>
+                                <div className="flex-col">
                                     <Label htmlFor={field.name}>Details</Label>
                                     <Input
                                         id={field.name}
@@ -444,7 +464,7 @@ function CreateRecipe() {
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
                                     ) : null}
-                                </>
+                                </div>
                             ))}
                         />
                         {ingredients.length > 1 && (
