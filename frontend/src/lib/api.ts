@@ -338,9 +338,7 @@ export function getRecipesByIngredientNameQueryOptions(name: string) {
 }
 
 export async function createRecipeIngredient({ value }: { value: CreateRecipeIngredient }) {
-    console.log("value: ", value)
     const res = await api.recipeIngredients.$post({ json: value });
-    console.log("res: ", res)
     if (!res.ok) {
         throw new Error("server error");
     }

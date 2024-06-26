@@ -59,15 +59,20 @@ function EditRecipeIngredient() {
         unit: '',
         details: ''
     });
-    const [ingredientList, setIngredientList] = useState(['']);
+
     const { data } = useQuery(getAllIngredientsQueryOptions);
+    const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
+    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
+        label: ingredient,
+        value: ingredient,
+    }));
+
     const [recipeTitle, setRecipeTitle] = useState('');
 
     useEffect(() => {
         const fetchRecipeIngredient = async () => {
             try {
                 const fetchedRecipeIngredient: FetchedRecipeIngredient = await getRecipeIngredientById(recipeIngredientId);
-                console.log("fetchedRecipeIngredient: ", fetchedRecipeIngredient)
                 setOldRecipeIngredient({
                     id: fetchedRecipeIngredient.recipeIngredient.id,
                     ingredientId: fetchedRecipeIngredient.recipeIngredient.ingredientId,
@@ -98,19 +103,6 @@ function EditRecipeIngredient() {
             fetchRecipe();
         }
     }, [oldRecipeIngredient.recipeId])
-
-    useEffect(() => {
-        if (data) {
-            setIngredientList(data.ingredients.map(ingredient => ingredient.name));
-        }
-    }, [data]);
-
-    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
-        label: ingredient,
-        value: ingredient,
-    }));
-
-    console.log("oldRecipeIngredient: ", oldRecipeIngredient)
 
     const form = useForm({
         validatorAdapter: zodValidator,

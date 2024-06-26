@@ -15,7 +15,7 @@ import {
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Select from 'react-select';
 
 type Ingredient = {
@@ -38,14 +38,14 @@ function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const [ingredients, setIngredients] = useState<Ingredient[]>([{ name: '', quantity: 0, unit: '', details: '' }]);
-    const [ingredientList, setIngredientList] = useState(['']);
+
     const { data } = useQuery(getAllIngredientsQueryOptions);
 
-    useEffect(() => {
-        if (data) {
-            setIngredientList(data.ingredients.map(ingredient => ingredient.name));
-        }
-    }, [data]);
+    const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
+    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
+        label: ingredient,
+        value: ingredient,
+    }));
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -133,11 +133,6 @@ function CreateRecipe() {
         setIngredients(updatedIngredients);
         form.setFieldValue('ingredients', updatedIngredients);
     };
-
-    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
-        label: ingredient,
-        value: ingredient,
-    }));
 
     return (
         <div className="p-1">

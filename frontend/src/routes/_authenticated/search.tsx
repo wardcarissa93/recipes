@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { getRecipesByIngredientName } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSearch } from '@/context/useSearch';
 
 export const Route = createFileRoute('/_authenticated/search')({
@@ -8,6 +9,7 @@ export const Route = createFileRoute('/_authenticated/search')({
 });
 
 function Search() {
+    const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     const { setResults } = useSearch();
