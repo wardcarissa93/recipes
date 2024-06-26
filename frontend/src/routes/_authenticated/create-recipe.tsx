@@ -134,21 +134,6 @@ function CreateRecipe() {
         form.setFieldValue('ingredients', updatedIngredients);
     };
 
-
-    // // State for search query and filtered ingredient list
-    // const [searchQuery, setSearchQuery] = useState('');
-    // const [filteredIngredients, setFilteredIngredients] = useState<string[]>(ingredientList);
-
-    // // Filter ingredients based on search query
-    // useEffect(() => {
-    //     if (searchQuery.trim() === '') {
-    //         setFilteredIngredients(ingredientList);
-    //     } else {
-    //         const filtered = ingredientList.filter(ingredient => ingredient.toLowerCase().includes(searchQuery.toLowerCase()));
-    //         setFilteredIngredients(filtered);
-    //     }
-    // }, [searchQuery, ingredientList]);
-
     const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
         label: ingredient,
         value: ingredient,
@@ -344,22 +329,6 @@ function CreateRecipe() {
                             children={((field) => (
                                 <div className="flex-col">
                                     <Label htmlFor={field.name}>Ingredient Name</Label>
-                                    {/* <select
-                                        id={field.name}
-                                        name={field.name}
-                                        value={ingredient.name}
-                                        onBlur={field.handleBlur}
-                                        onChange={(e) => {
-                                            field.handleChange(e.target.value)
-                                            handleIngredientChange(index, 'name', e.target.value)
-                                        }}
-                                        className="ingredient-name"
-                                    >
-                                        <option value="">Select Ingredient</option>
-                                        {ingredientList.map((ingredient, i) => (
-                                            <option key={i} value={ingredient}>{ingredient}</option>
-                                        ))}
-                                    </select> */}
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === ingredient.name)}
@@ -374,32 +343,6 @@ function CreateRecipe() {
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
                                     ) : null}
-                                    {/* <Label htmlFor={field.name}>Ingredient Name</Label>
-                                    <Input 
-                                        placeholder="Search for ingredient..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                    />
-                                    <select
-                                        id={field.name}
-                                        name={field.name}
-                                        value={ingredient.name}
-                                        onBlur={field.handleBlur}
-                                        onChange={(e) => {
-                                            const selectedIngredient = e.target.value;
-                                            if (selectedIngredient) {
-                                                handleIngredientChange(index, 'name', selectedIngredient);
-                                            }
-                                        }}
-                                        className="ingredient-name"
-                                    >
-                                        <option value="" disabled hidden>
-                                            Select Ingredient
-                                        </option>
-                                        {filteredIngredients.map((ingredient, i) => (
-                                            <option key={i} value={ingredient}>{ingredient}</option>
-                                        ))}
-                                    </select> */}
                                 </div>
                             ))}
                         />
