@@ -40,7 +40,6 @@ function CreateRecipe() {
     const [ingredients, setIngredients] = useState<Ingredient[]>([{ name: '', quantity: 0, unit: '', details: '' }]);
 
     const { data } = useQuery(getAllIngredientsQueryOptions);
-
     const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
     const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
         label: ingredient,

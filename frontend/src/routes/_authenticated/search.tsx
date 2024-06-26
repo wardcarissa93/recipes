@@ -1,18 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { getRecipesByIngredientName } from '@/lib/api';
-import { useQueryClient } from '@tanstack/react-query';
+import { 
+    getRecipesByIngredientName,
+    getAllIngredientsQueryOptions
+ } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query';
 import { useSearch } from '@/context/useSearch';
+
+type IngredientOption = {
+    label: string;
+    value: string;
+};
 
 export const Route = createFileRoute('/_authenticated/search')({
     component: Search
 });
 
 function Search() {
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     const { setResults } = useSearch();
+
+    const { data } = useQuery(getAllIngredientsQueryOptions);
+    const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
+    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
+        label: ingredient,
+        value: ingredient,
+    }));
+
+    console.log("ingredientOptions: ", ingredientOptions)
 
     const handleSearch = async () => {
         if (searchQuery.trim() !== '') {
