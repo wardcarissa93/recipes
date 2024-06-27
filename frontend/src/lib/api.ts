@@ -318,9 +318,10 @@ export function getRecipeIngredientsByRecipeIdQueryOptions(recipeId: string) {
     })
 }
 
-export async function getRecipesByIngredientName(name: string) {
-    const res = await api.recipeIngredients[`byIngredientName/:name`].$get({
-        param: { name: name },
+export async function getRecipesByIngredientName(names: string[]) {
+    const queryString = names.join(',');
+    const res = await api.recipeIngredients[`byIngredientName/:names`].$get({
+        param: { names: queryString },
     });
     if (!res.ok) {
         throw new Error("server error");
@@ -329,10 +330,10 @@ export async function getRecipesByIngredientName(name: string) {
     return data;
 }
 
-export function getRecipesByIngredientNameQueryOptions(name: string) {
+export function getRecipesByIngredientNameQueryOptions(names: string[]) {
     return queryOptions({
-        queryKey: ['get-recipes-by-ingredient-name', name],
-        queryFn: () => getRecipesByIngredientName(name),
+        queryKey: ['get-recipes-by-ingredient-name', names],
+        queryFn: () => getRecipesByIngredientName(names),
         staleTime: 1000 * 60 * 5,
     })
 }

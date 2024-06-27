@@ -18,8 +18,7 @@ export const Route = createFileRoute('/_authenticated/search')({
 });
 
 function Search() {
-    // const queryClient = useQueryClient();
-    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedIngredients, setSelectedIngredients] = useState<IngredientOption[]>([]);
     const navigate = useNavigate();
     const { setResults } = useSearch();
 
@@ -30,11 +29,9 @@ function Search() {
         value: ingredient,
     }));
 
-    console.log("ingredientOptions: ", ingredientOptions)
-
     const handleSearch = async () => {
-        if (searchQuery.trim() !== '') {
-            const results = await getRecipesByIngredientName(searchQuery.trim());
+        if (selectedIngredients.length > 0) {
+            const results = await getRecipesByIngredientName(selectedIngredients.map(ingredient => ingredient.value));
             setResults(results);
             navigate({ to: "/search-results" });
         }
@@ -43,30 +40,13 @@ function Search() {
     return (
         <div className="p-2 max-w-3xl m-auto">
             <div className="mb-4 flex-col">
-                <input 
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="p-2 border rounded w-full text-black" 
-                    placeholder="Search by ingredient name..."
-                />
                 <form>
                     <Select
                         defaultValue={[ingredientOptions[2], ingredientOptions[3]]}
                         isMulti
                         options={ingredientOptions}
-                        // value={ingredientOptions.find(option => option.value === field.state.value)}
-                        // onChange={(selectedOption) => {
-                        //     console.log("selected option: ", selectedOption)
-                        //     if (selectedOption) {
-                        //         field.handleChange(selectedOption.value);
-                        //     }
-                        // }}
-
-                        onChange={(value) => {
-                            console.log("VALUE:", value)
-                            return value
-                        }}
+                        value={selectedIngredients}
+                        onChange={(selectedOptions) => setSelectedIngredients(selectedOptions as IngredientOption[])}
                         className="ingredient-name"
                     />
                 </form>

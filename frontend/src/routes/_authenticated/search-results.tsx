@@ -9,7 +9,6 @@ export const Route = createFileRoute('/_authenticated/search-results')({
 
 function SearchResults() {
     const { results } = useSearch();
-    console.log("searchResults: ", results);
 
     if (!results) {
         return <div className="p-2 max-w-3xl m-auto">No search results found.</div>;
