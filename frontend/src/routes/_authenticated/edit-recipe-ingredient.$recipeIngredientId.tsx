@@ -59,15 +59,20 @@ function EditRecipeIngredient() {
         unit: '',
         details: ''
     });
-    const [ingredientList, setIngredientList] = useState(['']);
+
     const { data } = useQuery(getAllIngredientsQueryOptions);
+    const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
+    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
+        label: ingredient,
+        value: ingredient,
+    }));
+
     const [recipeTitle, setRecipeTitle] = useState('');
 
     useEffect(() => {
         const fetchRecipeIngredient = async () => {
             try {
                 const fetchedRecipeIngredient: FetchedRecipeIngredient = await getRecipeIngredientById(recipeIngredientId);
-                console.log("fetchedRecipeIngredient: ", fetchedRecipeIngredient)
                 setOldRecipeIngredient({
                     id: fetchedRecipeIngredient.recipeIngredient.id,
                     ingredientId: fetchedRecipeIngredient.recipeIngredient.ingredientId,
@@ -98,33 +103,6 @@ function EditRecipeIngredient() {
             fetchRecipe();
         }
     }, [oldRecipeIngredient.recipeId])
-
-    useEffect(() => {
-        if (data) {
-            setIngredientList(data.ingredients.map(ingredient => ingredient.name));
-        }
-    }, [data]);
-
-    // // State for search query and filtered ingredient list
-    // const [searchQuery, setSearchQuery] = useState('');
-    // const [filteredIngredients, setFilteredIngredients] = useState<string[]>(ingredientList);
-
-    // // Filter ingredients based on search query
-    // useEffect(() => {
-    //     if (searchQuery.trim() === '') {
-    //         setFilteredIngredients(ingredientList);
-    //     } else {
-    //         const filtered = ingredientList.filter(ingredient => ingredient.toLowerCase().includes(searchQuery.toLowerCase()));
-    //         setFilteredIngredients(filtered);
-    //     }
-    // }, [searchQuery, ingredientList]);
-
-    const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
-        label: ingredient,
-        value: ingredient,
-    }));
-
-    console.log("oldRecipeIngredient: ", oldRecipeIngredient)
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -200,55 +178,9 @@ function EditRecipeIngredient() {
                                         placeholder="Select Ingredient"
                                         className="ingredient-name"
                                     />
-                            {/* <Input 
-                                placeholder="Search for ingredient..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <select
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                onChange={(e) => {
-                                    const selectedIngredient = e.target.value;
-                                    console.log("selectedIngredient: ", selectedIngredient)
-                                    if (selectedIngredient) {
-                                        field.handleChange(selectedIngredient);
-                                    }
-                                    setOldRecipeIngredient(prevState => ({
-                                        ...prevState,
-                                        name: selectedIngredient
-                                    }));
-                                }}
-                                className="ingredient-name"
-                            >
-                                <option value="" disabled hidden>
-                                    Select Ingredient
-                                </option>
-                                {filteredIngredients.map((ingredient, i) => (
-                                    <option key={i} value={ingredient}>{ingredient}</option>
-                                ))}
-                            </select> */}
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                            {/* <select
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                onChange={(e) => field.handleChange(e.target.value)}
-                                className="ingredient-name"
-                            >
-                                <option value="">Select Ingredient</option>
-                                {ingredientList.map((ingredient, i) => (
-                                    <option key={i} value={ingredient}>{ingredient}</option>
-                                ))}
-                            </select>
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null} */}
                         </>
                     ))}
                 />

@@ -82,27 +82,8 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
         }
         return c.json({ recipeIngredients: recipeIngredients });
     })
-    // .get("byIngredientName/:name", getUser, async (c) => {
-    //     const ingredientName = c.req.param("name");
-    //     const user = c.var.user;
-    //     const recipes = await db
-    //         .select({
-    //             id: recipeTable.id,
-    //             title: recipeTable.title,
-    //             servings: recipeTable.servings
-    //         })
-    //         .from(ingredientTable)
-    //         .fullJoin(recipeIngredientTable, eq(ingredientTable.id, recipeIngredientTable.ingredientId))
-    //         .fullJoin(recipeTable, eq(recipeIngredientTable.recipeId, recipeTable.id))
-    //         .where(and(eq(recipeIngredientTable.userId, user.id), eq(ingredientTable.name, ingredientName)))
-    //         .then((res) => res);
-    //     if (!recipes) {
-    //         return c.notFound();
-    //     }
-    //     return c.json({ recipes: recipes });
-    // })
-    .get("/byIngredientName/:name", getUser, async (c) => {
-        const ingredientNames = c.req.param("name").split(",").map(name => name.trim());
+    .get("/byIngredientName/:names", getUser, async (c) => {
+        const ingredientNames = c.req.param("names").split(",").map(name => name.trim());
         const user = c.var.user;
         const recipes = await db
             .select({
