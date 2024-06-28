@@ -1,11 +1,10 @@
-// import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import DOMPurify from 'dompurify';
 import { 
     deleteRecipeIngredient,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
-    // getIngredientById
     deleteRecipe,
     getAllRecipesQueryOptions
  } from '@/lib/api';
@@ -32,31 +31,14 @@ function RecipeDetails() {
     const { isPending: ingredientsPending, error: ingredientsError, data: ingredientsData } = useQuery(getRecipeIngredientsByRecipeIdQueryOptions(recipeId));
 
     const recipe = recipeData?.recipe;
-    console.log("recipe: ", recipe);
+
+    let sanitizedInstructions = '';
+    if (recipe) {
+        const formattedInstructions = recipe.instructions.replace(/\n/g, '<br>');
+        sanitizedInstructions = DOMPurify.sanitize(formattedInstructions);
+    }
+
     const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;
-    console.log("ingredientsPending: ",ingredientsPending);
-    console.log("ingredients: ", ingredients);
-
-    // const [ingredientNames, setIngredientNames] = useState([]);
-    
-    // useEffect(() => {
-    //     const fetchIngredientNames = async () => {
-    //         if (ingredients) {
-    //             const names = await Promise.all(
-    //                 ingredients.map(async (ingredient) => {
-    //                     const { ingredient: ingredientData } = await getIngredientById(ingredient.ingredientId);
-    //                     return ingredientData.name;
-    //                 })
-    //             );
-    //             console.log("names: ", names);
-    //             setIngredientNames(names);
-    //         }
-    //     };
-    //     fetchIngredientNames();
-    // }, [ingredients]);
-
-    // console.log("ingredientNames: ", ingredientNames);
-    // console.log("ingredientNames[0]: ", ingredientNames[0]);
 
     if (recipeError) return 'An error has occurred: ' + recipeError.message;
     if (ingredientsError) return 'An error has occurred: ' + ingredientsError.message;
@@ -90,7 +72,7 @@ function RecipeDetails() {
                     </div>
                     )}
                     <h3>Instructions: </h3>
-                    <p>{recipe.instructions}</p>
+                    <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} />
                     <div className="flex w-[500px] justify-around align-center">
                         <Button variant="outline" size="icon" onClick={() => window.history.back()}>
                             Back
