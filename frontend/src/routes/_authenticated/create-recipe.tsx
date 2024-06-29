@@ -1,4 +1,3 @@
-import DOMPurify from 'dompurify';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +15,7 @@ import {
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
+import { sanitizeInput } from '../../utils/sanitizeInput';
 import { useState } from 'react';
 import Select from 'react-select';
 
@@ -34,10 +34,6 @@ type IngredientOption = {
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
 });
-
-function sanitizeInput(input: string): string {
-    return DOMPurify.sanitize(input);
-}
 
 function CreateRecipe() {
     const queryClient = useQueryClient();
