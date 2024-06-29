@@ -12,7 +12,8 @@ import {
     getAllRecipesQueryOptions,
     loadingCreateRecipeQueryOptions,
     deleteRecipe
- } from '@/lib/api'
+} from '@/lib/api'
+import DOMPurify from 'dompurify'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
@@ -70,7 +71,7 @@ function MyRecipes() {
                             <TableCell className="font-medium">{recipe.id}</TableCell>
                             <TableCell>
                                 <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
-                                    {recipe.title}
+                                    {DOMPurify.sanitize(recipe.title)}
                                 </Link>
                             </TableCell>
                             <TableCell>{recipe.servings}</TableCell>

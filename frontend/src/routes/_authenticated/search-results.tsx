@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSearch } from '@/context/useSearch';
 import { Link } from '@tanstack/react-router';
+import DOMPurify from 'dompurify';
 
 export const Route = createFileRoute('/_authenticated/search-results')({
     component: SearchResults
@@ -13,6 +14,11 @@ function SearchResults() {
     if (!results) {
         return <div className="p-2 max-w-3xl m-auto">No search results found.</div>;
     }
+
+    // Sanitize function using DOMPurify
+    const sanitizeHTML = (dirtyHTML: string) => {
+        return DOMPurify.sanitize(dirtyHTML);
+    };
 
     return (
         <div className="p-2 max-w-3xl m-auto">
@@ -30,7 +36,7 @@ function SearchResults() {
                         <TableRow key={recipe.id}>
                             <TableCell className="font-medium">{recipe.id}</TableCell>
                             <TableCell>
-                                <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
+                                <Link to={`/recipe/${recipe.id}`}>{sanitizeHTML(recipe.title)}</Link>
                             </TableCell>
                             <TableCell>{recipe.servings}</TableCell>
                         </TableRow>

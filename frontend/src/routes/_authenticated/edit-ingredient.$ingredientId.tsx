@@ -15,6 +15,7 @@ import {
     getIngredientByIdQueryOptions,
     loadingEditIngredientQueryOptions 
 } from '@/lib/api'
+import { sanitizeInput } from '../../utils/sanitizeInput'
 
 export const Route = createFileRoute('/_authenticated/edit-ingredient/$ingredientId')({
   component: EditIngredient
@@ -54,8 +55,7 @@ function EditIngredient() {
             name: ''
         },
         onSubmit: async ({ value }) => {
-            value.name = value.name.trim().toLowerCase();
-            console.log("value.name: ", value.name);
+            value.name = sanitizeInput(value.name.trim().toLowerCase());
             const existingIngredients = await queryClient.ensureQueryData(getAllIngredientsQueryOptions);
             queryClient.setQueryData(loadingEditIngredientQueryOptions.queryKey, {
                 ingredient: value,
