@@ -15,6 +15,7 @@ import {
     editRecipe,
     loadingEditRecipeQueryOptions
 } from '@/lib/api'
+import { sanitizeInput } from 'utils/sanitizeInput'
 
 type FetchedRecipe = {
     recipe: {
@@ -83,15 +84,21 @@ function EditRecipe() {
             url: oldRecipe.url
         },
         onSubmit: async ({ value }) => {
-            console.log("value being submitted: ", value)
             const existingRecipes = await queryClient.ensureQueryData(getAllRecipesQueryOptions);
-            
             queryClient.setQueryData(loadingEditRecipeQueryOptions.queryKey, {
                 recipe: value
             });
 
             try {
-                const updatedRecipe = await editRecipe({ id: recipeId, value });
+                const sanitizedValue = {
+                    ...value,
+                    title: sanitizeInput(value.title.trim()),
+                    description: sanitizeInput(value.description.trim()),
+                    instructions: sanitizeInput(value.instructions.trim()),
+                    url: sanitizeInput(value.url.trim())
+                };
+
+                const updatedRecipe = await editRecipe({ id: recipeId, value: sanitizedValue });
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: existingRecipes.recipes.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe: recipe)

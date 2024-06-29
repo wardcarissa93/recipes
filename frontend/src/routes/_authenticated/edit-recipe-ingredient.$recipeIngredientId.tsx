@@ -17,6 +17,7 @@ import {
     loadingEditRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
+import { sanitizeInput } from '../../utils/sanitizeInput'
 
 type FetchedRecipeIngredient = {
     recipeIngredient: {
@@ -121,8 +122,8 @@ function EditRecipeIngredient() {
                 ingredientId: ingredientId,
                 recipeId: oldRecipeIngredient.recipeId,
                 quantity: value.quantity,
-                unit: value.unit,
-                details: value.details
+                unit: sanitizeInput(value.unit.trim()),
+                details: sanitizeInput(value.details.trim())
             }
             queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {
                 recipeIngredient: recipeIngredientToEdit

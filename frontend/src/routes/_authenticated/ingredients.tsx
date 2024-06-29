@@ -18,15 +18,27 @@ import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
+import DOMPurify from 'dompurify';
 
 export const Route = createFileRoute('/_authenticated/ingredients')({
     component: Ingredients
 })
 
+type Ingredient = {
+    id: number,
+    name: string,
+}
+
 function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
     if (error) return 'An error has occurred: ' + error.message
+
+    const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
+        ...ingredient,
+        name: DOMPurify.sanitize(ingredient.name),
+    }));
+
     return (
         <div className="p-2 max-w-2xl m-auto">
             <Table>
@@ -62,7 +74,7 @@ function Ingredients() {
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     ))
-                    : data?.ingredients.map((ingredient) => (
+                    : sanitizedIngredients?.map((ingredient) => (
                         <TableRow key={ingredient.id}>
                             <TableCell className="font-medium">{ingredient.id}</TableCell>
                             <TableCell>{ingredient.name}</TableCell>
