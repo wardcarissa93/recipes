@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +35,10 @@ export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
 });
 
+function sanitizeInput(input: string): string {
+    return DOMPurify.sanitize(input);
+}
+
 function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -66,20 +71,20 @@ function CreateRecipe() {
             navigate({ to: "/my-recipes" });
 
             const recipe = {
-                title: value.title,
-                description: value.description,
+                title: sanitizeInput(value.title),
+                description: sanitizeInput(value.description),
                 prepTime: value.prepTime,
                 cookTime: value.cookTime,
                 totalTime: value.totalTime,
                 servings: value.servings,
-                instructions: value.instructions,
-                url: value.url
+                instructions: sanitizeInput(value.instructions),
+                url: sanitizeInput(value.url)
             };
             const ingredients = value.ingredients.map(ingredient => ({
-                name: ingredient.name,
+                name: sanitizeInput(ingredient.name),
                 quantity: ingredient.quantity,
-                unit: ingredient.unit,
-                details: ingredient.details
+                unit: sanitizeInput(ingredient.unit),
+                details: sanitizeInput(ingredient.details)
             }));
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });
@@ -282,12 +287,14 @@ function CreateRecipe() {
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Instructions</Label>
-                            <Input
+                            <textarea
                                 id={field.name}
                                 name={field.name}
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                rows={5}
+                                className="block w-full p-2 border rounded-md instructions-input"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
