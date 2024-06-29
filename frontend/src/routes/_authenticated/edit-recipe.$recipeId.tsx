@@ -265,12 +265,14 @@ function EditRecipe() {
                     children={((field) => (
                         <>
                             <Label htmlFor={field.name}>Instructions</Label>
-                            <Input 
+                            <textarea 
                                 id={field.name}
                                 name={field.name}
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                rows={5}
+                                className="block w-full p-2 border rounded-md instructions-input"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
