@@ -31,6 +31,7 @@ function RecipeDetails() {
     const { isPending: ingredientsPending, error: ingredientsError, data: ingredientsData } = useQuery(getRecipeIngredientsByRecipeIdQueryOptions(recipeId));
 
     const recipe = recipeData?.recipe;
+    const sanitizedTitle = recipe ? DOMPurify.sanitize(recipe.title) : '';
 
     let sanitizedInstructions = '';
     if (recipe) {
@@ -38,7 +39,15 @@ function RecipeDetails() {
         sanitizedInstructions = DOMPurify.sanitize(formattedInstructions);
     }
 
-    const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;
+    const sanitizedIngredients = ingredientsData?.recipeIngredients.map((ingredient: Ingredient) => ({
+        ...ingredient,
+        name: DOMPurify.sanitize(ingredient.name),
+        quantity: ingredient.quantity,
+        unit: DOMPurify.sanitize(ingredient.unit),
+        details: ingredient.details ? DOMPurify.sanitize(ingredient.details) : null
+    }));
+
+    // const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;
 
     if (recipeError) return 'An error has occurred: ' + recipeError.message;
     if (ingredientsError) return 'An error has occurred: ' + ingredientsError.message;
@@ -47,7 +56,7 @@ function RecipeDetails() {
         <div>
             {(!recipePending) && (
                 <div className="p-2 max-w-3xl m-auto">
-                    <h1 className="text-2xl font-bold">{recipe.title}</h1>
+                    <h1 className="text-2xl font-bold">{sanitizedTitle}</h1>
                     <p>Servings: {recipe.servings}</p>
                     <p>Total Time: {recipe.totalTime}</p>
                     {(ingredientsPending) ? (
@@ -58,7 +67,7 @@ function RecipeDetails() {
                         <div>
                         <h3>Ingredients:</h3>
                         <ul>
-                            {ingredients.map((ingredient: Ingredient) => (
+                            {sanitizedIngredients.map((ingredient: Ingredient) => (
                                 <li key={ingredient.name} className="ingredient-li">
                                     {ingredient.name} - {ingredient.quantity} {ingredient.unit}
                                     {ingredient.details && (<span> - {ingredient.details}</span>)}
