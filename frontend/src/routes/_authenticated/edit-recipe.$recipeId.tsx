@@ -15,7 +15,7 @@ import {
     editRecipe,
     loadingEditRecipeQueryOptions
 } from '@/lib/api'
-import { sanitizeInput } from 'utils/sanitizeInput'
+import { sanitizeInput } from '../../utils/sanitizeInput'
 
 type FetchedRecipe = {
     recipe: {
