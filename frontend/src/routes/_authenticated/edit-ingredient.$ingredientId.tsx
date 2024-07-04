@@ -51,7 +51,7 @@ function EditIngredient() {
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
-            name: ''
+            name: ingredientName
         },
         onSubmit: async ({ value }) => {
             value.name = sanitizeInput(value.name.trim().toLowerCase());
@@ -96,7 +96,7 @@ function EditIngredient() {
     
     return (
         <div className="p-2">
-            <h2>Edit Ingredient '{ingredientName}'</h2>
+            <h2 className="text-center p-4">Edit Ingredient '{ingredientName}'</h2>
                 <form
                     className="max-w-xl m-auto"
                     onSubmit={(e) => {
@@ -119,6 +119,7 @@ function EditIngredient() {
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
                                     onChange={(e) => field.handleChange(e.target.value)}
+                                    className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
                                     <em>{field.state.meta.touchedErrors}</em>
@@ -129,7 +130,7 @@ function EditIngredient() {
                     <form.Subscribe
                         selector={(state) => [state.canSubmit, state.isSubmitting]}
                         children={([canSubmit, isSubmitting]) => (
-                            <Button className="mt-4" type="submit" disabled={!canSubmit}>
+                            <Button className="mt-4 mx-auto flex" type="submit" disabled={!canSubmit}>
                                 {isSubmitting ? "..." : "Submit"}
                             </Button>
                         )}
