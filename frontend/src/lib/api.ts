@@ -259,6 +259,13 @@ export async function deleteIngredient({ id }: { id: number }) {
         param: { id: id.toString() },
     });
     if (!res.ok) {
+        const errorData: ErrorResponse = await res.json();
+        if (res.status === 409) {
+            if ('message' in errorData) {
+                throw new Error(errorData.message || 'Ingredient is being used in a recipe and cannot be deleted.')
+            } 
+            throw new Error('Ingredient is being used in a recipe and cannot be deleted.');
+        }
         throw new Error("server error");
     }
 }

@@ -116,7 +116,7 @@ function IngredientDeleteButton({ id }: { id: number }) {
         onError: (error) => {
             console.error('Error deleting ingredient:', error);
             toast("Error", {
-                description: `Failed to delete ingredient: ${id}`,
+                description: error.message || `Failed to delete ingredient: ${id}`,
             });
         },
         onSuccess: () => {

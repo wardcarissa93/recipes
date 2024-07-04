@@ -49,9 +49,15 @@ function CreateIngredient() {
                 });
                 navigate({ to: "/ingredients" });
             } catch (error) {
-                toast("Error", {
-                    description: `Ingredient is already in database`,
-                });
+                if (error.message) {
+                    toast("Error", {
+                        description: error.message
+                    })
+                } else {
+                    toast("Error", {
+                        description: "Error creating ingredient.",
+                    });
+                }
             } finally {
                 queryClient.setQueryData(loadingCreateIngredientQueryOptions.queryKey, {});
             }
