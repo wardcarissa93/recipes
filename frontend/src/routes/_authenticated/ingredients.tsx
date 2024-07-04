@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 import {
     getAllIngredientsQueryOptions,
     loadingCreateIngredientQueryOptions,
@@ -32,19 +33,35 @@ type Ingredient = {
 function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
+    const [isAscendingOrder, setIsAscendingOrder] = useState(true);
+
     if (error) return 'An error has occurred: ' + error.message
 
     const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
         ...ingredient,
         name: DOMPurify.sanitize(ingredient.name),
-    }));
+    })) || [];
+
+    const toggleSortOrder = () => {
+        setIsAscendingOrder(!isAscendingOrder);
+    };
+
+    const sortedIngredients = [...sanitizedIngredients].sort((a, b) => {
+        if (isAscendingOrder) {
+            return a.name.localeCompare(b.name);
+        } else {
+            return b.name.localeCompare(a.name);
+        }
+    });
 
     return (
         <div className="p-2 max-w-2xl m-auto">
+            <Button onClick={toggleSortOrder}>
+                {isAscendingOrder ? 'Sort Z-A' : 'Sort A-Z'}
+            </Button>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">Id</TableHead>
                         <TableHead>Ingredient</TableHead>
                         <TableHead>Edit</TableHead>
                         <TableHead>Delete</TableHead>
@@ -53,9 +70,6 @@ function Ingredients() {
                 <TableBody>
                     {loadingCreateIngredient?.ingredient && (
                         <TableRow>
-                            <TableCell className="font-medium">
-                                <Skeleton className="h-4"></Skeleton>
-                            </TableCell>
                             <TableCell>{loadingCreateIngredient?.ingredient.name}</TableCell>
                             <TableCell className="font-medium">
                                 <Skeleton className="h-4"></Skeleton>
@@ -68,15 +82,13 @@ function Ingredients() {
                     {isPending
                     ? Array(3).fill(0).map((_, i) => (
                         <TableRow key={i}>
-                            <TableCell className="font-medium"><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     ))
-                    : sanitizedIngredients?.map((ingredient) => (
+                    : sortedIngredients?.map((ingredient) => (
                         <TableRow key={ingredient.id}>
-                            <TableCell className="font-medium">{ingredient.id}</TableCell>
                             <TableCell>{ingredient.name}</TableCell>
                             <TableCell>
                                 <IngredientEditButton id={ingredient.id}/>

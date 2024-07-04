@@ -22,7 +22,7 @@ export const ingredientsRoute = new Hono()
             .select()
             .from(ingredientTable)
             .where(eq(ingredientTable.userId, user.id))
-            .orderBy(desc(ingredientTable.createdAt))
+            .orderBy(ingredientTable.name)
             .limit(100);
         return c.json({ ingredients: ingredients });
     })
