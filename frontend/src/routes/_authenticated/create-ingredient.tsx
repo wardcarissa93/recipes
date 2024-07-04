@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -21,13 +22,23 @@ export const Route = createFileRoute('/_authenticated/create-ingredient')({
 function CreateIngredient() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState('');
+
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
             name: ''
         },
         onSubmit: async ({ value }) => {
-            value.name = sanitizeInput(value.name.trim().toLowerCase());
+            const ingredientName = sanitizeInput(value.name.trim().toLowerCase());
+
+            if (!ingredientName) {
+                setErrorMessage("'Ingredient Name' is required");
+                setTimeout(() => {
+                    setErrorMessage('');
+                }, 3000);
+                return;
+            }
 
             const existingIngredients = await queryClient.ensureQueryData(
                 getAllIngredientsQueryOptions
@@ -81,7 +92,7 @@ function CreateIngredient() {
                     }}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Ingredient Name</Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-500">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -105,6 +116,7 @@ function CreateIngredient() {
                     )}
                 >
                 </form.Subscribe>
+                {errorMessage && <p className="text-yellow-500">{errorMessage}</p>}
             </form>
         </div>
     )
