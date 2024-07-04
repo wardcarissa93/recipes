@@ -102,11 +102,20 @@ export const ingredientsRoute = new Hono()
         return c.json({ ingredient: ingredient });
     })
     .delete("/:id{[0-9]+}", getUser, async (c) => {
-        const id = Number.parseInt(c.req.param("id"))
-        const user = c.var.user;
-        await db
-            .delete(recipeIngredientTable)
-            .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.ingredientId, id)));
+        const id = Number.parseInt(c.req.param("id"));
+        const user = c.var.user; 
+        // Check if the ingredient is being used in any recipes
+        const isUsed = await db
+            .select()
+            .from(recipeIngredientTable)
+            .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.ingredientId, id)))
+            .limit(1)
+            .then((res) => res.length > 0); 
+        if (isUsed) {
+            c.status(409);
+            return c.json({ message: "Ingredient is being used in a recipe and cannot be deleted." });
+        }
+        // Proceed with deletion if not used in any recipes
         const ingredient = await db
             .delete(ingredientTable)
             .where(and(eq(ingredientTable.userId, user.id), eq(ingredientTable.id, id)))

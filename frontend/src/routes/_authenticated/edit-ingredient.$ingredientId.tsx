@@ -33,7 +33,6 @@ function EditIngredient() {
     const navigate = useNavigate();
     const { ingredientId } = Route.useParams();
     const id = ingredientId;
-    console.log("ingredient id: ", id);
 
     const [ingredientName, setIngredientName] = useState('');
     useEffect(() => {
@@ -76,9 +75,15 @@ function EditIngredient() {
                 });
                 navigate({ to: "/ingredients" });
             } catch (error) {
-                toast("Error", {
-                    description: `Ingredient could not be updated.`
-                });
+                if (error.message) {
+                    toast("Error", {
+                        description: error.message
+                    })
+                } else {
+                    toast("Error", {
+                        description: `Ingredient could not be updated.`
+                    });
+                }
             } finally {
                 queryClient.setQueryData(loadingEditIngredientQueryOptions.queryKey, {});
             }
