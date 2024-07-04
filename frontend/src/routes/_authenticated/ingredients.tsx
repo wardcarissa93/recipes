@@ -34,6 +34,8 @@ function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
     const [isAscendingOrder, setIsAscendingOrder] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ingredientsPerPage = 8;
 
     if (error) return 'An error has occurred: ' + error.message
 
@@ -54,17 +56,24 @@ function Ingredients() {
         }
     });
 
+    const indexOfLastIngredient = currentPage * ingredientsPerPage;
+    const indexOfFirstIngredient = indexOfLastIngredient - ingredientsPerPage;
+    const currentIngredients = sortedIngredients.slice(indexOfFirstIngredient, indexOfLastIngredient);
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    }
+
     return (
-        <div className="p-2 max-w-2xl m-auto">
+        <div className="p-2 max-w-xl m-auto">
             <Button onClick={toggleSortOrder}>
                 {isAscendingOrder ? 'Sort Z-A' : 'Sort A-Z'}
             </Button>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Ingredient</TableHead>
-                        <TableHead>Edit</TableHead>
-                        <TableHead>Delete</TableHead>
+                        <TableHead className="w-1/2">Ingredient</TableHead>
+                        <TableHead className="w-1/4">Edit</TableHead>
+                        <TableHead className="w-1/4">Delete</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -87,7 +96,7 @@ function Ingredients() {
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     ))
-                    : sortedIngredients?.map((ingredient) => (
+                    : currentIngredients.map((ingredient) => (
                         <TableRow key={ingredient.id}>
                             <TableCell>{ingredient.name}</TableCell>
                             <TableCell>
@@ -100,6 +109,13 @@ function Ingredients() {
                     ))}
                 </TableBody>
             </Table>
+            <div className="flex justify-center mt-4">
+                {Array.from({ length: Math.ceil(sortedIngredients.length / ingredientsPerPage) }, (_, index) => (
+                    <Button key={index} onClick={() => paginate(index + 1)} className={`mx-1 ${currentPage === index + 1 ? 'bg-gray-300' : ''}`}>
+                        {index + 1}
+                    </Button>
+                ))}
+            </div>
         </div>
     )
 }
