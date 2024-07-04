@@ -65,7 +65,7 @@ function CreateIngredient() {
     });
     return (
         <div className="p-2">
-            <h2>Create Ingredient</h2>
+            <h2 className="text-center p-4">Create Ingredient</h2>
             <form
                 className="max-w-xl m-auto"
                 onSubmit={(e) => {
@@ -88,6 +88,7 @@ function CreateIngredient() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -98,7 +99,7 @@ function CreateIngredient() {
                 <form.Subscribe
                     selector={(state) => [state.canSubmit, state.isSubmitting]}
                     children={([canSubmit, isSubmitting]) => (
-                        <Button className="mt-4" type="submit" disabled={!canSubmit}>
+                        <Button className="mt-4 mx-auto flex" type="submit" disabled={!canSubmit}>
                             {isSubmitting ? "..." : "Submit"}
                         </Button>
                     )}
