@@ -28,20 +28,16 @@ function CreateIngredient() {
             name: ''
         },
         onSubmit: async ({ value }) => {
-            const sanitizedIngredient = {
-                name: sanitizeInput(value.name.trim().toLowerCase())
-            };
-
+            value.name = sanitizeInput(value.name.trim().toLowerCase());
             const existingIngredients = await queryClient.ensureQueryData(
                 getAllIngredientsQueryOptions
             );
-
             queryClient.setQueryData(loadingCreateIngredientQueryOptions.queryKey, {
-                ingredient: sanitizedIngredient,
+                ingredient: value,
             });
 
             try {
-                const newIngredient = await createIngredient({ value: sanitizedIngredient });
+                const newIngredient = await createIngredient({ value });
                 console.log("newIngredient: ", newIngredient)
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,
