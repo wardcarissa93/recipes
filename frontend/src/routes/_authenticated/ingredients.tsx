@@ -7,7 +7,7 @@ import {
     TableRow
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import {
     getAllIngredientsQueryOptions,
@@ -65,15 +65,22 @@ function Ingredients() {
 
     return (
         <div className="p-2 max-w-xl m-auto">
-            <Button onClick={toggleSortOrder}>
-                {isAscendingOrder ? 'Sort Z-A' : 'Sort A-Z'}
-            </Button>
+            <div className='flex justify-between'>
+                <Button onClick={toggleSortOrder}>
+                    {isAscendingOrder ? 'Sort Ingredients Z-A' : 'Sort Ingredients A-Z'}
+                </Button>
+                <Link to="/create-ingredient" className="[&.active]:font-bold">
+                    <Button>
+                        Create Ingredient
+                    </Button>
+                </Link>
+            </div>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-1/2">Ingredient</TableHead>
-                        <TableHead className="w-1/4">Edit</TableHead>
-                        <TableHead className="w-1/4">Delete</TableHead>
+                        <TableHead className="w-2/3">Ingredient</TableHead>
+                        <TableHead className="w-1/6">Edit</TableHead>
+                        <TableHead className="w-1/6">Delete</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

@@ -13,7 +13,9 @@ export const ingredients = pgTable(
 )
 
 export const insertIngredientsSchema = createInsertSchema(ingredients, {
-    name: z.string(),
+    name: z
+        .string()
+        .min(1, { message: "'Ingredient Name' is required."}),
 });
 
 export const selectIngredientsSchema = createSelectSchema(ingredients);
