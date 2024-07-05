@@ -33,7 +33,7 @@ function CreateIngredient() {
             const ingredientName = sanitizeInput(value.name.trim().toLowerCase());
 
             if (!ingredientName) {
-                setErrorMessage("'Ingredient Name' is required");
+                setErrorMessage("'Ingredient Name' is required.");
                 setTimeout(() => {
                     setErrorMessage('');
                 }, 3000);
@@ -92,7 +92,7 @@ function CreateIngredient() {
                     }}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-500">*</span></Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -116,7 +116,7 @@ function CreateIngredient() {
                     )}
                 >
                 </form.Subscribe>
-                {errorMessage && <p className="text-yellow-500">{errorMessage}</p>}
+                {errorMessage && <p className="text-yellow-300">{errorMessage}</p>}
             </form>
         </div>
     )
