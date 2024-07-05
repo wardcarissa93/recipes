@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -22,7 +21,6 @@ export const Route = createFileRoute('/_authenticated/create-ingredient')({
 function CreateIngredient() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const [errorMessage, setErrorMessage] = useState('');
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -30,26 +28,20 @@ function CreateIngredient() {
             name: ''
         },
         onSubmit: async ({ value }) => {
-            const ingredientName = sanitizeInput(value.name.trim().toLowerCase());
-
-            if (!ingredientName) {
-                setErrorMessage("'Ingredient Name' is required.");
-                setTimeout(() => {
-                    setErrorMessage('');
-                }, 3000);
-                return;
-            }
+            const sanitizedIngredient = {
+                name: sanitizeInput(value.name.trim().toLowerCase())
+            };
 
             const existingIngredients = await queryClient.ensureQueryData(
                 getAllIngredientsQueryOptions
             );
 
             queryClient.setQueryData(loadingCreateIngredientQueryOptions.queryKey, {
-                ingredient: value,
+                ingredient: sanitizedIngredient,
             });
 
             try {
-                const newIngredient = await createIngredient({ value });
+                const newIngredient = await createIngredient({ value: sanitizedIngredient });
                 console.log("newIngredient: ", newIngredient)
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,
@@ -116,7 +108,6 @@ function CreateIngredient() {
                     )}
                 >
                 </form.Subscribe>
-                {errorMessage && <p className="text-yellow-300">{errorMessage}</p>}
             </form>
         </div>
     )
