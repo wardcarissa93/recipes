@@ -371,7 +371,9 @@ export async function editRecipeIngredient({ id, value }: {id: string, value: Ed
         json: value
     });
     if (!res.ok) {
-        throw new Error("server error");
+        const errorResponse = await res.json();
+        const errorMessage = errorResponse.error?.issues?.map(issue => issue.message).join(', ') || "server error";
+        throw new Error(errorMessage);
     }
     const updatedRecipeIngredient = await res.json();
     return updatedRecipeIngredient;

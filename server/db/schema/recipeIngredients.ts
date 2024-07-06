@@ -22,7 +22,9 @@ export const insertRecipeIngredientsSchema = createInsertSchema(recipeIngredient
     recipeId: z.number(),
     ingredientId: z.number(),
     quantity: z.number(),
-    unit: z.string(),
+    unit: z
+        .string()
+        .min(1, { message: "'Unit' is required."} ),
     details: z.string().nullable()
 });
 
@@ -32,6 +34,8 @@ export const updateRecipeIngredientSchema = z.object({
     recipeId: z.number(),
     ingredientId: z.number(),
     quantity: z.number(),
-    unit: z.string(),
+    unit: z
+        .string()
+        .min(1, { message: "'Unit' is required." } ),
     details: z.string().nullable()
 })

@@ -15,11 +15,13 @@ export const ingredients = pgTable(
 export const insertIngredientsSchema = createInsertSchema(ingredients, {
     name: z
         .string()
-        .min(1, { message: "'Ingredient Name' is required."}),
+        .min(1, { message: "'Ingredient Name' is required."} ),
 });
 
 export const selectIngredientsSchema = createSelectSchema(ingredients);
 
 export const updateIngredientSchema = z.object({
-    name: z.string()
+    name: z
+        .string()
+        .min(1, { message: "'Ingredient Name' is required."} )
 });

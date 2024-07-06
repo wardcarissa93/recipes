@@ -114,9 +114,9 @@ function EditRecipeIngredient() {
             details: oldRecipeIngredient.details
         },
         onSubmit: async ({ value }) => {
-            console.log("value being submitted: ", value)
+            console.log("value being submitted: ", value);
             const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()));
-            console.log("existing ingredients: ", existingIngredientsForRecipe)
+            console.log("existing ingredients: ", existingIngredientsForRecipe);
             const ingredientId = await getIngredientIdByName(value.name);
             const recipeIngredientToEdit = {
                 ingredientId: ingredientId,
@@ -124,17 +124,17 @@ function EditRecipeIngredient() {
                 quantity: value.quantity,
                 unit: sanitizeInput(value.unit.trim()),
                 details: sanitizeInput(value.details.trim())
-            }
+            };
             queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {
                 recipeIngredient: recipeIngredientToEdit
             });
-
+    
             try {
                 const updatedRecipeIngredient = await editRecipeIngredient({ id: oldRecipeIngredient.id.toString(), value: recipeIngredientToEdit });
-                console.log("updatedRecipeIngredient: ", updatedRecipeIngredient)
+                console.log("updatedRecipeIngredient: ", updatedRecipeIngredient);
                 queryClient.setQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey, {
                     ...existingIngredientsForRecipe,
-                    recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient: recipeIngredient)
+                    recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient : recipeIngredient)
                 });
                 await queryClient.invalidateQueries({ queryKey: getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey });
                 toast("Ingredient Updated", {
@@ -143,13 +143,14 @@ function EditRecipeIngredient() {
                 navigate({ to: `/recipe/${oldRecipeIngredient.recipeId.toString()}` });
             } catch (error) {
                 toast("Error", {
-                    description: `Ingredient could not be updated for recipe.`
+                    description: `Ingredient could not be updated for recipe. ${error.message}`
                 });
             } finally {
                 queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {});
             }
         },
     });
+    
 
     return (
         <div className="p-2">
