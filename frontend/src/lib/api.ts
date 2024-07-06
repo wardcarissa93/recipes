@@ -192,11 +192,8 @@ export async function createIngredient({ value }: { value: CreateIngredient }) {
 
     if (!res.ok) {
         const errorData = await res.json();
-        if (res.status === 409) {
-            if ('message' in errorData) {
-                throw new Error(errorData.message || 'Ingredient already in database');
-            }
-            throw new Error('Ingredient already in database');
+        if ('message' in errorData) {
+            throw new Error(errorData.message)
         }
         throw new Error("server error");
     }
@@ -223,11 +220,8 @@ export async function editIngredient({ id, value }: {id: string, value: EditIngr
     });
     if (!res.ok) {
         const errorData: ErrorResponse = await res.json();
-        if (res.status === 409) {
-            if ('message' in errorData) {
-                throw new Error(errorData.message || 'Ingredient already in database');
-            }
-            throw new Error('Ingredient already in database');
+        if ('message' in errorData) {
+            throw new Error(errorData.message);
         }
         throw new Error("server error");
     }
@@ -260,12 +254,9 @@ export async function deleteIngredient({ id }: { id: number }) {
     });
     if (!res.ok) {
         const errorData: ErrorResponse = await res.json();
-        if (res.status === 409) {
-            if ('message' in errorData) {
-                throw new Error(errorData.message || 'Ingredient is being used in a recipe and cannot be deleted.')
-            } 
-            throw new Error('Ingredient is being used in a recipe and cannot be deleted.');
-        }
+        if ('message' in errorData) {
+            throw new Error(errorData.message);
+        } 
         throw new Error("server error");
     }
 }
