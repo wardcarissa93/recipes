@@ -163,7 +163,7 @@ function EditRecipeIngredient() {
                 <form.Field 
                     name="name"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Ingredient Name</Label>
                             <Select<IngredientOption>
                                         options={ingredientOptions}
@@ -179,13 +179,13 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
                     name="quantity"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Quantity</Label>
                             <Input
                                 id={field.name}
@@ -198,13 +198,13 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </di>
                     ))}
                 />
                 <form.Field 
                     name="unit"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Unit</Label>
                             <Input
                                 id={field.name}
@@ -216,13 +216,13 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
                     name="details"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Details</Label>
                             <Input
                                 id={field.name}
@@ -234,7 +234,7 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Subscribe

@@ -125,7 +125,7 @@ function EditRecipe() {
 
     return (
         <div className="p-2">
-            <h2>Edit Recipe '{oldRecipe.title}'</h2>
+            <h2 className="text-center p-4">Edit Recipe '{oldRecipe.title}'</h2>
             <form
                 className="max-w-xl m-auto"
                 onSubmit={(e) => {
@@ -140,19 +140,20 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.title
                     }}
                     children={((field) => (
-                        <>
-                            <Label htmlFor={field.name}>Title</Label>
+                        <div className="my-2">
+                            <Label htmlFor={field.name}>Title <span className="text-yellow-300">*</span></Label>
                             <Input 
                                 id={field.name}
                                 name={field.name}
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -161,7 +162,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.description
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Description</Label>
                             <Input 
                                 id={field.name}
@@ -173,7 +174,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -182,7 +183,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.prepTime
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Prep Time</Label>
                             <Input 
                                 id={field.name}
@@ -195,7 +196,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -204,7 +205,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.cookTime
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Cook Time</Label>
                             <Input 
                                 id={field.name}
@@ -217,7 +218,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -226,7 +227,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.totalTime
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Total Time</Label>
                             <Input 
                                 id={field.name}
@@ -239,7 +240,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -248,7 +249,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.servings
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Servings</Label>
                             <Input 
                                 id={field.name}
@@ -261,7 +262,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -270,7 +271,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.instructions
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Instructions</Label>
                             <textarea 
                                 id={field.name}
@@ -284,7 +285,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field
@@ -293,7 +294,7 @@ function EditRecipe() {
                         onChange: editRecipeSchema.shape.url
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>URL</Label>
                             <Input 
                                 id={field.name}
@@ -305,7 +306,7 @@ function EditRecipe() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Subscribe

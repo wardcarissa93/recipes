@@ -27,7 +27,9 @@ export const recipes = pgTable(
 
 
 export const insertRecipesSchema = createInsertSchema(recipes, {
-    title: z.string(),
+    title: z
+        .string()
+        .min(1, { message: "'Title' is required." } ),
     description: z.string().optional(),
     prepTime: z.number().optional(),
     cookTime: z.number().optional(),
@@ -40,7 +42,9 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
 export const selectRecipesSchema = createSelectSchema(recipes);
 
 export const updateRecipesSchema = z.object({
-    title: z.string(),
+    title: z
+        .string()
+        .min(1, { message: "'Title' is required." } ),
     description: z.string().optional(),
     prepTime: z.number().optional(),
     cookTime: z.number().optional(),
