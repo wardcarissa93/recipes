@@ -21,7 +21,9 @@ export const recipeIngredients = pgTable(
 export const insertRecipeIngredientsSchema = createInsertSchema(recipeIngredients, {
     recipeId: z.number(),
     ingredientId: z.number(),
-    quantity: z.number(),
+    quantity: z
+        .number()
+        .positive({ message: "'Quantity' must be greater than 0." }),
     unit: z
         .string()
         .min(1, { message: "'Unit' is required."} ),
@@ -33,7 +35,9 @@ export const selectRecipeIngredientsSchema = createSelectSchema(recipeIngredient
 export const updateRecipeIngredientSchema = z.object({
     recipeId: z.number(),
     ingredientId: z.number(),
-    quantity: z.number(),
+    quantity: z
+        .number()
+        .positive({ message: "'Quantity' must be greater than 0." }),
     unit: z
         .string()
         .min(1, { message: "'Unit' is required." } ),

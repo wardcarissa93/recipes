@@ -114,9 +114,7 @@ function EditRecipeIngredient() {
             details: oldRecipeIngredient.details
         },
         onSubmit: async ({ value }) => {
-            console.log("value being submitted: ", value);
             const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()));
-            console.log("existing ingredients: ", existingIngredientsForRecipe);
             const ingredientId = await getIngredientIdByName(value.name);
             const recipeIngredientToEdit = {
                 ingredientId: ingredientId,
@@ -131,7 +129,6 @@ function EditRecipeIngredient() {
     
             try {
                 const updatedRecipeIngredient = await editRecipeIngredient({ id: oldRecipeIngredient.id.toString(), value: recipeIngredientToEdit });
-                console.log("updatedRecipeIngredient: ", updatedRecipeIngredient);
                 queryClient.setQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey, {
                     ...existingIngredientsForRecipe,
                     recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient : recipeIngredient)
@@ -172,7 +169,6 @@ function EditRecipeIngredient() {
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === field.state.value)}
                                         onChange={(selectedOption) => {
-                                            console.log("selected option: ", selectedOption)
                                             if (selectedOption) {
                                                 field.handleChange(selectedOption.value);
                                             }
