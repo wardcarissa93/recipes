@@ -198,7 +198,7 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </di>
+                        </div>
                     ))}
                 />
                 <form.Field 
