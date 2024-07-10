@@ -154,7 +154,7 @@ function CreateRecipe() {
                     }}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Title</Label>
+                            <Label htmlFor={field.name}>Title <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -240,7 +240,7 @@ function CreateRecipe() {
                     })}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Total Time</Label>
+                            <Label htmlFor={field.name}>Total Time <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -284,7 +284,7 @@ function CreateRecipe() {
                     })}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Instructions</Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-yellow-300">*</span></Label>
                             <textarea
                                 id={field.name}
                                 name={field.name}
@@ -327,7 +327,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].name`}
                             children={((field) => (
                                 <div className="flex-col">
-                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === ingredient.name)}
@@ -349,7 +349,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].quantity`}
                             children={((field) => (
                                 <div className="flex-col">
-                                    <Label htmlFor={field.name}>Quantity</Label>
+                                    <Label htmlFor={field.name}>Quantity <span className="text-yellow-300">*</span></Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}
@@ -371,7 +371,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].unit`}
                             children={((field) => (
                                 <div className="flex-col">
-                                    <Label htmlFor={field.name}>Unit</Label>
+                                    <Label htmlFor={field.name}>Unit <span className="text-yellow-300">*</span></Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}

@@ -30,13 +30,21 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
     title: z
         .string()
         .min(1, { message: "'Title' is required." } ),
-    description: z.string().nullable(),
-    prepTime: z.number(),
-    cookTime: z.number(),
+    description: z
+        .string()
+        .nullable(),
+    prepTime: z
+        .number()
+        .nonnegative({ message: "'Prep Time' cannot be negative." } ),
+    cookTime: z
+        .number()
+        .nonnegative({ message: "'Cook Time' cannot be negative." } ),
     totalTime: z
         .number()
         .positive({ message: "'Total Time' must be greater than 0." } ),
-    servings: z.number(),
+    servings: z
+        .number()
+        .nonnegative({ message: "'Servings' cannot be negative." } ),
     instructions: z
         .string()
         .min(1, { message: "'Instructions' is required." } ),
@@ -49,15 +57,25 @@ export const updateRecipesSchema = z.object({
     title: z
         .string()
         .min(1, { message: "'Title' is required." } ),
-    description: z.string().nullable(),
-    prepTime: z.number(),
-    cookTime: z.number(),
+    description: z
+        .string()
+        .nullable(),
+    prepTime: z
+        .number()
+        .nonnegative({ message: "'Prep Time' cannot be negative." } ),
+    cookTime: z
+        .number()
+        .nonnegative({ message: "'Cook Time' cannot be negative." } ),
     totalTime: z
         .number()
         .positive({ message: "'Total Time' must be greater than 0." } ),
-    servings: z.number(),
+    servings: z
+        .number()
+        .nonnegative({ message: "'Servings' cannot be negative." } ),
     instructions: z
         .string()
         .min(1, { message: "'Instructions' is required." } ),
-    url: z.string().nullable()
+    url: z
+        .string()
+        .nullable()
 })
