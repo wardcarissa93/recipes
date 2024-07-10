@@ -12,7 +12,7 @@ export const recipes = pgTable(
         prepTime: numeric("prep_time", { precision: 6, scale: 0 }),
         cookTime: numeric("cook_time", { precision: 6, scale: 0 }),
         totalTime: numeric("total_time", { precision: 6, scale: 0 }).notNull(),
-        servings: numeric("servings", { precision: 2, scale: 0 }).notNull(),
+        servings: numeric("servings", { precision: 2, scale: 0 }),
         instructions: text("instructions").notNull(),
         url: text("url"),
         createdAt: timestamp('created_at').defaultNow()
@@ -27,25 +27,55 @@ export const recipes = pgTable(
 
 
 export const insertRecipesSchema = createInsertSchema(recipes, {
-    title: z.string(),
-    description: z.string().optional(),
-    prepTime: z.number().optional(),
-    cookTime: z.number().optional(),
-    totalTime: z.number(),
-    servings: z.number(),
-    instructions: z.string(),
-    url: z.string().optional()
+    title: z
+        .string()
+        .min(1, { message: "'Title' is required." } ),
+    description: z
+        .string()
+        .nullable(),
+    prepTime: z
+        .number()
+        .nonnegative({ message: "'Prep Time' cannot be negative." } ),
+    cookTime: z
+        .number()
+        .nonnegative({ message: "'Cook Time' cannot be negative." } ),
+    totalTime: z
+        .number()
+        .positive({ message: "'Total Time' must be greater than 0." } ),
+    servings: z
+        .number()
+        .nonnegative({ message: "'Servings' cannot be negative." } ),
+    instructions: z
+        .string()
+        .min(1, { message: "'Instructions' is required." } ),
+    url: z.string().nullable()
 });
 
 export const selectRecipesSchema = createSelectSchema(recipes);
 
 export const updateRecipesSchema = z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    prepTime: z.number().optional(),
-    cookTime: z.number().optional(),
-    totalTime: z.number(),
-    servings: z.number(),
-    instructions: z.string(),
-    url: z.string().optional()
+    title: z
+        .string()
+        .min(1, { message: "'Title' is required." } ),
+    description: z
+        .string()
+        .nullable(),
+    prepTime: z
+        .number()
+        .nonnegative({ message: "'Prep Time' cannot be negative." } ),
+    cookTime: z
+        .number()
+        .nonnegative({ message: "'Cook Time' cannot be negative." } ),
+    totalTime: z
+        .number()
+        .positive({ message: "'Total Time' must be greater than 0." } ),
+    servings: z
+        .number()
+        .nonnegative({ message: "'Servings' cannot be negative." } ),
+    instructions: z
+        .string()
+        .min(1, { message: "'Instructions' is required." } ),
+    url: z
+        .string()
+        .nullable()
 })

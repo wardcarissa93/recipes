@@ -111,7 +111,7 @@ function EditIngredient() {
                             onChange: editIngredientSchema.shape.name
                         }}
                         children={((field) => (
-                            <>
+                            <div className="my-2">
                                 <Label htmlFor={field.name}>Ingredient Name</Label>
                                 <Input
                                     id={field.name}
@@ -124,7 +124,7 @@ function EditIngredient() {
                                 {field.state.meta.touchedErrors ? (
                                     <em>{field.state.meta.touchedErrors}</em>
                                 ) : null}
-                            </>
+                            </div>
                         ))}
                     />
                     <form.Subscribe

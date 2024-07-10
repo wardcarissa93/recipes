@@ -67,20 +67,20 @@ function CreateRecipe() {
             navigate({ to: "/my-recipes" });
 
             const recipe = {
-                title: sanitizeInput(value.title),
-                description: sanitizeInput(value.description),
-                prepTime: value.prepTime,
-                cookTime: value.cookTime,
+                title: sanitizeInput(value.title.trim()),
+                description: value.description.trim() !== '' ? sanitizeInput(value.description.trim()) : null,
+                prepTime: value.prepTime !== 0 ? value.prepTime : null,
+                cookTime: value.cookTime !== 0 ? value.cookTime : null,
                 totalTime: value.totalTime,
-                servings: value.servings,
-                instructions: sanitizeInput(value.instructions),
-                url: sanitizeInput(value.url)
+                servings: value.servings !== 0 ? value.servings : null,
+                instructions: sanitizeInput(value.instructions.trim()),
+                url: value.url.trim() !== '' ? sanitizeInput(value.url.trim()) : null,
             };
             const ingredients = value.ingredients.map(ingredient => ({
-                name: sanitizeInput(ingredient.name),
+                name: sanitizeInput(ingredient.name.trim()),
                 quantity: ingredient.quantity,
-                unit: sanitizeInput(ingredient.unit),
-                details: sanitizeInput(ingredient.details)
+                unit: sanitizeInput(ingredient.unit.trim()),
+                details: ingredient.details.trim() !== '' ? sanitizeInput(ingredient.details.trim()) : null
             }));
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });
@@ -97,8 +97,10 @@ function CreateRecipe() {
                         ingredientId: ingredientId,
                         recipeId: newRecipe.id
                     } });
+                    console.log("newRecipeIngredient: ", newRecipeIngredient)
                     createdRecipeIngredients.push(newRecipeIngredient);
                 }
+                console.log("createdRecipeIngredients: ", createdRecipeIngredients)
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: [newRecipe, ...existingRecipes.recipes],
@@ -108,7 +110,7 @@ function CreateRecipe() {
                 });
             } catch (error) {
                 toast("Error", {
-                    description: `Failed to create new recipe`,
+                    description: `Failed to create new recipe. ${error.message}`,
                 });
             } finally {
                 queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {});
@@ -152,7 +154,7 @@ function CreateRecipe() {
                     }}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Title</Label>
+                            <Label htmlFor={field.name}>Title <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -238,7 +240,7 @@ function CreateRecipe() {
                     })}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Total Time</Label>
+                            <Label htmlFor={field.name}>Total Time <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -282,7 +284,7 @@ function CreateRecipe() {
                     })}
                     children={((field) => (
                         <>
-                            <Label htmlFor={field.name}>Instructions</Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-yellow-300">*</span></Label>
                             <textarea
                                 id={field.name}
                                 name={field.name}
@@ -325,7 +327,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].name`}
                             children={((field) => (
                                 <div className="flex-col">
-                                    <Label htmlFor={field.name}>Ingredient Name</Label>
+                                    <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === ingredient.name)}
@@ -347,7 +349,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].quantity`}
                             children={((field) => (
                                 <div className="flex-col">
-                                    <Label htmlFor={field.name}>Quantity</Label>
+                                    <Label htmlFor={field.name}>Quantity <span className="text-yellow-300">*</span></Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}
@@ -369,7 +371,7 @@ function CreateRecipe() {
                             name={`ingredients[${index}].unit`}
                             children={((field) => (
                                 <div className="flex-col">
-                                    <Label htmlFor={field.name}>Unit</Label>
+                                    <Label htmlFor={field.name}>Unit <span className="text-yellow-300">*</span></Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}

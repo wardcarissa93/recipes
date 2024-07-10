@@ -81,7 +81,7 @@ function EditRecipeIngredient() {
                     name: fetchedRecipeIngredient.recipeIngredient.name,
                     quantity: parseFloat(fetchedRecipeIngredient.recipeIngredient.quantity),
                     unit: fetchedRecipeIngredient.recipeIngredient.unit,
-                    details: fetchedRecipeIngredient.recipeIngredient.details
+                    details: fetchedRecipeIngredient.recipeIngredient.details !== null ? fetchedRecipeIngredient.recipeIngredient.details : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe's ingredient: ", error);
@@ -114,27 +114,24 @@ function EditRecipeIngredient() {
             details: oldRecipeIngredient.details
         },
         onSubmit: async ({ value }) => {
-            console.log("value being submitted: ", value)
             const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()));
-            console.log("existing ingredients: ", existingIngredientsForRecipe)
             const ingredientId = await getIngredientIdByName(value.name);
             const recipeIngredientToEdit = {
                 ingredientId: ingredientId,
                 recipeId: oldRecipeIngredient.recipeId,
                 quantity: value.quantity,
                 unit: sanitizeInput(value.unit.trim()),
-                details: sanitizeInput(value.details.trim())
-            }
+                details: value.details.trim() !== '' ? sanitizeInput(value.details.trim()) : null,
+            };
             queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {
                 recipeIngredient: recipeIngredientToEdit
             });
-
+    
             try {
                 const updatedRecipeIngredient = await editRecipeIngredient({ id: oldRecipeIngredient.id.toString(), value: recipeIngredientToEdit });
-                console.log("updatedRecipeIngredient: ", updatedRecipeIngredient)
                 queryClient.setQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey, {
                     ...existingIngredientsForRecipe,
-                    recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient: recipeIngredient)
+                    recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient : recipeIngredient)
                 });
                 await queryClient.invalidateQueries({ queryKey: getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey });
                 toast("Ingredient Updated", {
@@ -143,13 +140,14 @@ function EditRecipeIngredient() {
                 navigate({ to: `/recipe/${oldRecipeIngredient.recipeId.toString()}` });
             } catch (error) {
                 toast("Error", {
-                    description: `Ingredient could not be updated for recipe.`
+                    description: `Ingredient could not be updated for recipe. ${error.message}`
                 });
             } finally {
                 queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {});
             }
         },
     });
+    
 
     return (
         <div className="p-2">
@@ -165,13 +163,12 @@ function EditRecipeIngredient() {
                 <form.Field 
                     name="name"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Ingredient Name</Label>
                             <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === field.state.value)}
                                         onChange={(selectedOption) => {
-                                            console.log("selected option: ", selectedOption)
                                             if (selectedOption) {
                                                 field.handleChange(selectedOption.value);
                                             }
@@ -182,13 +179,13 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
                     name="quantity"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Quantity</Label>
                             <Input
                                 id={field.name}
@@ -201,13 +198,13 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
                     name="unit"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Unit</Label>
                             <Input
                                 id={field.name}
@@ -219,13 +216,13 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
                     name="details"
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Details</Label>
                             <Input
                                 id={field.name}
@@ -237,7 +234,7 @@ function EditRecipeIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Subscribe

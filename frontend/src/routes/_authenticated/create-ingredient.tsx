@@ -79,7 +79,7 @@ function CreateIngredient() {
                         onChange: createIngredientSchema.shape.name
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
@@ -92,7 +92,7 @@ function CreateIngredient() {
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Subscribe

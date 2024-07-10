@@ -57,6 +57,13 @@
       "when": 1717110488955,
       "tag": "0007_far_xorn",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1720567142283,
+      "tag": "0008_funny_mantis",
+      "breakpoints": true
     }
   ]
 }
