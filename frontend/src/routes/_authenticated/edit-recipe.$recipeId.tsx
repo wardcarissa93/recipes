@@ -55,7 +55,7 @@ function EditRecipe() {
                 const fetchedRecipe: FetchedRecipe = await getRecipeById(recipeId);
                 setOldRecipe({
                     title: fetchedRecipe.recipe.title,
-                    description: fetchedRecipe.recipe.description,
+                    description: fetchedRecipe.recipe.description !== null ? fetchedRecipe.recipe.description : '',
                     prepTime: parseInt(fetchedRecipe.recipe.prepTime),
                     cookTime: parseInt(fetchedRecipe.recipe.cookTime), 
                     totalTime: parseInt(fetchedRecipe.recipe.totalTime),
@@ -71,6 +71,8 @@ function EditRecipe() {
         fetchRecipe();
     }, [recipeId]);
 
+    console.log("old recipe: ", oldRecipe)
+
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
@@ -84,6 +86,7 @@ function EditRecipe() {
             url: oldRecipe.url
         },
         onSubmit: async ({ value }) => {
+            console.log("value being submitted: ", value)
             const existingRecipes = await queryClient.ensureQueryData(getAllRecipesQueryOptions);
             queryClient.setQueryData(loadingEditRecipeQueryOptions.queryKey, {
                 recipe: value
@@ -93,7 +96,7 @@ function EditRecipe() {
                 const sanitizedValue = {
                     ...value,
                     title: sanitizeInput(value.title.trim()),
-                    description: sanitizeInput(value.description.trim()),
+                    description: value.description.trim() !== '' ? sanitizeInput(value.description) : null,
                     instructions: sanitizeInput(value.instructions.trim()),
                     url: sanitizeInput(value.url.trim())
                 };

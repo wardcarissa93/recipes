@@ -67,14 +67,14 @@ function CreateRecipe() {
             navigate({ to: "/my-recipes" });
 
             const recipe = {
-                title: sanitizeInput(value.title),
-                description: sanitizeInput(value.description),
+                title: sanitizeInput(value.title.trim()),
+                description: value.description.trim() !== '' ? sanitizeInput(value.description.trim()) : null,
                 prepTime: value.prepTime,
                 cookTime: value.cookTime,
                 totalTime: value.totalTime,
                 servings: value.servings,
-                instructions: sanitizeInput(value.instructions),
-                url: sanitizeInput(value.url)
+                instructions: sanitizeInput(value.instructions.trim()),
+                url: sanitizeInput(value.url.trim())
             };
             const ingredients = value.ingredients.map(ingredient => ({
                 name: sanitizeInput(ingredient.name),

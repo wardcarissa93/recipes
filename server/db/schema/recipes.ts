@@ -12,7 +12,7 @@ export const recipes = pgTable(
         prepTime: numeric("prep_time", { precision: 6, scale: 0 }),
         cookTime: numeric("cook_time", { precision: 6, scale: 0 }),
         totalTime: numeric("total_time", { precision: 6, scale: 0 }).notNull(),
-        servings: numeric("servings", { precision: 2, scale: 0 }).notNull(),
+        servings: numeric("servings", { precision: 2, scale: 0 }),
         instructions: text("instructions").notNull(),
         url: text("url"),
         createdAt: timestamp('created_at').defaultNow()
@@ -30,7 +30,7 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
     title: z
         .string()
         .min(1, { message: "'Title' is required." } ),
-    description: z.string().optional(),
+    description: z.string().nullable(),
     prepTime: z.number().optional(),
     cookTime: z.number().optional(),
     totalTime: z.number(),
@@ -47,7 +47,7 @@ export const updateRecipesSchema = z.object({
     title: z
         .string()
         .min(1, { message: "'Title' is required." } ),
-    description: z.string().optional(),
+    description: z.string().nullable(),
     prepTime: z.number().optional(),
     cookTime: z.number().optional(),
     totalTime: z.number(),
