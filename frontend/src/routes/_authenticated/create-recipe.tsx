@@ -74,13 +74,13 @@ function CreateRecipe() {
                 totalTime: value.totalTime,
                 servings: value.servings,
                 instructions: sanitizeInput(value.instructions.trim()),
-                url: sanitizeInput(value.url.trim())
+                url: value.url.trim() !== '' ? sanitizeInput(value.url.trim()) : null,
             };
             const ingredients = value.ingredients.map(ingredient => ({
-                name: sanitizeInput(ingredient.name),
+                name: sanitizeInput(ingredient.name.trim()),
                 quantity: ingredient.quantity,
-                unit: sanitizeInput(ingredient.unit),
-                details: sanitizeInput(ingredient.details)
+                unit: sanitizeInput(ingredient.unit.trim()),
+                details: ingredient.details.trim() !== '' ? sanitizeInput(ingredient.details.trim()) : null
             }));
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });

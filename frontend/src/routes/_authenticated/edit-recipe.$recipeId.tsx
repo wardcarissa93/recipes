@@ -61,7 +61,7 @@ function EditRecipe() {
                     totalTime: parseInt(fetchedRecipe.recipe.totalTime),
                     servings: parseInt(fetchedRecipe.recipe.servings),
                     instructions: fetchedRecipe.recipe.instructions,
-                    url: fetchedRecipe.recipe.url
+                    url: fetchedRecipe.recipe.url !== null ? fetchedRecipe.recipe.url : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe: ", error);
@@ -98,7 +98,7 @@ function EditRecipe() {
                     title: sanitizeInput(value.title.trim()),
                     description: value.description.trim() !== '' ? sanitizeInput(value.description) : null,
                     instructions: sanitizeInput(value.instructions.trim()),
-                    url: sanitizeInput(value.url.trim())
+                    url: value.url.trim() !== '' ? sanitizeInput(value.url) : null,
                 };
 
                 const updatedRecipe = await editRecipe({ id: recipeId, value: sanitizedValue });

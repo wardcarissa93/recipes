@@ -38,7 +38,7 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
     instructions: z
         .string()
         .min(1, { message: "'Instructions' is required." } ),
-    url: z.string().optional()
+    url: z.string().nullable()
 });
 
 export const selectRecipesSchema = createSelectSchema(recipes);
@@ -55,5 +55,5 @@ export const updateRecipesSchema = z.object({
     instructions: z
         .string()
         .min(1, { message: "'Instructions' is required." } ),
-    url: z.string().optional()
+    url: z.string().nullable()
 })

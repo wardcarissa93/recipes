@@ -81,7 +81,7 @@ function EditRecipeIngredient() {
                     name: fetchedRecipeIngredient.recipeIngredient.name,
                     quantity: parseFloat(fetchedRecipeIngredient.recipeIngredient.quantity),
                     unit: fetchedRecipeIngredient.recipeIngredient.unit,
-                    details: fetchedRecipeIngredient.recipeIngredient.details
+                    details: fetchedRecipeIngredient.recipeIngredient.details !== null ? fetchedRecipeIngredient.recipeIngredient.details : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe's ingredient: ", error);
@@ -121,7 +121,7 @@ function EditRecipeIngredient() {
                 recipeId: oldRecipeIngredient.recipeId,
                 quantity: value.quantity,
                 unit: sanitizeInput(value.unit.trim()),
-                details: sanitizeInput(value.details.trim())
+                details: value.details.trim() !== '' ? sanitizeInput(value.details.trim()) : null,
             };
             queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {
                 recipeIngredient: recipeIngredientToEdit
