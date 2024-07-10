@@ -339,7 +339,9 @@ export function getRecipesByIngredientNameQueryOptions(names: string[]) {
 export async function createRecipeIngredient({ value }: { value: CreateRecipeIngredient }) {
     const res = await api.recipeIngredients.$post({ json: value });
     if (!res.ok) {
-        throw new Error("server error");
+        const errorResponse = await res.json();
+        const errorMessage = errorResponse.error?.issues?.map(issue => issue.message).join(', ') || "server error";
+        throw new Error(errorMessage);
     }
     const newRecipeIngredient = await res.json();
     return newRecipeIngredient;

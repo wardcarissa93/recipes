@@ -97,8 +97,10 @@ function CreateRecipe() {
                         ingredientId: ingredientId,
                         recipeId: newRecipe.id
                     } });
+                    console.log("newRecipeIngredient: ", newRecipeIngredient)
                     createdRecipeIngredients.push(newRecipeIngredient);
                 }
+                console.log("createdRecipeIngredients: ", createdRecipeIngredients)
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: [newRecipe, ...existingRecipes.recipes],
@@ -108,7 +110,7 @@ function CreateRecipe() {
                 });
             } catch (error) {
                 toast("Error", {
-                    description: `Failed to create new recipe`,
+                    description: `Failed to create new recipe. ${error.message}`,
                 });
             } finally {
                 queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, {});

@@ -33,7 +33,9 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
     description: z.string().nullable(),
     prepTime: z.number(),
     cookTime: z.number(),
-    totalTime: z.number(),
+    totalTime: z
+        .number()
+        .positive({ message: "'Total Time' must be greater than 0." } ),
     servings: z.number(),
     instructions: z
         .string()
@@ -50,7 +52,9 @@ export const updateRecipesSchema = z.object({
     description: z.string().nullable(),
     prepTime: z.number(),
     cookTime: z.number(),
-    totalTime: z.number(),
+    totalTime: z
+        .number()
+        .positive({ message: "'Total Time' must be greater than 0." } ),
     servings: z.number(),
     instructions: z
         .string()
