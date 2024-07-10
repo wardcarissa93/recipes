@@ -31,8 +31,8 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
         .string()
         .min(1, { message: "'Title' is required." } ),
     description: z.string().nullable(),
-    prepTime: z.number().optional(),
-    cookTime: z.number().optional(),
+    prepTime: z.number(),
+    cookTime: z.number(),
     totalTime: z.number(),
     servings: z.number(),
     instructions: z
@@ -48,8 +48,8 @@ export const updateRecipesSchema = z.object({
         .string()
         .min(1, { message: "'Title' is required." } ),
     description: z.string().nullable(),
-    prepTime: z.number().optional(),
-    cookTime: z.number().optional(),
+    prepTime: z.number(),
+    cookTime: z.number(),
     totalTime: z.number(),
     servings: z.number(),
     instructions: z

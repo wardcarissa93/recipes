@@ -69,10 +69,10 @@ function CreateRecipe() {
             const recipe = {
                 title: sanitizeInput(value.title.trim()),
                 description: value.description.trim() !== '' ? sanitizeInput(value.description.trim()) : null,
-                prepTime: value.prepTime,
-                cookTime: value.cookTime,
+                prepTime: value.prepTime !== 0 ? value.prepTime : null,
+                cookTime: value.cookTime !== 0 ? value.cookTime : null,
                 totalTime: value.totalTime,
-                servings: value.servings,
+                servings: value.servings !== 0 ? value.servings : null,
                 instructions: sanitizeInput(value.instructions.trim()),
                 url: value.url.trim() !== '' ? sanitizeInput(value.url.trim()) : null,
             };
