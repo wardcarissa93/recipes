@@ -8,7 +8,7 @@ import {
     updateRecipesSchema
 } from '../db/schema/recipes'
 import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
-import { eq, desc, and } from 'drizzle-orm'
+import { eq, desc, and, exists } from 'drizzle-orm'
 
 import { createRecipeSchema } from '../sharedTypes'
 
@@ -18,7 +18,14 @@ export const recipesRoute = new Hono()
         const recipes = await db
             .select()
             .from(recipeTable)
-            .where(eq(recipeTable.userId, user.id))
+            .where(and(
+                eq(recipeTable.userId, user.id),
+                exists(
+                    db.select()
+                        .from(recipeIngredientTable)
+                        .where(eq(recipeIngredientTable.recipeId, recipeTable.id))
+                )
+            ))
             .orderBy(desc(recipeTable.createdAt))
             .limit(100);
         return c.json({ recipes: recipes });

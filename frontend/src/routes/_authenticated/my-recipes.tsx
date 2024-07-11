@@ -27,6 +27,7 @@ export const Route = createFileRoute('/_authenticated/my-recipes')({
 function MyRecipes() {
     const { isPending, error, data } = useQuery(getAllRecipesQueryOptions);
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
+    console.log("DATA: ", data)
     if (error) return 'An error has occurred: ' + error.message
     return (
         <div className="p-2 max-w-3xl m-auto">
