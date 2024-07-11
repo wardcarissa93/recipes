@@ -15,7 +15,7 @@ import {
     getIngredientByIdQueryOptions,
     loadingEditIngredientQueryOptions 
 } from '@/lib/api'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 export const Route = createFileRoute('/_authenticated/edit-ingredient/$ingredientId')({
   component: EditIngredient

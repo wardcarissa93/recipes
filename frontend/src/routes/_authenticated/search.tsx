@@ -7,7 +7,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useSearch } from '@/context/useSearch';
 import Select from 'react-select';
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 type IngredientOption = {
     label: string;

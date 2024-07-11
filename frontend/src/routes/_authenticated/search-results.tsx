@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSearch } from '@/context/useSearch';
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 export const Route = createFileRoute('/_authenticated/search-results')({
     component: SearchResults

@@ -12,7 +12,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { createIngredientSchema } from '../../../../server/sharedTypes'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 export const Route = createFileRoute('/_authenticated/create-ingredient')({
     component: CreateIngredient

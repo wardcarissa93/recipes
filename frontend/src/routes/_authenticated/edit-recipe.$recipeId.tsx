@@ -15,7 +15,7 @@ import {
     editRecipe,
     loadingEditRecipeQueryOptions
 } from '@/lib/api'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 type Recipe = {
     id: number;

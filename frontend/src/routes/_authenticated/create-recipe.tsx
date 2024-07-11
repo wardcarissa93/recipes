@@ -15,7 +15,7 @@ import {
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
-import { sanitizeString } from '../../utils/sanitizeString';
+import { sanitizeString } from '../../lib/utils';
 import { useState } from 'react';
 import Select from 'react-select';
 

@@ -17,7 +17,7 @@ import {
     loadingEditRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 type FetchedRecipeIngredient = {
     recipeIngredient: RecipeIngredient

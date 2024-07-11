@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 
 export const Route = createFileRoute('/_authenticated/ingredients')({
     component: Ingredients
