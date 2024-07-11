@@ -173,6 +173,7 @@ function EditRecipe() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -180,50 +181,56 @@ function EditRecipe() {
                         </div>
                     ))}
                 />
-                <form.Field
-                    name="prepTime"
-                    validators={{
-                        onChange: editRecipeSchema.shape.prepTime
-                    }}
-                    children={((field) => (
-                        <div className="my-2">
-                            <Label htmlFor={field.name}>Prep Time</Label>
-                            <Input 
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </div>
-                    ))}
-                />
-                <form.Field
-                    name="cookTime"
-                    validators={{
-                        onChange: editRecipeSchema.shape.cookTime
-                    }}
-                    children={((field) => (
-                        <div className="my-2">
-                            <Label htmlFor={field.name}>Cook Time</Label>
-                            <Input 
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </div>
-                    ))}
-                />
+                <div className="flex gap-4">
+                    <form.Field
+                        name="prepTime"
+                        validators={{
+                            onChange: editRecipeSchema.shape.prepTime
+                        }}
+                        children={((field) => (
+                            <div className="my-2 w-1/2">
+                                <Label htmlFor={field.name}>Prep Time (in minutes)</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input 
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                    <form.Field
+                        name="cookTime"
+                        validators={{
+                            onChange: editRecipeSchema.shape.cookTime
+                        }}
+                        children={((field) => (
+                            <div className="my-2 w-1/2">
+                                <Label htmlFor={field.name}>Cook Time (in minutes)</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input 
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                </div>
                 <form.Field
                     name="totalTime"
                     validators={{
@@ -231,7 +238,7 @@ function EditRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Total Time</Label>
+                            <Label htmlFor={field.name}>Total Time (in minutes) <span className="text-yellow-300">*</span></Label>
                             <Input 
                                 id={field.name}
                                 name={field.name}
@@ -239,6 +246,7 @@ function EditRecipe() {
                                 onBlur={field.handleBlur}
                                 type="number"
                                 onChange={(e) => field.handleChange(Number(e.target.value))}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -254,6 +262,7 @@ function EditRecipe() {
                     children={((field) => (
                         <div className="my-2">
                             <Label htmlFor={field.name}>Servings</Label>
+                            <p className="italic text-xs">(Enter 0 if unavailable)</p>
                             <Input 
                                 id={field.name}
                                 name={field.name}
@@ -261,6 +270,7 @@ function EditRecipe() {
                                 onBlur={field.handleBlur}
                                 type="number"
                                 onChange={(e) => field.handleChange(Number(e.target.value))}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -275,7 +285,7 @@ function EditRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Instructions</Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-yellow-300">*</span></Label>
                             <textarea 
                                 id={field.name}
                                 name={field.name}
@@ -283,7 +293,7 @@ function EditRecipe() {
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
                                 rows={5}
-                                className="block w-full p-2 border rounded-md instructions-input"
+                                className="block w-full p-2 border rounded-md instructions-input mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -305,6 +315,7 @@ function EditRecipe() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
