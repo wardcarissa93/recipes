@@ -15,7 +15,7 @@ import {
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
-import { sanitizeInput } from '../../utils/sanitizeInput';
+import { sanitizeString } from '../../utils/sanitizeString';
 import { useState } from 'react';
 import Select from 'react-select';
 
@@ -67,20 +67,20 @@ function CreateRecipe() {
             navigate({ to: "/my-recipes" });
 
             const recipe = {
-                title: sanitizeInput(value.title.trim()),
-                description: value.description.trim() !== '' ? sanitizeInput(value.description.trim()) : null,
+                title: sanitizeString(value.title.trim()),
+                description: value.description.trim() !== '' ? sanitizeString(value.description.trim()) : null,
                 prepTime: value.prepTime !== 0 ? value.prepTime : null,
                 cookTime: value.cookTime !== 0 ? value.cookTime : null,
                 totalTime: value.totalTime,
                 servings: value.servings !== 0 ? value.servings : null,
-                instructions: sanitizeInput(value.instructions.trim()),
-                url: value.url.trim() !== '' ? sanitizeInput(value.url.trim()) : null,
+                instructions: sanitizeString(value.instructions.trim()),
+                url: value.url.trim() !== '' ? sanitizeString(value.url.trim()) : null,
             };
             const ingredients = value.ingredients.map(ingredient => ({
-                name: sanitizeInput(ingredient.name.trim()),
+                name: sanitizeString(ingredient.name.trim()),
                 quantity: ingredient.quantity,
-                unit: sanitizeInput(ingredient.unit.trim()),
-                details: ingredient.details.trim() !== '' ? sanitizeInput(ingredient.details.trim()) : null
+                unit: sanitizeString(ingredient.unit.trim()),
+                details: ingredient.details.trim() !== '' ? sanitizeString(ingredient.details.trim()) : null
             }));
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });

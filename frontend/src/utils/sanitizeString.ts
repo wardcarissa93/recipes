@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
 
-export function sanitizeInput(input: string): string {
+export function sanitizeString(input: string): string {
   return DOMPurify.sanitize(input);
 }

@@ -7,6 +7,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useSearch } from '@/context/useSearch';
 import Select from 'react-select';
+import { sanitizeString } from '../../utils/sanitizeString'
 
 type IngredientOption = {
     label: string;
@@ -25,8 +26,8 @@ function Search() {
     const { data } = useQuery(getAllIngredientsQueryOptions);
     const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
     const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
-        label: ingredient,
-        value: ingredient,
+        label: sanitizeString(ingredient),
+        value: sanitizeString(ingredient),
     }));
 
     const handleSearch = async () => {

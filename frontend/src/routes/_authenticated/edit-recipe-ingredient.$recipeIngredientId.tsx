@@ -17,18 +17,24 @@ import {
     loadingEditRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
-import { sanitizeInput } from '../../utils/sanitizeInput'
+import { sanitizeString } from '../../utils/sanitizeString'
 
 type FetchedRecipeIngredient = {
-    recipeIngredient: {
-        id: number;
-        ingredientId: number;
-        recipeId: number;
-        name: string;
-        quantity: string;
-        unit: string;
-        details: string;
-    }
+    recipeIngredient: RecipeIngredient
+}
+
+type ExistingRecipeIngredients = {
+    recipeIngredients: RecipeIngredient[]
+}
+
+type RecipeIngredient = {
+    id: number;
+    ingredientId: number;
+    recipeId: number;
+    name: string;
+    quantity: string;
+    unit: string;
+    details: string;
 }
 
 type FetchedRecipe = {
@@ -64,8 +70,8 @@ function EditRecipeIngredient() {
     const { data } = useQuery(getAllIngredientsQueryOptions);
     const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
     const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
-        label: ingredient,
-        value: ingredient,
+        label: sanitizeString(ingredient),
+        value: sanitizeString(ingredient),
     }));
 
     const [recipeTitle, setRecipeTitle] = useState('');
@@ -78,10 +84,10 @@ function EditRecipeIngredient() {
                     id: fetchedRecipeIngredient.recipeIngredient.id,
                     ingredientId: fetchedRecipeIngredient.recipeIngredient.ingredientId,
                     recipeId: fetchedRecipeIngredient.recipeIngredient.recipeId,
-                    name: fetchedRecipeIngredient.recipeIngredient.name,
+                    name: sanitizeString(fetchedRecipeIngredient.recipeIngredient.name),
                     quantity: parseFloat(fetchedRecipeIngredient.recipeIngredient.quantity),
-                    unit: fetchedRecipeIngredient.recipeIngredient.unit,
-                    details: fetchedRecipeIngredient.recipeIngredient.details !== null ? fetchedRecipeIngredient.recipeIngredient.details : ''
+                    unit: sanitizeString(fetchedRecipeIngredient.recipeIngredient.unit),
+                    details: fetchedRecipeIngredient.recipeIngredient.details !== null ? sanitizeString(fetchedRecipeIngredient.recipeIngredient.details) : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe's ingredient: ", error);
@@ -96,7 +102,8 @@ function EditRecipeIngredient() {
             const fetchRecipe = async () => {
                 try {
                     const fetchedRecipe: FetchedRecipe = await getRecipeById(oldRecipeIngredient.recipeId.toString());
-                    setRecipeTitle(fetchedRecipe.recipe.title);
+                    const sanitizedRecipeTitle = sanitizeString(fetchedRecipe.recipe.title);
+                    setRecipeTitle(sanitizedRecipeTitle);
                 } catch (error) {
                     console.error("Error fetching recipe: ", error);
                 }
@@ -114,21 +121,21 @@ function EditRecipeIngredient() {
             details: oldRecipeIngredient.details
         },
         onSubmit: async ({ value }) => {
-            const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()));
+            const existingIngredientsForRecipe: ExistingRecipeIngredients = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()));
             const ingredientId = await getIngredientIdByName(value.name);
             const recipeIngredientToEdit = {
                 ingredientId: ingredientId,
                 recipeId: oldRecipeIngredient.recipeId,
                 quantity: value.quantity,
-                unit: sanitizeInput(value.unit.trim()),
-                details: value.details.trim() !== '' ? sanitizeInput(value.details.trim()) : null,
+                unit: sanitizeString(value.unit.trim()),
+                details: value.details.trim() !== '' ? sanitizeString(value.details.trim()) : null,
             };
             queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {
                 recipeIngredient: recipeIngredientToEdit
             });
     
             try {
-                const updatedRecipeIngredient = await editRecipeIngredient({ id: oldRecipeIngredient.id.toString(), value: recipeIngredientToEdit });
+                const updatedRecipeIngredient: RecipeIngredient = await editRecipeIngredient({ id: oldRecipeIngredient.id.toString(), value: recipeIngredientToEdit });
                 queryClient.setQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey, {
                     ...existingIngredientsForRecipe,
                     recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient : recipeIngredient)
@@ -139,9 +146,15 @@ function EditRecipeIngredient() {
                 });
                 navigate({ to: `/recipe/${oldRecipeIngredient.recipeId.toString()}` });
             } catch (error) {
-                toast("Error", {
-                    description: `Ingredient could not be updated for recipe. ${error.message}`
-                });
+                if (error.message) {
+                    toast("Error", {
+                        description: error.message
+                    })
+                } else {
+                    toast("Error", {
+                        description: `Ingredient could not be updated for recipe.`
+                    });
+                }
             } finally {
                 queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {});
             }

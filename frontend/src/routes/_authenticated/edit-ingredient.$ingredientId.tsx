@@ -15,7 +15,7 @@ import {
     getIngredientByIdQueryOptions,
     loadingEditIngredientQueryOptions 
 } from '@/lib/api'
-import { sanitizeInput } from '../../utils/sanitizeInput'
+import { sanitizeString } from '../../utils/sanitizeString'
 
 export const Route = createFileRoute('/_authenticated/edit-ingredient/$ingredientId')({
   component: EditIngredient
@@ -28,6 +28,10 @@ type UpdatedIngredient = {
     createdAt: string | null
 };
 
+type FetchedIngredient = {
+    ingredient: UpdatedIngredient
+}
+
 function EditIngredient() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -38,8 +42,9 @@ function EditIngredient() {
     useEffect(() => {
         const fetchIngredient = async () => {
             try {
-                const fetchedIngredient = await getIngredientById(id);
-                setIngredientName(fetchedIngredient.ingredient.name);
+                const fetchedIngredient: FetchedIngredient = await getIngredientById(id);
+                const sanitizedIngredientName = sanitizeString(fetchedIngredient.ingredient.name);
+                setIngredientName(sanitizedIngredientName);
             } catch (error) {
                 console.error("Error fetching ingredient:", error);
             }
@@ -54,7 +59,7 @@ function EditIngredient() {
             name: ingredientName
         },
         onSubmit: async ({ value }) => {
-            value.name = sanitizeInput(value.name.trim().toLowerCase());
+            value.name = sanitizeString(value.name.trim().toLowerCase());
             const existingIngredients = await queryClient.ensureQueryData(getAllIngredientsQueryOptions);
             queryClient.setQueryData(loadingEditIngredientQueryOptions.queryKey, {
                 ingredient: value,

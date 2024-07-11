@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
-import DOMPurify from 'dompurify';
+import { sanitizeString } from '../../utils/sanitizeString'
 
 export const Route = createFileRoute('/_authenticated/ingredients')({
     component: Ingredients
@@ -41,7 +41,7 @@ function Ingredients() {
 
     const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
         ...ingredient,
-        name: DOMPurify.sanitize(ingredient.name),
+        name: sanitizeString(ingredient.name),
     })) || [];
 
     const toggleSortOrder = () => {
