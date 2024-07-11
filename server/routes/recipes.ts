@@ -18,8 +18,7 @@ export const recipesRoute = new Hono()
         const recipes = await db
             .select({
                 id: recipeTable.id,
-                title: recipeTable.title,
-                servings: recipeTable.servings
+                title: recipeTable.title
             })
             .from(recipeTable)
             .where(and(
@@ -30,7 +29,7 @@ export const recipesRoute = new Hono()
                         .where(eq(recipeIngredientTable.recipeId, recipeTable.id))
                 )
             ))
-            .orderBy(desc(recipeTable.createdAt))
+            .orderBy(recipeTable.title)
             .limit(100);
         return c.json({ recipes: recipes });
     })

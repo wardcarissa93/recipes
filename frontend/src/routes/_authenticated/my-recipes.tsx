@@ -8,34 +8,66 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useState } from 'react'
 import { 
     getAllRecipesQueryOptions,
     loadingCreateRecipeQueryOptions,
     deleteRecipe
 } from '@/lib/api'
-import DOMPurify from 'dompurify'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
+import DOMPurify from 'dompurify'
 
 export const Route = createFileRoute('/_authenticated/my-recipes')({
     component: MyRecipes
 })
 
+type Recipe = {
+    id: number,
+    title: string,
+}
+
 function MyRecipes() {
     const { isPending, error, data } = useQuery(getAllRecipesQueryOptions);
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
-    console.log("DATA: ", data)
+    const [isAscendingOrder, setIsAscendingOrder] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const recipesPerPage = 8;
+
     if (error) return 'An error has occurred: ' + error.message
 
+    const sanitizedRecipes = data?.recipes.map((recipe: Recipe) => ({
+        ...recipe,
+        title: DOMPurify.sanitize(recipe.title),
+    })) || [];
+
+    const toggleSortOrder = () => {
+        setIsAscendingOrder(!isAscendingOrder);
+    };
+
+    const sortedRecipes = [...sanitizedRecipes].sort((a, b) => {
+        if (isAscendingOrder) {
+            return a.title.localeCompare(b.title);
+        } else {
+            return b.title.localeCompare(a.title);
+        }
+    });
+
+    const indexOfLastRecipe = currentPage * recipesPerPage;
+    const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+    const currentRecipes = sortedRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    }
     
     return (
         <div className="p-2 max-w-xl m-auto">
             <div className="flex justify-between">
-                <Button>
-                    Sort Recipes
+                <Button onClick={toggleSortOrder}>
+                    {isAscendingOrder ? 'Sort Recipes Z-A' : 'Sort Recipes A-Z'}
                 </Button>
                 <Link to="/search" className="[&.active]:font-bold">
                     <Button>
@@ -71,7 +103,7 @@ function MyRecipes() {
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     )) 
-                    : data?.recipes.map((recipe) => (
+                    : currentRecipes.map((recipe) => (
                         <TableRow key={recipe.id}>
                             <TableCell>
                                 <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
@@ -88,6 +120,17 @@ function MyRecipes() {
                     ))}
                 </TableBody>
             </Table>
+            <div className="flex justify-center mt-4">
+                {Array.from({ length: Math.ceil(sortedRecipes.length / recipesPerPage) }, (_, index) => (
+                    <Button 
+                        key={index} 
+                        onClick={() => paginate(index + 1)}
+                        className={`mx-1 ${currentPage === index + 1 ? 'bg-gray-300' : ''}`}
+                    >
+                        {index + 1}
+                    </Button>
+                ))}
+            </div>
         </div>
     )
 }
