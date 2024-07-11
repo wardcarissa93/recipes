@@ -174,7 +174,7 @@ function EditRecipeIngredient() {
                                             }
                                         }}
                                         placeholder="Select Ingredient"
-                                        className="ingredient-name"
+                                        className="ingredient-name mt-2"
                                     />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -194,7 +194,7 @@ function EditRecipeIngredient() {
                                 onBlur={field.handleBlur}
                                 type="number"
                                 onChange={(e) => field.handleChange(Number(e.target.value))}
-                                className="bg-white text-black"
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -213,6 +213,7 @@ function EditRecipeIngredient() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -231,6 +232,7 @@ function EditRecipeIngredient() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
