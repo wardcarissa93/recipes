@@ -72,12 +72,13 @@ function RecipeDetails() {
                                     {ingredient.name} - {ingredient.quantity} {ingredient.unit}
                                     {ingredient.details && (<span> - {ingredient.details}</span>)}
                                     <span> - </span>
-                                    <RecipeIngredientEditButton id={ingredient.id}/>
+                                    <EditRecipeIngredientButton id={ingredient.id}/>
                                     <span> - </span>
-                                    <RecipeIngredientDeleteButton id={ingredient.id} recipeId={recipeId} />
+                                    <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} />
                                 </li>
                             ))}
                         </ul>
+                        <AddRecipeIngredientButton id={recipe.id} />
                     </div>
                     )}
                     <h3>Instructions: </h3>
@@ -86,8 +87,8 @@ function RecipeDetails() {
                         <Button variant="outline" size="icon" onClick={() => window.history.back()}>
                             Back
                         </Button>
-                        <RecipeEditButton id={recipe.id} />
-                        <RecipeDeleteButton id={recipe.id} />
+                        <EditRecipeButton id={recipe.id} />
+                        <DeleteRecipeButton id={recipe.id} />
                     </div>
                 </div>
             )}
@@ -95,9 +96,9 @@ function RecipeDetails() {
     );
 }
 
-function RecipeEditButton({ id }: { id: number }) {
+function EditRecipeButton({ id }: { id: number }) {
     const navigate = useNavigate();
-    const handleEdit = () => {
+    const navigateToEditRecipe = () => {
         navigate({
             to: `/edit-recipe/$recipeId`,
             params: { recipeId: id.toString() }
@@ -106,7 +107,7 @@ function RecipeEditButton({ id }: { id: number }) {
 
     return (
         <Button 
-            onClick={handleEdit}
+            onClick={navigateToEditRecipe}
             variant="outline"
         >
             <p>Edit Recipe</p>
@@ -114,7 +115,7 @@ function RecipeEditButton({ id }: { id: number }) {
     )
 }
 
-function RecipeDeleteButton({ id }: { id: number }) {
+function DeleteRecipeButton({ id }: { id: number }) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const mutation = useMutation({
@@ -149,9 +150,9 @@ function RecipeDeleteButton({ id }: { id: number }) {
     );
 }
 
-function RecipeIngredientEditButton({ id }: { id: number }) {
+function EditRecipeIngredientButton({ id }: { id: number }) {
     const navigate = useNavigate();
-    const handleEdit = () => {
+    const navigateToEditRecipeIngredient = () => {
         navigate({
             to: "/edit-recipe-ingredient/$recipeIngredientId",
             params: { recipeIngredientId: id.toString() }
@@ -160,7 +161,7 @@ function RecipeIngredientEditButton({ id }: { id: number }) {
 
     return (
         <Button 
-            onClick={handleEdit}
+            onClick={navigateToEditRecipeIngredient}
             variant="outline"
             size="icon"
         >
@@ -169,7 +170,26 @@ function RecipeIngredientEditButton({ id }: { id: number }) {
     )
 }
 
-function RecipeIngredientDeleteButton({ id, recipeId }: { id: number, recipeId: string }) {
+function AddRecipeIngredientButton({ id }: { id: number}) {
+    const navigate = useNavigate();
+    const navigateToAddRecipeIngredient = () => {
+        navigate({
+            to: "/add-recipe-ingredient/$recipeId",
+            params: { recipeId: id.toString() }
+        });
+    };
+
+    return (
+        <Button
+            onClick={navigateToAddRecipeIngredient}
+            variant="outline"
+        >
+            Add Ingredient to Recipe
+        </Button>
+    )
+}
+
+function DeleteRecipeIngredientButton({ id, recipeId }: { id: number, recipeId: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteRecipeIngredient,
