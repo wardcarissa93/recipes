@@ -2,34 +2,21 @@ import { useState, useEffect } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from "@/components/ui/label"
+import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { useQueryClient, useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { useForm } from '@tanstack/react-form'
-import { 
-    editRecipeIngredient,
+import {
+    createRecipeIngredient,
     getAllIngredientsQueryOptions,
     getIngredientIdByName,
     getRecipeById,
-    getRecipeIngredientById, 
     getRecipeIngredientsByRecipeIdQueryOptions,
-    loadingEditRecipeIngredientQueryOptions
+    loadingCreateRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
 import { sanitizeInput } from '../../utils/sanitizeInput'
-
-type FetchedRecipeIngredient = {
-    recipeIngredient: {
-        id: number;
-        ingredientId: number;
-        recipeId: number;
-        name: string;
-        quantity: string;
-        unit: string;
-        details: string;
-    }
-}
 
 type FetchedRecipe = {
     recipe: {
@@ -43,23 +30,14 @@ type IngredientOption = {
     value: string;
 }
 
-export const Route = createFileRoute('/_authenticated/edit-recipe-ingredient/$recipeIngredientId')({
-    component: EditRecipeIngredient
+export const Route = createFileRoute('/_authenticated/add-recipe-ingredient/$recipeId')({
+    component: AddRecipeIngredient
 })
 
-function EditRecipeIngredient() {
+function AddRecipeIngredient() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { recipeIngredientId } = Route.useParams();
-    const [oldRecipeIngredient, setOldRecipeIngredient] = useState({
-        id: 0,
-        ingredientId: 0,
-        recipeId: 0,
-        name: '',
-        quantity: 0,
-        unit: '',
-        details: ''
-    });
+    const { recipeId } = Route.useParams();
 
     const { data } = useQuery(getAllIngredientsQueryOptions);
     const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
@@ -71,89 +49,67 @@ function EditRecipeIngredient() {
     const [recipeTitle, setRecipeTitle] = useState('');
 
     useEffect(() => {
-        const fetchRecipeIngredient = async () => {
+        const fetchRecipe = async () => {
             try {
-                const fetchedRecipeIngredient: FetchedRecipeIngredient = await getRecipeIngredientById(recipeIngredientId);
-                setOldRecipeIngredient({
-                    id: fetchedRecipeIngredient.recipeIngredient.id,
-                    ingredientId: fetchedRecipeIngredient.recipeIngredient.ingredientId,
-                    recipeId: fetchedRecipeIngredient.recipeIngredient.recipeId,
-                    name: fetchedRecipeIngredient.recipeIngredient.name,
-                    quantity: parseFloat(fetchedRecipeIngredient.recipeIngredient.quantity),
-                    unit: fetchedRecipeIngredient.recipeIngredient.unit,
-                    details: fetchedRecipeIngredient.recipeIngredient.details !== null ? fetchedRecipeIngredient.recipeIngredient.details : ''
-                });
+                const fetchedRecipe: FetchedRecipe = await getRecipeById(recipeId);
+                setRecipeTitle(fetchedRecipe.recipe.title);
             } catch (error) {
-                console.error("Error fetching recipe's ingredient: ", error);
+                console.error("Error fetching recipe: ", error);
             }
         };
-
-        fetchRecipeIngredient();
-    }, [recipeIngredientId]);
-
-    useEffect(() => {
-        if (oldRecipeIngredient.recipeId) {
-            const fetchRecipe = async () => {
-                try {
-                    const fetchedRecipe: FetchedRecipe = await getRecipeById(oldRecipeIngredient.recipeId.toString());
-                    setRecipeTitle(fetchedRecipe.recipe.title);
-                } catch (error) {
-                    console.error("Error fetching recipe: ", error);
-                }
-            };
-            fetchRecipe();
-        }
-    }, [oldRecipeIngredient.recipeId])
+        fetchRecipe();
+    }, [recipeId]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
         defaultValues: {
-            name: oldRecipeIngredient.name,
-            quantity: oldRecipeIngredient.quantity,
-            unit: oldRecipeIngredient.unit,
-            details: oldRecipeIngredient.details
+            name: '',
+            quantity: 0,
+            unit: '',
+            details: ''
         },
         onSubmit: async ({ value }) => {
-            const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()));
+            console.log("VALUE BEING SUBMITTED: ", value)
+            const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(recipeId))
             const ingredientId = await getIngredientIdByName(value.name);
-            const recipeIngredientToEdit = {
+            const newRecipeIngredient = {
                 ingredientId: ingredientId,
-                recipeId: oldRecipeIngredient.recipeId,
+                recipeId: parseInt(recipeId),
                 quantity: value.quantity,
                 unit: sanitizeInput(value.unit.trim()),
-                details: value.details.trim() !== '' ? sanitizeInput(value.details.trim()) : null,
+                details: value.details.trim() !== '' ? sanitizeInput(value.details.trim()): null
             };
-            queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {
-                recipeIngredient: recipeIngredientToEdit
+
+            queryClient.setQueryData(loadingCreateRecipeIngredientQueryOptions.queryKey, {
+                recipeIngredient: newRecipeIngredient
             });
-    
+
             try {
-                const updatedRecipeIngredient = await editRecipeIngredient({ id: oldRecipeIngredient.id.toString(), value: recipeIngredientToEdit });
-                queryClient.setQueryData(getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey, {
+                const addedRecipeIngredient = await createRecipeIngredient({ value: newRecipeIngredient });
+                queryClient.setQueryData(getRecipeIngredientsByRecipeIdQueryOptions(recipeId).queryKey, {
                     ...existingIngredientsForRecipe,
-                    recipeIngredients: existingIngredientsForRecipe.recipeIngredients.map(recipeIngredient => recipeIngredient.id === updatedRecipeIngredient.id ? updatedRecipeIngredient : recipeIngredient)
+                    recipeIngredients: [...existingIngredientsForRecipe.recipeIngredients, addedRecipeIngredient]
                 });
-                await queryClient.invalidateQueries({ queryKey: getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey });
-                toast("Ingredient Updated", {
-                    description: `Successfully updated ${value.name} for recipe '${recipeTitle}'`,
+                await queryClient.invalidateQueries({ queryKey: getRecipeIngredientsByRecipeIdQueryOptions(recipeId).queryKey });
+                toast("Ingredient Added", {
+                    description: `Successfully added ${value.name} to recipe '${recipeTitle}'`,
                 });
-                navigate({ to: `/recipe/${oldRecipeIngredient.recipeId.toString()}` });
+                navigate({ to: `/recipe/${recipeId}` });
             } catch (error) {
                 toast("Error", {
-                    description: `Ingredient could not be updated for recipe. ${error.message}`
+                    description: `Ingredient could not be added to recipe. ${error.message}`
                 });
             } finally {
-                queryClient.setQueryData(loadingEditRecipeIngredientQueryOptions.queryKey, {});
+                queryClient.setQueryData(loadingCreateRecipeIngredientQueryOptions.queryKey, {});
             }
         },
     });
-    
 
     return (
         <div className="p-2">
-            <h2 className="text-center p-4">Edit '{oldRecipeIngredient.name}' for '{recipeTitle}'</h2>
-            <form 
-                className='max-w-xl m-auto'
+            <h2 className="text-center p-4">Add Ingredient to {recipeTitle}</h2>
+            <form
+                className="max-w-xl m-auto"
                 onSubmit={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
