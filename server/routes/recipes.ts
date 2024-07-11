@@ -16,7 +16,11 @@ export const recipesRoute = new Hono()
     .get("/", getUser, async (c) => {
         const user = c.var.user;
         const recipes = await db
-            .select()
+            .select({
+                id: recipeTable.id,
+                title: recipeTable.title,
+                servings: recipeTable.servings
+            })
             .from(recipeTable)
             .where(and(
                 eq(recipeTable.userId, user.id),

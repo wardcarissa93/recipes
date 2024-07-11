@@ -29,26 +29,32 @@ function MyRecipes() {
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
     console.log("DATA: ", data)
     if (error) return 'An error has occurred: ' + error.message
+
+    
     return (
-        <div className="p-2 max-w-3xl m-auto">
+        <div className="p-2 max-w-xl m-auto">
+            <div className="flex justify-between">
+                <Button>
+                    Sort Recipes
+                </Button>
+                <Link to="/search" className="[&.active]:font-bold">
+                    <Button>
+                        Search for Recipe
+                    </Button>
+                </Link>
+            </div>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">Id</TableHead>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Servings</TableHead>
-                        <TableHead>Edit</TableHead>
-                        <TableHead>Delete</TableHead>
+                        <TableHead className="w-2/3">Title</TableHead>
+                        <TableHead className="w-1/6">Edit</TableHead>
+                        <TableHead className="w-1/6">Delete</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {loadingCreateRecipe?.recipe && (
                         <TableRow>
-                            <TableCell className="font-medium">
-                                <Skeleton className="h-4"></Skeleton>
-                            </TableCell>
                             <TableCell>{loadingCreateRecipe?.recipe.title}</TableCell>
-                            <TableCell>{loadingCreateRecipe?.recipe.servings}</TableCell>
                             <TableCell>
                                 <Skeleton className='h-4'/>
                             </TableCell>
@@ -60,8 +66,6 @@ function MyRecipes() {
                     {isPending 
                     ? Array(3).fill(0).map((_, i) => (
                         <TableRow key={i}>
-                            <TableCell className="font-medium"><Skeleton className="h-4"></Skeleton></TableCell>
-                            <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
@@ -69,13 +73,11 @@ function MyRecipes() {
                     )) 
                     : data?.recipes.map((recipe) => (
                         <TableRow key={recipe.id}>
-                            <TableCell className="font-medium">{recipe.id}</TableCell>
                             <TableCell>
                                 <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
                                     {DOMPurify.sanitize(recipe.title)}
                                 </Link>
                             </TableCell>
-                            <TableCell>{recipe.servings}</TableCell>
                             <TableCell>
                                 <RecipeEditButton id={recipe.id}/>
                             </TableCell>
