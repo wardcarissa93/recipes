@@ -98,7 +98,7 @@ function CreateIngredient() {
                 <form.Subscribe
                     selector={(state) => [state.canSubmit, state.isSubmitting]}
                     children={([canSubmit, isSubmitting]) => (
-                        <Button className="mt-4 mx-auto flex" type="submit" disabled={!canSubmit}>
+                        <Button className="mt-8 mx-auto flex" type="submit" disabled={!canSubmit}>
                             {isSubmitting ? "..." : "Submit"}
                         </Button>
                     )}
