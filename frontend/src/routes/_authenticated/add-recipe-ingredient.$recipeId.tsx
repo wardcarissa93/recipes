@@ -16,7 +16,7 @@ import {
     loadingCreateRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
-import { sanitizeInput } from '../../utils/sanitizeInput'
+import { sanitizeString } from '../../utils/sanitizeString'
 
 type FetchedRecipe = {
     recipe: {
@@ -76,8 +76,8 @@ function AddRecipeIngredient() {
                 ingredientId: ingredientId,
                 recipeId: parseInt(recipeId),
                 quantity: value.quantity,
-                unit: sanitizeInput(value.unit.trim()),
-                details: value.details.trim() !== '' ? sanitizeInput(value.details.trim()): null
+                unit: sanitizeString(value.unit.trim()),
+                details: value.details.trim() !== '' ? sanitizeString(value.details.trim()): null
             };
 
             queryClient.setQueryData(loadingCreateRecipeIngredientQueryOptions.queryKey, {

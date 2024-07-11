@@ -12,7 +12,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { createIngredientSchema } from '../../../../server/sharedTypes'
-import { sanitizeInput } from '../../utils/sanitizeInput'
+import { sanitizeString } from '../../utils/sanitizeString'
 
 export const Route = createFileRoute('/_authenticated/create-ingredient')({
     component: CreateIngredient
@@ -28,7 +28,7 @@ function CreateIngredient() {
             name: ''
         },
         onSubmit: async ({ value }) => {
-            value.name = sanitizeInput(value.name.trim().toLowerCase());
+            value.name = sanitizeString(value.name.trim().toLowerCase());
             const existingIngredients = await queryClient.ensureQueryData(
                 getAllIngredientsQueryOptions
             );

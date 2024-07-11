@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import DOMPurify from 'dompurify';
+import { sanitizeString } from '../../utils/sanitizeString'
 import { 
     deleteRecipeIngredient,
     getRecipeByIdQueryOptions,
@@ -31,20 +31,20 @@ function RecipeDetails() {
     const { isPending: ingredientsPending, error: ingredientsError, data: ingredientsData } = useQuery(getRecipeIngredientsByRecipeIdQueryOptions(recipeId));
 
     const recipe = recipeData?.recipe;
-    const sanitizedTitle = recipe ? DOMPurify.sanitize(recipe.title) : '';
+    const sanitizedTitle = recipe ? sanitizeString(recipe.title) : '';
 
     let sanitizedInstructions = '';
     if (recipe) {
         const formattedInstructions = recipe.instructions.replace(/\n/g, '<br>');
-        sanitizedInstructions = DOMPurify.sanitize(formattedInstructions);
+        sanitizedInstructions = sanitizeString(formattedInstructions);
     }
 
     const sanitizedIngredients = ingredientsData?.recipeIngredients.map((ingredient: Ingredient) => ({
         ...ingredient,
-        name: DOMPurify.sanitize(ingredient.name),
+        name: sanitizeString(ingredient.name),
         quantity: ingredient.quantity,
-        unit: DOMPurify.sanitize(ingredient.unit),
-        details: ingredient.details ? DOMPurify.sanitize(ingredient.details) : null
+        unit: sanitizeString(ingredient.unit),
+        details: ingredient.details ? sanitizeString(ingredient.details) : null
     }));
 
     // const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;

@@ -15,19 +15,22 @@ import {
     editRecipe,
     loadingEditRecipeQueryOptions
 } from '@/lib/api'
-import { sanitizeInput } from '../../utils/sanitizeInput'
+import { sanitizeString } from '../../utils/sanitizeString'
+
+type Recipe = {
+    id: number;
+    title: string;
+    description: string;
+    prepTime: string;
+    cookTime: string;
+    totalTime: string;
+    servings: string;
+    instructions: string;
+    url: string;
+}
 
 type FetchedRecipe = {
-    recipe: {
-        title: string;
-        description: string;
-        prepTime: string;
-        cookTime: string;
-        totalTime: string;
-        servings: string;
-        instructions: string;
-        url: string;
-    }
+    recipe: Recipe
 };
  
 export const Route = createFileRoute('/_authenticated/edit-recipe/$recipeId')({
@@ -54,14 +57,14 @@ function EditRecipe() {
             try {
                 const fetchedRecipe: FetchedRecipe = await getRecipeById(recipeId);
                 setOldRecipe({
-                    title: fetchedRecipe.recipe.title,
-                    description: fetchedRecipe.recipe.description !== null ? fetchedRecipe.recipe.description : '',
+                    title: sanitizeString(fetchedRecipe.recipe.title),
+                    description: fetchedRecipe.recipe.description !== null ? sanitizeString(fetchedRecipe.recipe.description) : '',
                     prepTime: parseInt(fetchedRecipe.recipe.prepTime),
                     cookTime: parseInt(fetchedRecipe.recipe.cookTime), 
                     totalTime: parseInt(fetchedRecipe.recipe.totalTime),
                     servings: parseInt(fetchedRecipe.recipe.servings),
-                    instructions: fetchedRecipe.recipe.instructions,
-                    url: fetchedRecipe.recipe.url !== null ? fetchedRecipe.recipe.url : ''
+                    instructions: sanitizeString(fetchedRecipe.recipe.instructions),
+                    url: fetchedRecipe.recipe.url !== null ? sanitizeString(fetchedRecipe.recipe.url) : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe: ", error);
@@ -70,8 +73,6 @@ function EditRecipe() {
 
         fetchRecipe();
     }, [recipeId]);
-
-    console.log("old recipe: ", oldRecipe)
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -86,7 +87,6 @@ function EditRecipe() {
             url: oldRecipe.url
         },
         onSubmit: async ({ value }) => {
-            console.log("value being submitted: ", value)
             const existingRecipes = await queryClient.ensureQueryData(getAllRecipesQueryOptions);
             queryClient.setQueryData(loadingEditRecipeQueryOptions.queryKey, {
                 recipe: value
@@ -95,13 +95,13 @@ function EditRecipe() {
             try {
                 const sanitizedValue = {
                     ...value,
-                    title: sanitizeInput(value.title.trim()),
-                    description: value.description.trim() !== '' ? sanitizeInput(value.description) : null,
-                    instructions: sanitizeInput(value.instructions.trim()),
-                    url: value.url.trim() !== '' ? sanitizeInput(value.url) : null,
+                    title: sanitizeString(value.title.trim()),
+                    description: value.description.trim() !== '' ? sanitizeString(value.description) : null,
+                    instructions: sanitizeString(value.instructions.trim()),
+                    url: value.url.trim() !== '' ? sanitizeString(value.url) : null,
                 };
 
-                const updatedRecipe = await editRecipe({ id: recipeId, value: sanitizedValue });
+                const updatedRecipe: Recipe = await editRecipe({ id: recipeId, value: sanitizedValue });
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: existingRecipes.recipes.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe: recipe)

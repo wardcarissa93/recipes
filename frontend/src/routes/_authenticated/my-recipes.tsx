@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
-import DOMPurify from 'dompurify'
+import { sanitizeString } from '../../utils/sanitizeString'
 
 export const Route = createFileRoute('/_authenticated/my-recipes')({
     component: MyRecipes
@@ -41,7 +41,7 @@ function MyRecipes() {
 
     const sanitizedRecipes = data?.recipes.map((recipe: Recipe) => ({
         ...recipe,
-        title: DOMPurify.sanitize(recipe.title),
+        title: sanitizeString(recipe.title),
     })) || [];
 
     const toggleSortOrder = () => {
@@ -107,7 +107,7 @@ function MyRecipes() {
                         <TableRow key={recipe.id}>
                             <TableCell>
                                 <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
-                                    {DOMPurify.sanitize(recipe.title)}
+                                    {recipe.title}
                                 </Link>
                             </TableCell>
                             <TableCell>
