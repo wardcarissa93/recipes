@@ -116,7 +116,7 @@ function Ingredients() {
                     ))}
                 </TableBody>
             </Table>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-8">
                 {Array.from({ length: Math.ceil(sortedIngredients.length / ingredientsPerPage) }, (_, index) => (
                     <Button key={index} onClick={() => paginate(index + 1)} className={`mx-1 ${currentPage === index + 1 ? 'bg-gray-300' : ''}`}>
                         {index + 1}

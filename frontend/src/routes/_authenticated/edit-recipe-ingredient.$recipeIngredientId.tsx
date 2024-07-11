@@ -151,7 +151,7 @@ function EditRecipeIngredient() {
 
     return (
         <div className="p-2">
-            <h2>Edit '{oldRecipeIngredient.name}' for Recipe '{recipeTitle}'</h2>
+            <h2 className="text-center p-4">Edit '{oldRecipeIngredient.name}' for Recipe '{recipeTitle}'</h2>
             <form 
                 className='max-w-xl m-auto'
                 onSubmit={(e) => {
@@ -164,7 +164,7 @@ function EditRecipeIngredient() {
                     name="name"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Ingredient Name</Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
                             <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === field.state.value)}
@@ -186,7 +186,7 @@ function EditRecipeIngredient() {
                     name="quantity"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Quantity</Label>
+                            <Label htmlFor={field.name}>Quantity <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -194,6 +194,7 @@ function EditRecipeIngredient() {
                                 onBlur={field.handleBlur}
                                 type="number"
                                 onChange={(e) => field.handleChange(Number(e.target.value))}
+                                className="bg-white text-black"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -205,7 +206,7 @@ function EditRecipeIngredient() {
                     name="unit"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Unit</Label>
+                            <Label htmlFor={field.name}>Unit <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -240,7 +241,7 @@ function EditRecipeIngredient() {
                 <form.Subscribe
                     selector={(state) => [state.canSubmit, state.isSubmitting]}
                     children={([canSubmit, isSubmitting]) => (
-                        <Button className="mt-4" type="submit" disabled={!canSubmit}>
+                        <Button className="mt-8 mx-auto flex" type="submit" disabled={!canSubmit}>
                             {isSubmitting ? "..." : "Submit"}
                         </Button>
                     )}

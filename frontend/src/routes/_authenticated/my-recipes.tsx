@@ -120,7 +120,7 @@ function MyRecipes() {
                     ))}
                 </TableBody>
             </Table>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-8">
                 {Array.from({ length: Math.ceil(sortedRecipes.length / recipesPerPage) }, (_, index) => (
                     <Button 
                         key={index} 
