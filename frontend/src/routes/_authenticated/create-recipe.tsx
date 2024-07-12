@@ -120,7 +120,7 @@ function CreateRecipe() {
         form.setFieldValue('ingredients', remainingIngredients);
     };
 
-    const handleIngredientChange = (index: number, field: string, value: any) => {
+    const handleIngredientChange = (index: number, field: string, value: unknown) => {
         const updatedIngredients = ingredients.map((ingredient, i) => 
             i === index ? { ...ingredient, [field]: value } : ingredient 
         );
@@ -325,13 +325,31 @@ function CreateRecipe() {
                         </div>
                     ))}
                 />
+                <h2 className="text-center text-lg p-4">Ingredients</h2>
                 {ingredients.map((ingredient, index) => (
-                    <div key={index} className="flex gap-4 ingredient-input">
+                    <div key={index} className="ingredient-input">
+                        <hr />
+                        <div className="flex justify-between m-2 mb-4">
+                            <h3 className="font-bold pb-6 pt-2">Ingredient {index+1}</h3>
+                            {ingredients.length > 1 && (
+                                <Button
+                                    type="button"
+                                    onClick={() => removeIngredient(index)}
+                                >
+                                    Remove
+                                </Button>
+                            )}
+                        </div>
                         <form.Field 
                             name={`ingredients[${index}].name`}
                             children={((field) => (
-                                <div className="flex-col my-2">
-                                    <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
+                                <div className="flex justify-between m-2">
+                                    <Label 
+                                        htmlFor={field.name}
+                                        className="w-1/2"
+                                    >
+                                        Ingredient Name <span className="text-yellow-300">*</span>
+                                    </Label>
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === ingredient.name)}
@@ -341,7 +359,7 @@ function CreateRecipe() {
                                             }
                                         }}
                                         placeholder="Select Ingredient"
-                                        className="ingredient-name mt-2"
+                                        className="ingredient-name w-1/2"
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -352,8 +370,13 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].quantity`}
                             children={((field) => (
-                                <div className="flex-col my-2">
-                                    <Label htmlFor={field.name}>Quantity <span className="text-yellow-300">*</span></Label>
+                                <div className="flex justify-between m-2">
+                                    <Label 
+                                        htmlFor={field.name}
+                                        className="w-1/2"
+                                    >
+                                        Quantity <span className="text-yellow-300">*</span>
+                                    </Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}
@@ -364,7 +387,7 @@ function CreateRecipe() {
                                             field.handleChange(Number(e.target.value))
                                             handleIngredientChange(index, 'quantity', Number(e.target.value))
                                         }}
-                                        className='mt-2'
+                                        className='w-1/2'
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -375,8 +398,13 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].unit`}
                             children={((field) => (
-                                <div className="flex-col my-2">
-                                    <Label htmlFor={field.name}>Unit <span className="text-yellow-300">*</span></Label>
+                                <div className="flex justify-between m-2">
+                                    <Label 
+                                        htmlFor={field.name}
+                                        className="w-1/2"
+                                    >
+                                        Unit <span className="text-yellow-300">*</span>
+                                    </Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}
@@ -386,7 +414,7 @@ function CreateRecipe() {
                                             field.handleChange(e.target.value)
                                             handleIngredientChange(index, 'unit', e.target.value)
                                         }}
-                                        className='mt-2'
+                                        className='w-1/2'
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -397,8 +425,13 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].details`}
                             children={((field) => (
-                                <div className="flex-col my-2">
-                                    <Label htmlFor={field.name}>Details</Label>
+                                <div className="flex justify-between m-2">
+                                    <Label 
+                                        htmlFor={field.name}
+                                        className='w-1/2'
+                                    >
+                                        Details
+                                    </Label>
                                     <Input
                                         id={field.name}
                                         name={field.name}
@@ -408,7 +441,7 @@ function CreateRecipe() {
                                             field.handleChange(e.target.value)
                                             handleIngredientChange(index, 'details', e.target.value)
                                         }}
-                                        className='mt-2'
+                                        className='w-1/2'
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -416,21 +449,14 @@ function CreateRecipe() {
                                 </div>
                             ))}
                         />
-                        {ingredients.length > 1 && (
-                            <Button
-                                type="button"
-                                onClick={() => removeIngredient(index)}
-                                className="mb-4"
-                            >
-                                Remove
-                            </Button>
-                        )}
                     </div>
                 ))}
-                <Button type="button" onClick={addIngredient}>
-                    Add Ingredient
-                </Button>
-                <Button type="submit">Create Recipe</Button>
+                <div className="flex-col align-center">
+                    <Button type="button" onClick={addIngredient} className="flex m-auto mb-8">
+                        Add Another Ingredient
+                    </Button>
+                    <Button type="submit" className="flex m-auto my-4">Create Recipe</Button>
+                </div>
             </form>
         </div>
     );
