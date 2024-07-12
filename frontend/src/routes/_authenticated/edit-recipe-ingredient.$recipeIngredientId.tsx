@@ -141,7 +141,7 @@ function EditRecipeIngredient() {
 
     return (
         <div className="p-2">
-            <h2 className="text-center p-4">Edit '{oldRecipeIngredient.name}' for '{recipeTitle}'</h2>
+            <h2 className="text-center p-4 text-xl">Edit '{oldRecipeIngredient.name}' for '{recipeTitle}'</h2>
             <form 
                 className='max-w-xl m-auto'
                 onSubmit={(e) => {

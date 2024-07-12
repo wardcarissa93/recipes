@@ -12,14 +12,18 @@ function SearchResults() {
     const { results } = useSearch();
 
     if (!results) {
-        return <div className="p-2 max-w-3xl m-auto">No search results found.</div>;
+        return (
+            <div className='p-2 max-w-xl m-auto'>
+                <h2 className="text-center text-xl p-4"></h2>
+            </div>
+        );
     }
 
     console.log("RESULTS: ", results)
 
     return (
-        <div className="p-2 max-w-3xl m-auto">
-            Search results
+        <div className="p-2 max-w-xl m-auto">
+            <h2 className="text-center text-xl p-4">Search Results</h2>
             <Table>
                 <TableHeader>
                     <TableRow>

@@ -129,10 +129,10 @@ function CreateRecipe() {
     };
 
     return (
-        <div className="p-1">
-            <h2>Create Recipe</h2>
+        <div className="p-2">
+            <h2 className="text-center p-4 text-xl">Create Recipe</h2>
             <form 
-                className='m-auto'
+                className='max-w-xl m-auto'
                 onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -145,7 +145,7 @@ function CreateRecipe() {
                         onChange: createRecipeSchema.shape.title
                     }}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Title <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
@@ -153,11 +153,12 @@ function CreateRecipe() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
@@ -166,7 +167,7 @@ function CreateRecipe() {
                         onChange: createRecipeSchema.shape.description
                     })}
                     children={((field) => (
-                        <>
+                        <div className="my-2">
                             <Label htmlFor={field.name}>Description</Label>
                             <Input
                                 id={field.name}
@@ -174,65 +175,72 @@ function CreateRecipe() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
-                <form.Field 
-                    name="prepTime"
-                    validators={({
-                        onChange: createRecipeSchema.shape.prepTime
-                    })}
-                    children={((field) => (
-                        <>
-                            <Label htmlFor={field.name}>Prep Time</Label>
-                            <Input
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </>
-                    ))}
-                />
-                <form.Field 
-                    name="cookTime"
-                    validators={({
-                        onChange: createRecipeSchema.shape.cookTime
-                    })}
-                    children={((field) => (
-                        <>
-                            <Label htmlFor={field.name}>Cook Time</Label>
-                            <Input
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </>
-                    ))}
-                />
+                <div className="flex gap-4">
+                    <form.Field 
+                        name="prepTime"
+                        validators={({
+                            onChange: createRecipeSchema.shape.prepTime
+                        })}
+                        children={((field) => (
+                            <div className='my-2 w-1/2'>
+                                <Label htmlFor={field.name}>Prep Time (in minutes)</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                    <form.Field 
+                        name="cookTime"
+                        validators={({
+                            onChange: createRecipeSchema.shape.cookTime
+                        })}
+                        children={((field) => (
+                            <div className='my-2 w-1/2'>
+                                <Label htmlFor={field.name}>Cook Time (in minutes)</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                </div>
                 <form.Field 
                     name="totalTime"
                     validators={({
                         onChange: createRecipeSchema.shape.totalTime
                     })}
                     children={((field) => (
-                        <>
-                            <Label htmlFor={field.name}>Total Time <span className="text-yellow-300">*</span></Label>
+                        <div className='my-2'>
+                            <Label htmlFor={field.name}>Total Time (in minutes) <span className="text-yellow-300">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -240,11 +248,12 @@ function CreateRecipe() {
                                 onBlur={field.handleBlur}
                                 type="number"
                                 onChange={(e) => field.handleChange(Number(e.target.value))}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
@@ -253,8 +262,9 @@ function CreateRecipe() {
                         onChange: createRecipeSchema.shape.servings
                     })}
                     children={((field) => (
-                        <>
+                        <div className='my-2'>
                             <Label htmlFor={field.name}>Servings</Label>
+                            <p className="italic text-xs">(Enter 0 if unavailable)</p>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -262,11 +272,12 @@ function CreateRecipe() {
                                 onBlur={field.handleBlur}
                                 type="number"
                                 onChange={(e) => field.handleChange(Number(e.target.value))}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
@@ -275,7 +286,7 @@ function CreateRecipe() {
                         onChange: createRecipeSchema.shape.instructions
                     })}
                     children={((field) => (
-                        <>
+                        <div className='my-2'>
                             <Label htmlFor={field.name}>Instructions <span className="text-yellow-300">*</span></Label>
                             <textarea
                                 id={field.name}
@@ -284,12 +295,12 @@ function CreateRecipe() {
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
                                 rows={5}
-                                className="block w-full p-2 border rounded-md instructions-input"
+                                className="block w-full p-2 border rounded-md instructions-input mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 <form.Field 
@@ -298,7 +309,7 @@ function CreateRecipe() {
                         onChange: createRecipeSchema.shape.url
                     })}
                     children={((field) => (
-                        <>
+                        <div className='my-2'>
                             <Label htmlFor={field.name}>URL</Label>
                             <Input
                                 id={field.name}
@@ -306,11 +317,12 @@ function CreateRecipe() {
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
+                                className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
                             ) : null}
-                        </>
+                        </div>
                     ))}
                 />
                 {ingredients.map((ingredient, index) => (
@@ -318,7 +330,7 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].name`}
                             children={((field) => (
-                                <div className="flex-col">
+                                <div className="flex-col my-2">
                                     <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
@@ -329,7 +341,7 @@ function CreateRecipe() {
                                             }
                                         }}
                                         placeholder="Select Ingredient"
-                                        className="ingredient-name"
+                                        className="ingredient-name mt-2"
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -340,7 +352,7 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].quantity`}
                             children={((field) => (
-                                <div className="flex-col">
+                                <div className="flex-col my-2">
                                     <Label htmlFor={field.name}>Quantity <span className="text-yellow-300">*</span></Label>
                                     <Input
                                         id={field.name}
@@ -352,6 +364,7 @@ function CreateRecipe() {
                                             field.handleChange(Number(e.target.value))
                                             handleIngredientChange(index, 'quantity', Number(e.target.value))
                                         }}
+                                        className='mt-2'
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -362,7 +375,7 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].unit`}
                             children={((field) => (
-                                <div className="flex-col">
+                                <div className="flex-col my-2">
                                     <Label htmlFor={field.name}>Unit <span className="text-yellow-300">*</span></Label>
                                     <Input
                                         id={field.name}
@@ -373,6 +386,7 @@ function CreateRecipe() {
                                             field.handleChange(e.target.value)
                                             handleIngredientChange(index, 'unit', e.target.value)
                                         }}
+                                        className='mt-2'
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
@@ -383,7 +397,7 @@ function CreateRecipe() {
                         <form.Field 
                             name={`ingredients[${index}].details`}
                             children={((field) => (
-                                <div className="flex-col">
+                                <div className="flex-col my-2">
                                     <Label htmlFor={field.name}>Details</Label>
                                     <Input
                                         id={field.name}
@@ -394,6 +408,7 @@ function CreateRecipe() {
                                             field.handleChange(e.target.value)
                                             handleIngredientChange(index, 'details', e.target.value)
                                         }}
+                                        className='mt-2'
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em>{field.state.meta.touchedErrors}</em>
