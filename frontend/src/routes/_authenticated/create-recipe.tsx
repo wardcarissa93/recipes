@@ -18,18 +18,10 @@ import { createRecipeSchema } from '../../../../server/sharedTypes';
 import { sanitizeString } from '../../lib/utils';
 import { useState } from 'react';
 import Select from 'react-select';
-
-type Ingredient = {
-    name: string;
-    quantity: number;
-    unit: string;
-    details: '';
-};
-
-type IngredientOption = {
-    label: string;
-    value: string;
-};
+import {
+    type IngredientOption,
+    type NewRecipeIngredient
+} from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
@@ -38,7 +30,7 @@ export const Route = createFileRoute('/_authenticated/create-recipe')({
 function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const [ingredients, setIngredients] = useState<Ingredient[]>([{ name: '', quantity: 0, unit: '', details: '' }]);
+    const [ingredients, setIngredients] = useState<NewRecipeIngredient[]>([{ name: '', quantity: 0, unit: '', details: '' }]);
 
     const { data } = useQuery(getAllIngredientsQueryOptions);
     const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];

@@ -17,18 +17,10 @@ import {
 } from '@/lib/api'
 import Select from 'react-select'
 import { sanitizeString } from '../../lib/utils'
-
-type FetchedRecipe = {
-    recipe: {
-        id: number;
-        title: string;
-    }
-}
-
-type IngredientOption = {
-    label: string;
-    value: string;
-}
+import {
+    type FetchedRecipe,
+    type IngredientOption
+} from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/add-recipe-ingredient/$recipeId')({
     component: AddRecipeIngredient

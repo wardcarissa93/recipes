@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_authenticated/edit-ingredient/$ingredien
   component: EditIngredient
 })
 
-type UpdatedIngredient = {
+type Ingredient = {
     id: number,
     userId: string,
     name: string,
@@ -29,7 +29,7 @@ type UpdatedIngredient = {
 };
 
 type FetchedIngredient = {
-    ingredient: UpdatedIngredient
+    ingredient: Ingredient
 }
 
 function EditIngredient() {
@@ -66,7 +66,7 @@ function EditIngredient() {
             });
 
             try {
-                const updatedIngredient: UpdatedIngredient = await editIngredient({ id, value });
+                const updatedIngredient: Ingredient = await editIngredient({ id, value });
                 console.log("updatedIngredient: ", updatedIngredient);
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,

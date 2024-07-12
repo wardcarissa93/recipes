@@ -9,14 +9,11 @@ import {
     type EditRecipe,
     type EditRecipeIngredient
 } from '../../../server/sharedTypes'
+import { type ErrorResponse } from './types'
 
 const client = hc<ApiRoutes>('/')
 
 export const api = client.api
-
-type ErrorResponse = {
-    message?: string;
-}
 
 async function getCurrentUser() {
     const res = await api.me.$get();
