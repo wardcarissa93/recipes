@@ -7,12 +7,8 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useSearch } from '@/context/useSearch';
 import Select from 'react-select';
-import { sanitizeString } from '../../lib/utils'
-
-type IngredientOption = {
-    label: string;
-    value: string;
-};
+import { sanitizeString } from '../../lib/utils';
+import { type IngredientOption } from '../../lib/types';
 
 export const Route = createFileRoute('/_authenticated/search')({
     component: Search

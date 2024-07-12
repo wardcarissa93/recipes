@@ -6,24 +6,17 @@ export type ExistingRecipeIngredients = {
     recipeIngredients: RecipeIngredient[]
 }
 
-
-
 export type FetchedIngredient = {
     ingredient: Ingredient
 }
 
 export type FetchedRecipe = {
-    recipe: {
-        id: number;
-        title: string;
-    }
+    recipe: Recipe
 }
 
 export type FetchedRecipeIngredient = {
     recipeIngredient: RecipeIngredient
 }
-
-
 
 export type Ingredient = {
     id: number,
@@ -44,6 +37,18 @@ export type NewRecipeIngredient = {
     details: '';
 }
 
+export type Recipe = {
+    id: number;
+    title: string;
+    description?: string;
+    prepTime?: string;
+    cookTime?: string;
+    totalTime?: string;
+    servings?: string;
+    instructions?: string;
+    url?: string;
+}
+
 export type RecipeIngredient = {
     id: number;
     ingredientId: number;
@@ -51,5 +56,11 @@ export type RecipeIngredient = {
     name: string;
     quantity: string;
     unit: string;
-    details: string;
+    details?: string;
+}
+
+export type SearchResult = {
+    id: number;
+    servings: number;
+    title: string;
 }

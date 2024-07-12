@@ -1,18 +1,12 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSearch } from '@/context/useSearch';
-import { sanitizeString } from '../../lib/utils'
+import { sanitizeString } from '../../lib/utils';
+import { type SearchResult } from '../../lib/types';
 
 export const Route = createFileRoute('/_authenticated/search-results')({
     component: SearchResults
 });
-
-type SearchResult = {
-    id: number;
-    servings: number;
-    title: string;
-}
-
 
 function SearchResults() {
     const { results } = useSearch();

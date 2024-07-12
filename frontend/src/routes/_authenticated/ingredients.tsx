@@ -20,15 +20,11 @@ import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
 import { sanitizeString } from '../../lib/utils'
+import { type Ingredient } from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/ingredients')({
     component: Ingredients
 })
-
-type Ingredient = {
-    id: number,
-    name: string,
-}
 
 function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
@@ -38,6 +34,8 @@ function Ingredients() {
     const ingredientsPerPage = 8;
 
     if (error) return 'An error has occurred: ' + error.message
+
+    console.log("DATA: ", data)
 
     const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
         ...ingredient,
