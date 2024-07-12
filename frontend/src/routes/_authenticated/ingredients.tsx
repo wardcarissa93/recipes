@@ -35,8 +35,6 @@ function Ingredients() {
 
     if (error) return 'An error has occurred: ' + error.message
 
-    console.log("DATA: ", data)
-
     const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
         ...ingredient,
         name: sanitizeString(ingredient.name),
@@ -153,7 +151,6 @@ function IngredientDeleteButton({ id }: { id: number }) {
             });
         },
         onSuccess: () => {
-            console.log('Ingredient deleted successfully:', id);
             toast("Ingredient Deleted", {
                 description: `Successfully deleted ingredient: ${id}`,
             })
@@ -168,7 +165,6 @@ function IngredientDeleteButton({ id }: { id: number }) {
     });
 
     const handleDelete = () => {
-        console.log('Deleting ingredient with id:', id);
         mutation.mutate({ id });
     };
 
