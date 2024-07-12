@@ -15,22 +15,15 @@ import {
     getIngredientByIdQueryOptions,
     loadingEditIngredientQueryOptions 
 } from '@/lib/api'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
+import {
+    type FetchedIngredient,
+    type Ingredient
+} from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/edit-ingredient/$ingredientId')({
   component: EditIngredient
 })
-
-type UpdatedIngredient = {
-    id: number,
-    userId: string,
-    name: string,
-    createdAt: string | null
-};
-
-type FetchedIngredient = {
-    ingredient: UpdatedIngredient
-}
 
 function EditIngredient() {
     const queryClient = useQueryClient();
@@ -66,7 +59,7 @@ function EditIngredient() {
             });
 
             try {
-                const updatedIngredient: UpdatedIngredient = await editIngredient({ id, value });
+                const updatedIngredient: Ingredient = await editIngredient({ id, value });
                 console.log("updatedIngredient: ", updatedIngredient);
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,

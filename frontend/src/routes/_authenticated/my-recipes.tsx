@@ -19,16 +19,12 @@ import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
+import { type Recipe } from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/my-recipes')({
     component: MyRecipes
 })
-
-type Recipe = {
-    id: number,
-    title: string,
-}
 
 function MyRecipes() {
     const { isPending, error, data } = useQuery(getAllRecipesQueryOptions);

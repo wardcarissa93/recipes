@@ -17,37 +17,14 @@ import {
     loadingEditRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
-import { sanitizeString } from '../../utils/sanitizeString'
-
-type FetchedRecipeIngredient = {
-    recipeIngredient: RecipeIngredient
-}
-
-type ExistingRecipeIngredients = {
-    recipeIngredients: RecipeIngredient[]
-}
-
-type RecipeIngredient = {
-    id: number;
-    ingredientId: number;
-    recipeId: number;
-    name: string;
-    quantity: string;
-    unit: string;
-    details: string;
-}
-
-type FetchedRecipe = {
-    recipe: {
-        id: number;
-        title: string;
-    }
-}
-
-type IngredientOption = {
-    label: string;
-    value: string;
-}
+import { sanitizeString } from '../../lib/utils'
+import {
+    type ExistingRecipeIngredients,
+    type FetchedRecipe,
+    type FetchedRecipeIngredient,
+    type IngredientOption,
+    type RecipeIngredient
+} from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/edit-recipe-ingredient/$recipeIngredientId')({
     component: EditRecipeIngredient
@@ -87,7 +64,7 @@ function EditRecipeIngredient() {
                     name: sanitizeString(fetchedRecipeIngredient.recipeIngredient.name),
                     quantity: parseFloat(fetchedRecipeIngredient.recipeIngredient.quantity),
                     unit: sanitizeString(fetchedRecipeIngredient.recipeIngredient.unit),
-                    details: fetchedRecipeIngredient.recipeIngredient.details !== null ? sanitizeString(fetchedRecipeIngredient.recipeIngredient.details) : ''
+                    details: fetchedRecipeIngredient.recipeIngredient.details !== (null || undefined) ? sanitizeString(fetchedRecipeIngredient.recipeIngredient.details) : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe's ingredient: ", error);

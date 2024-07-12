@@ -15,23 +15,11 @@ import {
     editRecipe,
     loadingEditRecipeQueryOptions
 } from '@/lib/api'
-import { sanitizeString } from '../../utils/sanitizeString'
-
-type Recipe = {
-    id: number;
-    title: string;
-    description: string;
-    prepTime: string;
-    cookTime: string;
-    totalTime: string;
-    servings: string;
-    instructions: string;
-    url: string;
-}
-
-type FetchedRecipe = {
-    recipe: Recipe
-};
+import { sanitizeString } from '../../lib/utils'
+import {
+    type FetchedRecipe,
+    type Recipe
+} from '../../lib/types'
  
 export const Route = createFileRoute('/_authenticated/edit-recipe/$recipeId')({
     component: EditRecipe
@@ -58,13 +46,13 @@ function EditRecipe() {
                 const fetchedRecipe: FetchedRecipe = await getRecipeById(recipeId);
                 setOldRecipe({
                     title: sanitizeString(fetchedRecipe.recipe.title),
-                    description: fetchedRecipe.recipe.description !== null ? sanitizeString(fetchedRecipe.recipe.description) : '',
-                    prepTime: parseInt(fetchedRecipe.recipe.prepTime),
-                    cookTime: parseInt(fetchedRecipe.recipe.cookTime), 
-                    totalTime: parseInt(fetchedRecipe.recipe.totalTime),
-                    servings: parseInt(fetchedRecipe.recipe.servings),
-                    instructions: sanitizeString(fetchedRecipe.recipe.instructions),
-                    url: fetchedRecipe.recipe.url !== null ? sanitizeString(fetchedRecipe.recipe.url) : ''
+                    description: fetchedRecipe.recipe.description !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.description) : '',
+                    prepTime: fetchedRecipe.recipe.prepTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.prepTime) : 0,
+                    cookTime: fetchedRecipe.recipe.cookTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.cookTime) : 0, 
+                    totalTime: fetchedRecipe.recipe.totalTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.totalTime) : 0,
+                    servings: fetchedRecipe.recipe.servings !== (null || undefined) ? parseInt(fetchedRecipe.recipe.servings) : 0,
+                    instructions: fetchedRecipe.recipe.instructions !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.instructions) : '',
+                    url: fetchedRecipe.recipe.url !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.url) : ''
                 });
             } catch (error) {
                 console.error("Error fetching recipe: ", error);

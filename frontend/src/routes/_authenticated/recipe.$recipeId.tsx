@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { sanitizeString } from '../../utils/sanitizeString'
+import { sanitizeString } from '../../lib/utils'
 import { 
     deleteRecipeIngredient,
     getRecipeByIdQueryOptions,
