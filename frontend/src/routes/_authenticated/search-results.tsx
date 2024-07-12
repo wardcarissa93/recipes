@@ -19,8 +19,6 @@ function SearchResults() {
         );
     }
 
-    console.log("RESULTS: ", results)
-
     return (
         <div className="p-2 max-w-xl m-auto">
             <h2 className="text-center text-xl p-4">Search Results</h2>

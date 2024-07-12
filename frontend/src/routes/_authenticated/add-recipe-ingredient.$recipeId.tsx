@@ -61,7 +61,6 @@ function AddRecipeIngredient() {
             details: ''
         },
         onSubmit: async ({ value }) => {
-            console.log("VALUE BEING SUBMITTED: ", value)
             const existingIngredientsForRecipe = await queryClient.ensureQueryData(getRecipeIngredientsByRecipeIdQueryOptions(recipeId))
             const ingredientId = await getIngredientIdByName(value.name);
             const newRecipeIngredient = {

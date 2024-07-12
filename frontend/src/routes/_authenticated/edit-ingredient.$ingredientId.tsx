@@ -60,7 +60,6 @@ function EditIngredient() {
 
             try {
                 const updatedIngredient: Ingredient = await editIngredient({ id, value });
-                console.log("updatedIngredient: ", updatedIngredient);
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,
                     ingredients: existingIngredients.ingredients.map(ingredient =>

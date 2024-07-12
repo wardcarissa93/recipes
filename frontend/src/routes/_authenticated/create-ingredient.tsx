@@ -38,7 +38,6 @@ function CreateIngredient() {
 
             try {
                 const newIngredient = await createIngredient({ value });
-                console.log("newIngredient: ", newIngredient)
                 queryClient.setQueryData(getAllIngredientsQueryOptions.queryKey, {
                     ...existingIngredients,
                     ingredients: [newIngredient, ...existingIngredients.ingredients],

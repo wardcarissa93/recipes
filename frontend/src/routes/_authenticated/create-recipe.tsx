@@ -89,10 +89,8 @@ function CreateRecipe() {
                         ingredientId: ingredientId,
                         recipeId: newRecipe.id
                     } });
-                    console.log("newRecipeIngredient: ", newRecipeIngredient)
                     createdRecipeIngredients.push(newRecipeIngredient);
                 }
-                console.log("createdRecipeIngredients: ", createdRecipeIngredients)
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
                     recipes: [newRecipe, ...existingRecipes.recipes],
