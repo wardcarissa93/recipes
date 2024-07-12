@@ -99,7 +99,7 @@ function AddRecipeIngredient() {
 
     return (
         <div className="p-2">
-            <h2 className="text-center p-4">Add Ingredient to {recipeTitle}</h2>
+            <h2 className="text-center p-4 text-xl">Add Ingredient to {recipeTitle}</h2>
             <form
                 className="max-w-xl m-auto"
                 onSubmit={(e) => {

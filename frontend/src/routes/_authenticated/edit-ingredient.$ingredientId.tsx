@@ -94,7 +94,7 @@ function EditIngredient() {
     
     return (
         <div className="p-2">
-            <h2 className="text-center p-4">Edit Ingredient '{ingredientName}'</h2>
+            <h2 className="text-center p-4 text-xl">Edit Ingredient '{ingredientName}'</h2>
                 <form
                     className="max-w-xl m-auto"
                     onSubmit={(e) => {
@@ -111,6 +111,7 @@ function EditIngredient() {
                         children={((field) => (
                             <div className="my-2">
                                 <Label htmlFor={field.name}>Ingredient Name</Label>
+                                <p className="italic text-xs">Please use singular form only (no plurals) to prevent duplicates</p>
                                 <Input
                                     id={field.name}
                                     name={field.name}

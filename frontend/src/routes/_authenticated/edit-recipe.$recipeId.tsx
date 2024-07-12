@@ -116,7 +116,7 @@ function EditRecipe() {
 
     return (
         <div className="p-2">
-            <h2 className="text-center p-4">Edit Recipe '{oldRecipe.title}'</h2>
+            <h2 className="text-center p-4 text-xl">Edit Recipe '{oldRecipe.title}'</h2>
             <form
                 className="max-w-xl m-auto"
                 onSubmit={(e) => {
