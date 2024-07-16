@@ -457,7 +457,15 @@ function CreateRecipe() {
                     <Button type="button" onClick={addIngredient} className="flex m-auto mb-8">
                         Add Another Ingredient
                     </Button>
-                    <Button type="submit" className="flex m-auto my-4">Create Recipe</Button>
+                    <form.Subscribe
+                        selector={(state) => [state.canSubmit, state.isSubmitting]}
+                        children={([canSubmit, isSubmitting]) => (
+                            <Button className="m-auto my-4 flex" type="submit" disabled={!canSubmit}>
+                                {isSubmitting ? "..." : "Create Recipe"}
+                            </Button>
+                        )}
+                    >
+                    </form.Subscribe>
                 </div>
             </form>
         </div>
