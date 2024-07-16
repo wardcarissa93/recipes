@@ -96,7 +96,7 @@ function CreateRecipe() {
                     recipes: [newRecipe, ...existingRecipes.recipes],
                 });
                 toast("Recipe Created", {
-                    description: `Successfully created new recipe: ${newRecipe.id}`,
+                    description: `Successfully created new recipe: ${newRecipe.title}`,
                 });
             } catch (error) {
                 toast("Error", {

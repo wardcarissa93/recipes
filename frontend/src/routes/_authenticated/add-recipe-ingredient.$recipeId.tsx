@@ -83,7 +83,7 @@ function AddRecipeIngredient() {
                 });
                 await queryClient.invalidateQueries({ queryKey: getRecipeIngredientsByRecipeIdQueryOptions(recipeId).queryKey });
                 toast("Ingredient Added", {
-                    description: `Successfully added ${value.name} to recipe '${recipeTitle}'`,
+                    description: `Successfully added ${value.name} to '${recipeTitle}'`,
                 });
                 navigate({ to: `/recipe/${recipeId}` });
             } catch (error) {

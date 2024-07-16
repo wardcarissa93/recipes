@@ -106,7 +106,7 @@ function Ingredients() {
                                 <IngredientEditButton id={ingredient.id}/>
                             </TableCell>
                             <TableCell>
-                                <IngredientDeleteButton id={ingredient.id}/>
+                                <IngredientDeleteButton id={ingredient.id} name={ingredient.name}/>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -140,19 +140,19 @@ function IngredientEditButton({ id }: { id: number }) {
     )
 }
 
-function IngredientDeleteButton({ id }: { id: number }) {
+function IngredientDeleteButton({ id, name }: { id: number, name: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteIngredient,
         onError: (error) => {
             console.error('Error deleting ingredient:', error);
             toast("Error", {
-                description: error.message || `Failed to delete ingredient: ${id}`,
+                description: error.message || `Failed to delete ingredient '${name}'`,
             });
         },
         onSuccess: () => {
             toast("Ingredient Deleted", {
-                description: `Successfully deleted ingredient: ${id}`,
+                description: `Successfully deleted ingredient '${name}'`,
             })
             queryClient.setQueryData(
                 getAllIngredientsQueryOptions.queryKey,

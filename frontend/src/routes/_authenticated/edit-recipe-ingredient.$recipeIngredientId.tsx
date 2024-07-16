@@ -119,7 +119,7 @@ function EditRecipeIngredient() {
                 });
                 await queryClient.invalidateQueries({ queryKey: getRecipeIngredientsByRecipeIdQueryOptions(oldRecipeIngredient.recipeId.toString()).queryKey });
                 toast("Ingredient Updated", {
-                    description: `Successfully updated ${value.name} for recipe '${recipeTitle}'`,
+                    description: `Successfully updated ${value.name} for '${recipeTitle}'`,
                 });
                 navigate({ to: `/recipe/${oldRecipeIngredient.recipeId.toString()}` });
             } catch (error) {

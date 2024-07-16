@@ -74,7 +74,7 @@ function RecipeDetails() {
                                     <span> - </span>
                                     <EditRecipeIngredientButton id={ingredient.id}/>
                                     <span> - </span>
-                                    <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} />
+                                    <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
                                 </li>
                             ))}
                         </ul>
@@ -88,7 +88,7 @@ function RecipeDetails() {
                             Back
                         </Button>
                         <EditRecipeButton id={recipe.id} />
-                        <DeleteRecipeButton id={recipe.id} />
+                        <DeleteRecipeButton id={recipe.id} title={recipe.title} />
                     </div>
                 </div>
             )}
@@ -115,19 +115,20 @@ function EditRecipeButton({ id }: { id: number }) {
     )
 }
 
-function DeleteRecipeButton({ id }: { id: number }) {
+function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteRecipe,
-        onError: () => {
+        onError: (error) => {
+            console.error('Error deleting recipe: ', error);
             toast("Error", {
-                description: `Failed to delete recipe: ${id}`,
+                description: error.message || `Failed to delete recipe '${title}'`,
             });
         },
         onSuccess: () => {
             toast("Recipe Deleted", {
-                description: `Successfully deleted recipe: ${id}`,
+                description: `Successfully deleted recipe '${title}'`,
             })
             queryClient.setQueryData(
                 getAllRecipesQueryOptions.queryKey,
@@ -189,18 +190,19 @@ function AddRecipeIngredientButton({ id }: { id: number}) {
     )
 }
 
-function DeleteRecipeIngredientButton({ id, recipeId }: { id: number, recipeId: string }) {
+function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, recipeId: string, name: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteRecipeIngredient,
-        onError: () => {
+        onError: (error) => {
+            console.error('Error deleting ingredient:', error);
             toast("Error", {
-                description: `Failed to delete ingredient: ${id}`,
+                description: error.message || `Failed to delete ingredient: ${name}`,
             });
         },
         onSuccess: () => {
             toast("Ingredient Deleted", {
-                description: `Successfully deleted ingredient: ${id}`,
+                description: `Successfully deleted ingredient: ${name}`,
             })
             queryClient.setQueryData(
                 getRecipeIngredientsByRecipeIdQueryOptions(recipeId).queryKey,
