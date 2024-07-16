@@ -43,7 +43,8 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
         .nullable(),
     totalTime: z
         .number()
-        .positive({ message: "'Total Time' must be greater than 0." } ),
+        .nonnegative({ message: "'Total Time' cannot be negative." } )
+        .nullable(),
     servings: z
         .number()
         .nonnegative({ message: "'Servings' cannot be negative." } )
@@ -75,7 +76,8 @@ export const updateRecipesSchema = z.object({
         .nullable(),
     totalTime: z
         .number()
-        .positive({ message: "'Total Time' must be greater than 0." } ),
+        .nonnegative({ message: "'Total Time' cannot be negative." } )
+        .nullable(),
     servings: z
         .number()
         .nonnegative({ message: "'Servings' cannot be negative." } )

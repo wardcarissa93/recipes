@@ -98,7 +98,6 @@ function EditRecipe() {
                     ...existingRecipes,
                     recipes: existingRecipes.recipes.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe: recipe)
                 });
-                console.log("updatedRecipe: ", updatedRecipe)
                 await queryClient.invalidateQueries({ queryKey: getAllRecipesQueryOptions.queryKey });
                 await queryClient.invalidateQueries({ queryKey: getRecipeByIdQueryOptions(recipeId).queryKey });
                 toast("Recipe Updated", {
@@ -175,7 +174,7 @@ function EditRecipe() {
                         </div>
                     ))}
                 />
-                <div className="flex gap-4">
+                <div className="flex gap-8">
                     <form.Field
                         name="prepTime"
                         validators={{
@@ -225,53 +224,57 @@ function EditRecipe() {
                         ))}
                     />
                 </div>
-                <form.Field
-                    name="totalTime"
-                    validators={{
-                        onChange: editRecipeSchema.shape.totalTime
-                    }}
-                    children={((field) => (
-                        <div className="my-2">
-                            <Label htmlFor={field.name}>Total Time (in minutes) <span className="text-yellow-300">*</span></Label>
-                            <Input 
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                                className="mt-2"
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </div>
-                    ))}
-                />
-                <form.Field
-                    name="servings"
-                    validators={{
-                        onChange: editRecipeSchema.shape.servings
-                    }}
-                    children={((field) => (
-                        <div className="my-2">
-                            <Label htmlFor={field.name}>Servings</Label>
-                            <p className="italic text-xs">(Enter 0 if unavailable)</p>
-                            <Input 
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                                className="mt-2"
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </div>
-                    ))}
-                />
+                <div className="flex gap-8">
+                    <form.Field
+                        name="totalTime"
+                        validators={{
+                            onChange: editRecipeSchema.shape.totalTime
+                        }}
+                        children={((field) => (
+                            <div className="my-2 w-1/2">
+                                <Label htmlFor={field.name}>Total Time (in minutes)</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input 
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                    <form.Field
+                        name="servings"
+                        validators={{
+                            onChange: editRecipeSchema.shape.servings
+                        }}
+                        children={((field) => (
+                            <div className="my-2 w-1/2">
+                                <Label htmlFor={field.name}>Servings</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input 
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                </div>
+
                 <form.Field
                     name="instructions"
                     validators={{

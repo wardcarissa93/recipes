@@ -63,7 +63,7 @@ function CreateRecipe() {
                 description: value.description.trim() !== '' ? sanitizeString(value.description.trim()) : null,
                 prepTime: value.prepTime !== 0 ? value.prepTime : null,
                 cookTime: value.cookTime !== 0 ? value.cookTime : null,
-                totalTime: value.totalTime,
+                totalTime: value.totalTime !== 0 ? value.totalTime : null,
                 servings: value.servings !== 0 ? value.servings : null,
                 instructions: sanitizeString(value.instructions.trim()),
                 url: value.url.trim() !== '' ? sanitizeString(value.url.trim()) : null,
@@ -181,7 +181,7 @@ function CreateRecipe() {
                         </div>
                     ))}
                 />
-                <div className="flex gap-4">
+                <div className="flex gap-8">
                     <form.Field 
                         name="prepTime"
                         validators={({
@@ -231,53 +231,57 @@ function CreateRecipe() {
                         ))}
                     />
                 </div>
-                <form.Field 
-                    name="totalTime"
-                    validators={({
-                        onChange: createRecipeSchema.shape.totalTime
-                    })}
-                    children={((field) => (
-                        <div className='my-2'>
-                            <Label htmlFor={field.name}>Total Time (in minutes) <span className="text-yellow-300">*</span></Label>
-                            <Input
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                                className="mt-2"
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </div>
-                    ))}
-                />
-                <form.Field 
-                    name="servings"
-                    validators={({
-                        onChange: createRecipeSchema.shape.servings
-                    })}
-                    children={((field) => (
-                        <div className='my-2'>
-                            <Label htmlFor={field.name}>Servings</Label>
-                            <p className="italic text-xs">(Enter 0 if unavailable)</p>
-                            <Input
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                type="number"
-                                onChange={(e) => field.handleChange(Number(e.target.value))}
-                                className="mt-2"
-                            />
-                            {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
-                            ) : null}
-                        </div>
-                    ))}
-                />
+                <div className="flex gap-8">
+                    <form.Field 
+                        name="totalTime"
+                        validators={({
+                            onChange: createRecipeSchema.shape.totalTime
+                        })}
+                        children={((field) => (
+                            <div className='my-2 w-1/2'>
+                                <Label htmlFor={field.name}>Total Time (in minutes)</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                    <form.Field 
+                        name="servings"
+                        validators={({
+                            onChange: createRecipeSchema.shape.servings
+                        })}
+                        children={((field) => (
+                            <div className='my-2 w-1/2'>
+                                <Label htmlFor={field.name}>Servings</Label>
+                                <p className="italic text-xs">(Enter 0 if unavailable)</p>
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    type="number"
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                                    className="mt-2"
+                                />
+                                {field.state.meta.touchedErrors ? (
+                                    <em>{field.state.meta.touchedErrors}</em>
+                                ) : null}
+                            </div>
+                        ))}
+                    />
+                </div>
+
                 <form.Field 
                     name="instructions"
                     validators={({

@@ -85,13 +85,11 @@ export const loadingCreateRecipeQueryOptions = queryOptions<{
 });
 
 export async function editRecipe({ id, value }: {id: string, value: EditRecipe }){
-    console.log("value: ", value)
     await new Promise((r) => setTimeout(r, 2000));
     const res = await api.recipes[`:id{[0-9]+}`].$put({
         param: { id: id },
         json: value
     });
-    console.log("res: ", res)
     if (!res.ok) {
         throw new Error("server error");
     }
