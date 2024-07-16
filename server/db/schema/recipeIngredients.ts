@@ -23,7 +23,7 @@ export const insertRecipeIngredientsSchema = createInsertSchema(recipeIngredient
     ingredientId: z.number(),
     quantity: z
         .number()
-        .positive({ message: "'Quantity' must be greater than 0." }),
+        .nonnegative({ message: "'Quantity' cannot be negative." }),
     unit: z
         .string()
         .min(1, { message: "'Unit' is required."} ),
@@ -37,7 +37,7 @@ export const updateRecipeIngredientSchema = z.object({
     ingredientId: z.number(),
     quantity: z
         .number()
-        .positive({ message: "'Quantity' must be greater than 0." }),
+        .nonnegative({ message: "'Quantity' cannot be negative." }),
     unit: z
         .string()
         .min(1, { message: "'Unit' is required." } ),

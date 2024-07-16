@@ -35,20 +35,25 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
         .nullable(),
     prepTime: z
         .number()
-        .nonnegative({ message: "'Prep Time' cannot be negative." } ),
+        .nonnegative({ message: "'Prep Time' cannot be negative." } )
+        .nullable(),
     cookTime: z
         .number()
-        .nonnegative({ message: "'Cook Time' cannot be negative." } ),
+        .nonnegative({ message: "'Cook Time' cannot be negative." } )
+        .nullable(),
     totalTime: z
         .number()
         .positive({ message: "'Total Time' must be greater than 0." } ),
     servings: z
         .number()
-        .nonnegative({ message: "'Servings' cannot be negative." } ),
+        .nonnegative({ message: "'Servings' cannot be negative." } )
+        .nullable(),
     instructions: z
         .string()
         .min(1, { message: "'Instructions' is required." } ),
-    url: z.string().nullable()
+    url: z
+        .string()
+        .nullable()
 });
 
 export const selectRecipesSchema = createSelectSchema(recipes);
@@ -62,16 +67,19 @@ export const updateRecipesSchema = z.object({
         .nullable(),
     prepTime: z
         .number()
-        .nonnegative({ message: "'Prep Time' cannot be negative." } ),
+        .nonnegative({ message: "'Prep Time' cannot be negative." } )
+        .nullable(),
     cookTime: z
         .number()
-        .nonnegative({ message: "'Cook Time' cannot be negative." } ),
+        .nonnegative({ message: "'Cook Time' cannot be negative." } )
+        .nullable(),
     totalTime: z
         .number()
         .positive({ message: "'Total Time' must be greater than 0." } ),
     servings: z
         .number()
-        .nonnegative({ message: "'Servings' cannot be negative." } ),
+        .nonnegative({ message: "'Servings' cannot be negative." } )
+        .nullable(),
     instructions: z
         .string()
         .min(1, { message: "'Instructions' is required." } ),

@@ -47,10 +47,10 @@ function EditRecipe() {
                 setOldRecipe({
                     title: sanitizeString(fetchedRecipe.recipe.title),
                     description: fetchedRecipe.recipe.description !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.description) : '',
-                    prepTime: fetchedRecipe.recipe.prepTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.prepTime) : 0,
-                    cookTime: fetchedRecipe.recipe.cookTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.cookTime) : 0, 
+                    prepTime: fetchedRecipe.recipe.prepTime ? parseInt(fetchedRecipe.recipe.prepTime) : 0,
+                    cookTime: fetchedRecipe.recipe.cookTime ? parseInt(fetchedRecipe.recipe.cookTime) : 0, 
                     totalTime: fetchedRecipe.recipe.totalTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.totalTime) : 0,
-                    servings: fetchedRecipe.recipe.servings !== (null || undefined) ? parseInt(fetchedRecipe.recipe.servings) : 0,
+                    servings: fetchedRecipe.recipe.servings ? parseInt(fetchedRecipe.recipe.servings) : 0,
                     instructions: fetchedRecipe.recipe.instructions !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.instructions) : '',
                     url: fetchedRecipe.recipe.url !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.url) : ''
                 });
@@ -85,6 +85,9 @@ function EditRecipe() {
                     ...value,
                     title: sanitizeString(value.title.trim()),
                     description: value.description.trim() !== '' ? sanitizeString(value.description) : null,
+                    prepTime: value.prepTime !== 0 ? value.prepTime : null,
+                    cookTime: value.cookTime !== 0 ? value.cookTime : null,
+                    servings: value.servings !== 0 ? value.servings : null,
                     instructions: sanitizeString(value.instructions.trim()),
                     url: value.url.trim() !== '' ? sanitizeString(value.url) : null,
                 };
@@ -101,6 +104,7 @@ function EditRecipe() {
                 });
                 navigate({ to: "/my-recipes" });
             } catch (error) {
+                console.error(error)
                 toast("Error", {
                     description: `Recipe could not be updated.`
                 });
