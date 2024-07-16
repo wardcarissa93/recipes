@@ -76,6 +76,7 @@ function EditRecipe() {
         },
         onSubmit: async ({ value }) => {
             const existingRecipes = await queryClient.ensureQueryData(getAllRecipesQueryOptions);
+            navigate({ to: "/my-recipes" });
             queryClient.setQueryData(loadingEditRecipeQueryOptions.queryKey, {
                 recipe: value
             });
@@ -97,12 +98,13 @@ function EditRecipe() {
                     ...existingRecipes,
                     recipes: existingRecipes.recipes.map(recipe => recipe.id === updatedRecipe.id ? updatedRecipe: recipe)
                 });
+                console.log("updatedRecipe: ", updatedRecipe)
                 await queryClient.invalidateQueries({ queryKey: getAllRecipesQueryOptions.queryKey });
                 await queryClient.invalidateQueries({ queryKey: getRecipeByIdQueryOptions(recipeId).queryKey });
                 toast("Recipe Updated", {
                     description: `Successfully updated recipe '${value.title}'`,
                 });
-                navigate({ to: "/my-recipes" });
+
             } catch (error) {
                 console.error(error)
                 toast("Error", {

@@ -71,6 +71,13 @@
       "when": 1720759933481,
       "tag": "0009_lethal_shocker",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1721157083887,
+      "tag": "0010_pretty_blazing_skull",
+      "breakpoints": true
     }
   ]
 }

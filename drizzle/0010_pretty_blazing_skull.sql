@@ -1,0 +1,1 @@
+ALTER TABLE "recipes" ALTER COLUMN "total_time" DROP NOT NULL;

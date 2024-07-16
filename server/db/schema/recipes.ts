@@ -11,7 +11,7 @@ export const recipes = pgTable(
         description: text("description"),
         prepTime: numeric("prep_time", { precision: 6, scale: 0 }),
         cookTime: numeric("cook_time", { precision: 6, scale: 0 }),
-        totalTime: numeric("total_time", { precision: 6, scale: 0 }).notNull(),
+        totalTime: numeric("total_time", { precision: 6, scale: 0 }),
         servings: numeric("servings", { precision: 2, scale: 0 }),
         instructions: text("instructions").notNull(),
         url: text("url"),
