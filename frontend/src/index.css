@@ -75,7 +75,7 @@
     }
   }
 
-  .ingredient-name, .instructions-input {
+  .ingredient-name, .instructions-input, .description-input {
     color: black;
   }
 

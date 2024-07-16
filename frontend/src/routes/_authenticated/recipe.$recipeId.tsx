@@ -31,6 +31,7 @@ function RecipeDetails() {
     const { isPending: ingredientsPending, error: ingredientsError, data: ingredientsData } = useQuery(getRecipeIngredientsByRecipeIdQueryOptions(recipeId));
 
     const recipe = recipeData?.recipe;
+    console.log("RECIPE: ", recipe)
     const sanitizedTitle = recipe ? sanitizeString(recipe.title) : '';
 
     let sanitizedInstructions = '';
