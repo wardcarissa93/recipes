@@ -31,12 +31,14 @@ function RecipeDetails() {
     const { isPending: ingredientsPending, error: ingredientsError, data: ingredientsData } = useQuery(getRecipeIngredientsByRecipeIdQueryOptions(recipeId));
 
     const recipe = recipeData?.recipe;
-    console.log("RECIPE: ", recipe)
     const sanitizedTitle = recipe ? sanitizeString(recipe.title) : '';
 
+    let sanitizedDescription = '';
     let sanitizedInstructions = '';
     if (recipe) {
+        const formattedDescription = recipe.description.replace(/\n/g, '<br>');
         const formattedInstructions = recipe.instructions.replace(/\n/g, '<br>');
+        sanitizedDescription = sanitizeString(formattedDescription);
         sanitizedInstructions = sanitizeString(formattedInstructions);
     }
 
@@ -58,6 +60,7 @@ function RecipeDetails() {
             {(!recipePending) && (
                 <div className="p-2 max-w-3xl m-auto">
                     <h1 className="text-2xl font-bold">{sanitizedTitle}</h1>
+                    <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
                     <p>Servings: {recipe.servings}</p>
                     <p>Total Time: {recipe.totalTime}</p>
                     {(ingredientsPending) ? (
