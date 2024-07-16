@@ -167,13 +167,14 @@ function CreateRecipe() {
                     children={((field) => (
                         <div className="my-2">
                             <Label htmlFor={field.name}>Description</Label>
-                            <Input
+                            <textarea
                                 id={field.name}
                                 name={field.name}
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
-                                className="mt-2"
+                                rows={3}
+                                className="mt-2 block w-full p-2 border rounded-md description-input"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
@@ -281,7 +282,6 @@ function CreateRecipe() {
                         ))}
                     />
                 </div>
-
                 <form.Field 
                     name="instructions"
                     validators={({

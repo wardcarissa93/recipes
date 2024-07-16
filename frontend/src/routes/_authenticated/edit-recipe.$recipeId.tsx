@@ -49,7 +49,7 @@ function EditRecipe() {
                     description: fetchedRecipe.recipe.description !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.description) : '',
                     prepTime: fetchedRecipe.recipe.prepTime ? parseInt(fetchedRecipe.recipe.prepTime) : 0,
                     cookTime: fetchedRecipe.recipe.cookTime ? parseInt(fetchedRecipe.recipe.cookTime) : 0, 
-                    totalTime: fetchedRecipe.recipe.totalTime !== (null || undefined) ? parseInt(fetchedRecipe.recipe.totalTime) : 0,
+                    totalTime: fetchedRecipe.recipe.totalTime ? parseInt(fetchedRecipe.recipe.totalTime) : 0,
                     servings: fetchedRecipe.recipe.servings ? parseInt(fetchedRecipe.recipe.servings) : 0,
                     instructions: fetchedRecipe.recipe.instructions !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.instructions) : '',
                     url: fetchedRecipe.recipe.url !== (null || undefined) ? sanitizeString(fetchedRecipe.recipe.url) : ''
@@ -88,6 +88,7 @@ function EditRecipe() {
                     description: value.description.trim() !== '' ? sanitizeString(value.description) : null,
                     prepTime: value.prepTime !== 0 ? value.prepTime : null,
                     cookTime: value.cookTime !== 0 ? value.cookTime : null,
+                    totalTime: value.totalTime !== 0 ? value.totalTime : null,
                     servings: value.servings !== 0 ? value.servings : null,
                     instructions: sanitizeString(value.instructions.trim()),
                     url: value.url.trim() !== '' ? sanitizeString(value.url) : null,
@@ -160,13 +161,14 @@ function EditRecipe() {
                     children={((field) => (
                         <div className="my-2">
                             <Label htmlFor={field.name}>Description</Label>
-                            <Input 
+                            <textarea 
                                 id={field.name}
                                 name={field.name}
                                 value={field.state.value}
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
-                                className="mt-2"
+                                rows={3}
+                                className="mt-2 block w-full p-2 border rounded-md description-input"
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em>{field.state.meta.touchedErrors}</em>
