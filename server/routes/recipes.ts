@@ -68,7 +68,7 @@ export const recipesRoute = new Hono()
         const prepTimeAsString = prepTime?.toString();
         const cookTimeAsString = cookTime?.toString();
         const totalTimeAsString = totalTime.toString();
-        const servingsAsString = servings.toString();
+        const servingsAsString = servings?.toString();
         const recipe = await db
             .update(recipeTable)
             .set({ 
