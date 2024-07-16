@@ -65,10 +65,10 @@ export const recipesRoute = new Hono()
         const id = Number.parseInt(c.req.param("id"));
         const user = c.var.user;
         const { title, description, prepTime, cookTime, totalTime, servings, instructions, url } = await c.req.valid("json");
-        const prepTimeAsString = prepTime?.toString();
-        const cookTimeAsString = cookTime?.toString();
-        const totalTimeAsString = totalTime.toString();
-        const servingsAsString = servings?.toString();
+        const prepTimeAsString = prepTime?.toString() || null;
+        const cookTimeAsString = cookTime?.toString() || null;
+        const totalTimeAsString = totalTime?.toString() || null;
+        const servingsAsString = servings?.toString() || null;
         const recipe = await db
             .update(recipeTable)
             .set({ 

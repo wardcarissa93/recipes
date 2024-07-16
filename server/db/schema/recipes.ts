@@ -11,7 +11,7 @@ export const recipes = pgTable(
         description: text("description"),
         prepTime: numeric("prep_time", { precision: 6, scale: 0 }),
         cookTime: numeric("cook_time", { precision: 6, scale: 0 }),
-        totalTime: numeric("total_time", { precision: 6, scale: 0 }).notNull(),
+        totalTime: numeric("total_time", { precision: 6, scale: 0 }),
         servings: numeric("servings", { precision: 2, scale: 0 }),
         instructions: text("instructions").notNull(),
         url: text("url"),
@@ -43,7 +43,8 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
         .nullable(),
     totalTime: z
         .number()
-        .positive({ message: "'Total Time' must be greater than 0." } ),
+        .nonnegative({ message: "'Total Time' cannot be negative." } )
+        .nullable(),
     servings: z
         .number()
         .nonnegative({ message: "'Servings' cannot be negative." } )
@@ -75,7 +76,8 @@ export const updateRecipesSchema = z.object({
         .nullable(),
     totalTime: z
         .number()
-        .positive({ message: "'Total Time' must be greater than 0." } ),
+        .nonnegative({ message: "'Total Time' cannot be negative." } )
+        .nullable(),
     servings: z
         .number()
         .nonnegative({ message: "'Servings' cannot be negative." } )
