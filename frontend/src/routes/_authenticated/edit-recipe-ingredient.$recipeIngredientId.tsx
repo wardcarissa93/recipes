@@ -141,6 +141,9 @@ function EditRecipeIngredient() {
 
     return (
         <div className="p-2">
+            <Button onClick={() => window.history.back()}>
+                Back
+            </Button>
             <h2 className="text-center p-4 text-xl">Edit '{oldRecipeIngredient.name}' for '{recipeTitle}'</h2>
             <form 
                 className='max-w-xl m-auto'

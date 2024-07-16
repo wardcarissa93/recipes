@@ -59,7 +59,10 @@ function RecipeDetails() {
         <div>
             {(!recipePending) && (
                 <div className="p-2 max-w-3xl m-auto">
-                    <h1 className="text-2xl font-bold">{sanitizedTitle}</h1>
+                    <Button onClick={() => window.history.back()}>
+                        Back
+                    </Button>
+                    <h1 className="text-2xl font-bold text-center p-4">{sanitizedTitle}</h1>
                     <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
                     <p>Servings: {recipe.servings}</p>
                     <p>Total Time: {recipe.totalTime}</p>
@@ -82,18 +85,18 @@ function RecipeDetails() {
                                 </li>
                             ))}
                         </ul>
-                        <AddRecipeIngredientButton id={recipe.id} />
                     </div>
                     )}
                     <h3>Instructions: </h3>
                     <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} />
-                    <div className="flex w-[500px] justify-around align-center">
-                        <Button variant="outline" size="icon" onClick={() => window.history.back()}>
-                            Back
-                        </Button>
+                    <div className="flex justify-between">
                         <EditRecipeButton id={recipe.id} />
+                        <AddRecipeIngredientButton id={recipe.id} />
                         <DeleteRecipeButton id={recipe.id} title={recipe.title} />
                     </div>
+                    <Button onClick={() => window.history.back()} className="m-auto mt-8 flex">
+                        Back
+                    </Button>
                 </div>
             )}
         </div>
@@ -112,9 +115,8 @@ function EditRecipeButton({ id }: { id: number }) {
     return (
         <Button 
             onClick={navigateToEditRecipe}
-            variant="outline"
         >
-            <p>Edit Recipe</p>
+            <p>Edit Recipe Details</p>
         </Button>
     )
 }
@@ -148,7 +150,6 @@ function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
     return (
         <Button
             onClick={() => mutation.mutate({ id })}
-            variant="outline"
         >
             {mutation.isPending ? "..." : <p>Delete Recipe</p>}
         </Button>
@@ -187,7 +188,6 @@ function AddRecipeIngredientButton({ id }: { id: number}) {
     return (
         <Button
             onClick={navigateToAddRecipeIngredient}
-            variant="outline"
         >
             Add Ingredient to Recipe
         </Button>

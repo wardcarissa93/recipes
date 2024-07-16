@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSearch } from '@/context/useSearch';
 import { sanitizeString } from '../../lib/utils';
@@ -21,6 +22,9 @@ function SearchResults() {
 
     return (
         <div className="p-2 max-w-xl m-auto">
+            <Button onClick={() => window.history.back()}>
+                Back
+            </Button>
             <h2 className="text-center text-xl p-4">Search Results</h2>
             <Table>
                 <TableHeader>
