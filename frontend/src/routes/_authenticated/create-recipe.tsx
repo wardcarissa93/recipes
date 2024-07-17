@@ -147,7 +147,7 @@ function CreateRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Title <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Title <span className="text-red-500 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -157,7 +157,7 @@ function CreateRecipe() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -180,7 +180,7 @@ function CreateRecipe() {
                                 className="mt-2 block w-full p-2 border rounded-md description-input"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -205,7 +205,7 @@ function CreateRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -229,7 +229,7 @@ function CreateRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -255,7 +255,7 @@ function CreateRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -279,7 +279,7 @@ function CreateRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -292,7 +292,7 @@ function CreateRecipe() {
                     })}
                     children={((field) => (
                         <div className='my-2'>
-                            <Label htmlFor={field.name}>Instructions <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-red-500 font-bold">*</span></Label>
                             <textarea
                                 id={field.name}
                                 name={field.name}
@@ -303,7 +303,7 @@ function CreateRecipe() {
                                 className="block w-full p-2 border rounded-md instructions-input mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -325,7 +325,7 @@ function CreateRecipe() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -340,6 +340,7 @@ function CreateRecipe() {
                                 <Button
                                     type="button"
                                     onClick={() => removeIngredient(index)}
+                                    className="hover:bg-red-500"
                                 >
                                     Remove
                                 </Button>
@@ -353,7 +354,7 @@ function CreateRecipe() {
                                         htmlFor={field.name}
                                         className="w-1/2"
                                     >
-                                        Ingredient Name <span className="text-indigo-300 font-bold">*</span>
+                                        Ingredient Name <span className="text-red-500 font-bold">*</span>
                                     </Label>
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
@@ -367,7 +368,7 @@ function CreateRecipe() {
                                         className="ingredient-name w-1/2"
                                     />
                                     {field.state.meta.touchedErrors ? (
-                                        <em>{field.state.meta.touchedErrors}</em>
+                                        <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                     ) : null}
                                 </div>
                             ))}
@@ -380,7 +381,7 @@ function CreateRecipe() {
                                         htmlFor={field.name}
                                         className="w-1/2"
                                     >
-                                        Quantity <span className="text-indigo-300 font-bold">*</span>
+                                        Quantity <span className="text-red-500 font-bold">*</span>
                                     </Label>
                                     <Input
                                         id={field.name}
@@ -395,7 +396,7 @@ function CreateRecipe() {
                                         className='w-1/2'
                                     />
                                     {field.state.meta.touchedErrors ? (
-                                        <em>{field.state.meta.touchedErrors}</em>
+                                        <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                     ) : null}
                                 </div>
                             ))}
@@ -408,7 +409,7 @@ function CreateRecipe() {
                                         htmlFor={field.name}
                                         className="w-1/2"
                                     >
-                                        Unit <span className="text-indigo-300 font-bold">*</span>
+                                        Unit <span className="text-red-500 font-bold">*</span>
                                     </Label>
                                     <Input
                                         id={field.name}
@@ -422,7 +423,7 @@ function CreateRecipe() {
                                         className='w-1/2'
                                     />
                                     {field.state.meta.touchedErrors ? (
-                                        <em>{field.state.meta.touchedErrors}</em>
+                                        <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                     ) : null}
                                 </div>
                             ))}
@@ -449,7 +450,7 @@ function CreateRecipe() {
                                         className='w-1/2'
                                     />
                                     {field.state.meta.touchedErrors ? (
-                                        <em>{field.state.meta.touchedErrors}</em>
+                                        <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                     ) : null}
                                 </div>
                             ))}

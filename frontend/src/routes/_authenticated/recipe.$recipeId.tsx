@@ -170,7 +170,7 @@ function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
     return (
         <Button
             onClick={() => mutation.mutate({ id })}
-            className="w-[150px]"
+            className="w-[150px] hover:bg-red-500"
         >
             {mutation.isPending ? "..." : <p>Delete Recipe</p>}
         </Button>
@@ -245,6 +245,7 @@ function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, reci
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
+            className="hover:bg-red-500"
         >
             {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
         </Button>
