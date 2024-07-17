@@ -134,7 +134,11 @@ function IngredientEditButton({ id }: { id: number }) {
     };
 
     return (
-        <Button onClick={handleEdit}>
+        <Button
+            onClick={handleEdit} 
+            variant="outline"
+            size="icon"
+        >
             <Edit className="h-4 w-4" />
         </Button>
     )
@@ -169,7 +173,11 @@ function IngredientDeleteButton({ id, name }: { id: number, name: string }) {
     };
 
     return (
-        <Button onClick={handleDelete}>
+        <Button
+            onClick={handleDelete} 
+            variant="outline"
+            size="icon"
+        >
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>
     )

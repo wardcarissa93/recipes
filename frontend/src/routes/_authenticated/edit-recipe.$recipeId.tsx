@@ -127,7 +127,7 @@ function EditRecipe() {
             </Button>
             <h2 className="text-center p-4 text-xl">Edit Recipe '{oldRecipe.title}'</h2>
             <form
-                className="max-w-xl m-auto"
+                className="max-w-2xl m-auto"
                 onSubmit={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
@@ -141,7 +141,7 @@ function EditRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Title <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Title <span className="text-indigo-300 font-bold">*</span></Label>
                             <Input 
                                 id={field.name}
                                 name={field.name}
@@ -287,7 +287,7 @@ function EditRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Instructions <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-indigo-300 font-bold">*</span></Label>
                             <textarea 
                                 id={field.name}
                                 name={field.name}

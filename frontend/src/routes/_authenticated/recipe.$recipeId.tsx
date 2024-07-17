@@ -35,11 +35,17 @@ function RecipeDetails() {
 
     let sanitizedDescription = '';
     let sanitizedInstructions = '';
+    let sanitizedUrl = '';
     if (recipe) {
-        const formattedDescription = recipe.description.replace(/\n/g, '<br>');
+        if (recipe.description) {
+            const formattedDescription = recipe.description.replace(/\n/g, '<br>');
+            sanitizedDescription = sanitizeString(formattedDescription);
+        }
         const formattedInstructions = recipe.instructions.replace(/\n/g, '<br>');
-        sanitizedDescription = sanitizeString(formattedDescription);
         sanitizedInstructions = sanitizeString(formattedInstructions);
+        if (recipe.url) {
+            sanitizedUrl = sanitizeString(recipe.url);
+        }
     }
 
     const sanitizedIngredients = ingredientsData?.recipeIngredients.map((ingredient: Ingredient) => ({
@@ -62,39 +68,53 @@ function RecipeDetails() {
                     <Button onClick={() => window.history.back()}>
                         Back
                     </Button>
-                    <h1 className="text-2xl font-bold text-center p-4">{sanitizedTitle}</h1>
-                    <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
-                    <p>Servings: {recipe.servings}</p>
-                    <p>Total Time: {recipe.totalTime}</p>
+                    <div className="text-center p-4">
+                        {sanitizedUrl ? (
+                            <a href={sanitizedUrl} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold hover:text-indigo-400">
+                            {sanitizedTitle}
+                            </a>
+                        ) : (
+                            <h1 className="text-2xl font-bold">{sanitizedTitle}</h1>
+                        )}
+                        <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} className="italic" />
+                    </div>
+                    <p className="text-center my-4">Servings: {recipe.servings ? (recipe.servings) : "N/A"}</p>
+                    <div className="flex justify-between max-w-lg m-auto">
+                        <p>Prep Time: {recipe.prepTime ? (recipe.prepTime + " min") : "N/A"}</p>
+                        <p>Cook Time: {recipe.cookTime ? (recipe.cookTime + " min") : "N/A"}</p>
+                        <p>Total Time: {recipe.totalTime ? (recipe.totalTime + " min") : "N/A"}</p>
+                    </div>
                     {(ingredientsPending) ? (
                         <div>
                             <p>Ingredients loading...</p>
                         </div>
                     ) : (
-                        <div>
-                        <h3>Ingredients:</h3>
-                        <ul>
-                            {sanitizedIngredients.map((ingredient: Ingredient) => (
-                                <li key={ingredient.name} className="ingredient-li">
-                                    {ingredient.name} - {ingredient.quantity} {ingredient.unit}
-                                    {ingredient.details && (<span> - {ingredient.details}</span>)}
-                                    <span> - </span>
-                                    <EditRecipeIngredientButton id={ingredient.id}/>
-                                    <span> - </span>
-                                    <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                        <div className="my-8">
+                            <hr />
+                            <h3 className="text-center p-2 mt-2">Ingredients</h3>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                {sanitizedIngredients.map((ingredient: Ingredient) => (
+                                    <div key={ingredient.name} className="flex items-center">
+                                        <EditRecipeIngredientButton id={ingredient.id}/>
+                                        <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
+                                        <p className="ml-2 max-w-[250px]">
+                                            {ingredient.quantity} {ingredient.unit} {ingredient.name}
+                                            {ingredient.details && (<span>, {ingredient.details}</span>)}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                            <hr />
+                        </div>
                     )}
-                    <h3>Instructions: </h3>
-                    <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} />
-                    <div className="flex justify-between">
+                    <h3 className="text-center mb-2">Instructions</h3>
+                    <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} className="p-2"/>
+                    <div className="flex justify-between my-8">
                         <EditRecipeButton id={recipe.id} />
-                        <AddRecipeIngredientButton id={recipe.id} />
+                        <AddRecipeIngredientButton id={recipe.id}/>
                         <DeleteRecipeButton id={recipe.id} title={recipe.title} />
                     </div>
-                    <Button onClick={() => window.history.back()} className="m-auto mt-8 flex">
+                    <Button onClick={() => window.history.back()} className="m-auto flex">
                         Back
                     </Button>
                 </div>
@@ -150,6 +170,7 @@ function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
     return (
         <Button
             onClick={() => mutation.mutate({ id })}
+            className="w-[150px]"
         >
             {mutation.isPending ? "..." : <p>Delete Recipe</p>}
         </Button>
