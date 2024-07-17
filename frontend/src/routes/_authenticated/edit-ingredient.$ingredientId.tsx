@@ -70,7 +70,7 @@ function EditIngredient() {
                 toast("Ingredient Updated", {
                     description: `Successfully updated ingredient: '${value.name}'`,
                 });
-                navigate({ to: "/ingredients" });
+                navigate({ to: "/my-ingredients" });
             } catch (error) {
                 if (error.message) {
                     toast("Error", {

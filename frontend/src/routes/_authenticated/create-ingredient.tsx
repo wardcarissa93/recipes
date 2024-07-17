@@ -45,7 +45,7 @@ function CreateIngredient() {
                 toast("Ingredient Created", {
                     description: `Successfully created new ingredient: ${newIngredient.name}`,
                 });
-                navigate({ to: "/ingredients" });
+                navigate({ to: "/my-ingredients" });
             } catch (error) {
                 if (error.message) {
                     toast("Error", {
