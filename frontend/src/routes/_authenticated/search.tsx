@@ -80,13 +80,13 @@ function Search() {
                     className="ingredient-name"
                     styles={searchBarStyles}
                 />
-                <Button
-                    onClick={handleSearch}
-                    className="mt-8 mx-auto flex"
-                >
-                    Search
-                </Button>
             </form>
+            <Button
+                onClick={handleSearch}
+                className="mt-8 mx-auto flex"
+            >
+                Search
+            </Button>
         </div>
     );
 }
