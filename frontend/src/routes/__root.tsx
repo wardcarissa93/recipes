@@ -17,10 +17,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function NavBar() {
     return (
         <div className="p-2 flex justify-between  m-auto items-baseline">
-            <Link to="/search">
-                <h1 className="text-2xl font-bold hover:text-indigo-400">Search</h1>
-            </Link>
             <div className="flex gap-4">
+                <Link to="/search" className="[&.active]:font-bold hover:text-indigo-400">
+                    Search
+                </Link>
                 <Link to="/my-recipes" className="[&.active]:font-bold hover:text-indigo-400">
                     My Recipes
                 </Link>
@@ -30,7 +30,12 @@ function NavBar() {
                 <Link to="/ingredients" className="[&.active]:font-bold hover:text-indigo-400">
                     Ingredients
                 </Link>
-                <a href="/api/logout" className="hover:text-indigo-400">Logout</a>
+                {/* <a href="/api/logout" className="hover:text-indigo-400">Logout</a> */}
+            </div>
+            <div>
+                <Link to="/profile" className="[&.active]:font-bold hover:text-indigo-400">
+                    Profile
+                </Link>
             </div>
         </div>
     )

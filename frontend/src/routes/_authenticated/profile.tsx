@@ -17,19 +17,19 @@ function Profile() {
 
     return (
         <div className="p-2">
-            <div className="flex items-center gap-2">
-                <Avatar>
-                    {data.user.picture && (
+            <Button onClick={() => window.history.back()}>
+                Back
+            </Button>
+            <div className="flex gap-4 p-4 justify-center items-center">
+                {data.user.picture && (
+                    <Avatar>
                         <AvatarImage src={data.user.picture} alt={sanitizeString(data.user.given_name)}/>
-                    )}
-                    <AvatarFallback>{sanitizeString(data.user.given_name)}</AvatarFallback>
-                </Avatar>
-                <p>
-                    {sanitizeString(data.user.given_name)} {sanitizeString(data.user.family_name)}
-                </p>
+                    </Avatar>
+                )}
+                <h2>{sanitizeString(data.user.given_name)} {sanitizeString(data.user.family_name)} is currently logged in.</h2>
             </div>
-            <Button asChild className="my-4">
-                <a href="/api/logout">Logout</a>
+            <Button asChild className="mt-8 mx-auto flex w-[83px]">
+                <a href="/api/logout">Logout?</a>
             </Button>
         </div>
     )
