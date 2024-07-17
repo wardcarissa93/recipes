@@ -141,7 +141,7 @@ function EditRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Title <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Title <span className="text-red-500 font-bold">*</span></Label>
                             <Input 
                                 id={field.name}
                                 name={field.name}
@@ -151,7 +151,7 @@ function EditRecipe() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -174,7 +174,7 @@ function EditRecipe() {
                                 className="mt-2 block w-full p-2 border rounded-md description-input"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -199,7 +199,7 @@ function EditRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -223,7 +223,7 @@ function EditRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -249,7 +249,7 @@ function EditRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -273,7 +273,7 @@ function EditRecipe() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}
@@ -287,7 +287,7 @@ function EditRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Instructions <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-red-500 font-bold">*</span></Label>
                             <textarea 
                                 id={field.name}
                                 name={field.name}
@@ -298,7 +298,7 @@ function EditRecipe() {
                                 className="block w-full p-2 border rounded-md instructions-input mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -320,7 +320,7 @@ function EditRecipe() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}

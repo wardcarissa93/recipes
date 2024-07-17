@@ -123,7 +123,7 @@ function EditIngredient() {
                                     className="mt-2"
                                 />
                                 {field.state.meta.touchedErrors ? (
-                                    <em>{field.state.meta.touchedErrors}</em>
+                                    <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                                 ) : null}
                             </div>
                         ))}

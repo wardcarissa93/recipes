@@ -157,7 +157,7 @@ function EditRecipeIngredient() {
                     name="name"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Ingredient Name <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-red-500 font-bold">*</span></Label>
                             <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === field.state.value)}
@@ -170,7 +170,7 @@ function EditRecipeIngredient() {
                                         className="ingredient-name mt-2"
                                     />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -179,7 +179,7 @@ function EditRecipeIngredient() {
                     name="quantity"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Quantity <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Quantity <span className="text-red-500 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -190,7 +190,7 @@ function EditRecipeIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -199,7 +199,7 @@ function EditRecipeIngredient() {
                     name="unit"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Unit <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Unit <span className="text-red-500 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -209,7 +209,7 @@ function EditRecipeIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -228,7 +228,7 @@ function EditRecipeIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}

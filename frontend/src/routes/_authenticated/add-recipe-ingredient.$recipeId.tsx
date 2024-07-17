@@ -114,7 +114,7 @@ function AddRecipeIngredient() {
                     name="name"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Ingredient Name <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-red-500 font-bold">*</span></Label>
                             <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === field.state.value)}
@@ -127,7 +127,7 @@ function AddRecipeIngredient() {
                                         className="ingredient-name mt-2"
                                     />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -136,7 +136,7 @@ function AddRecipeIngredient() {
                     name="quantity"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Quantity <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Quantity <span className="text-red-500 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -147,7 +147,7 @@ function AddRecipeIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -156,7 +156,7 @@ function AddRecipeIngredient() {
                     name="unit"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Unit <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Unit <span className="text-red-500 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -166,7 +166,7 @@ function AddRecipeIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}
@@ -185,7 +185,7 @@ function AddRecipeIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}

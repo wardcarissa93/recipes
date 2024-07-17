@@ -82,7 +82,7 @@ function CreateIngredient() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Ingredient Name <span className="text-indigo-300 font-bold">*</span></Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-red-500 font-bold">*</span></Label>
                             <p className="italic text-xs">Please use singular form only (no plurals) to prevent duplicates</p>
                             <Input
                                 id={field.name}
@@ -93,7 +93,7 @@ function CreateIngredient() {
                                 className="mt-2"
                             />
                             {field.state.meta.touchedErrors ? (
-                                <em>{field.state.meta.touchedErrors}</em>
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
                             ) : null}
                         </div>
                     ))}

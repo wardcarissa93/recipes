@@ -177,6 +177,7 @@ function IngredientDeleteButton({ id, name }: { id: number, name: string }) {
             onClick={handleDelete} 
             variant="outline"
             size="icon"
+            className="hover:bg-red-500"
         >
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>
