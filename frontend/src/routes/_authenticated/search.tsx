@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { Button } from '@/components/ui/button';
 import { 
     getRecipesByIngredientName,
     getAllIngredientsQueryOptions
@@ -13,6 +14,35 @@ import { type IngredientOption } from '../../lib/types';
 export const Route = createFileRoute('/_authenticated/search')({
     component: Search
 });
+
+
+const searchBarStyles = {
+    control: (provided) => ({
+        ...provided,
+        minHeight: '40px',
+        height: '40px',
+        boxShadow: 'none',
+        '&:hover': {
+            border: '2px solid #818cf8'
+        }
+    }),
+    valueContainer: (provided) => ({
+        ...provided,
+        height: '40px',
+        padding: '0 6px'
+    }),
+    input: (provided) => ({
+        ...provided,
+        margin: '0px'
+    }),
+    indicatorSeparator: () => ({
+        display: 'none'
+    }),
+    indicatorsContainer: (provided) => ({
+        ...provided,
+        height: '40px'
+    })
+};
 
 function Search() {
     const [selectedIngredients, setSelectedIngredients] = useState<IngredientOption[]>([]);
@@ -35,25 +65,28 @@ function Search() {
     };
 
     return (
-        <div className="p-2 max-w-3xl m-auto">
-            <div className="mb-4 flex-col">
-                <form>
-                    <Select
-                        defaultValue={[ingredientOptions[2], ingredientOptions[3]]}
-                        isMulti
-                        options={ingredientOptions}
-                        value={selectedIngredients}
-                        onChange={(selectedOptions) => setSelectedIngredients(selectedOptions as IngredientOption[])}
-                        className="ingredient-name"
-                    />
-                </form>
-                <button
+        <div className="p-2">
+            <Button onClick={() => window.history.back()}>
+                Back
+            </Button>
+            <h2 className="text-center p-4 text-xl">Search for Recipe by Ingredient(s)</h2>
+            <form className="max-w-xl m-auto">
+                <Select
+                    defaultValue={[ingredientOptions[2], ingredientOptions[3]]}
+                    isMulti
+                    options={ingredientOptions}
+                    value={selectedIngredients}
+                    onChange={(selectedOptions) => setSelectedIngredients(selectedOptions as IngredientOption[])}
+                    className="ingredient-name"
+                    styles={searchBarStyles}
+                />
+                <Button
                     onClick={handleSearch}
-                    className="ml-2 p-2 bg-blue-500 text-white rounded"
+                    className="mt-8 mx-auto flex"
                 >
                     Search
-                </button>
-            </div>
+                </Button>
+            </form>
         </div>
     );
 }

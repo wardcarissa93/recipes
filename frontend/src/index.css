@@ -75,9 +75,9 @@
     }
   }
 
-  .ingredient-name, .instructions-input, .description-input {
+.ingredient-name, .instructions-input, .description-input {
     color: black;
-  }
+}
 
 #add-ingredient-button, 
 #create-recipe-button {
