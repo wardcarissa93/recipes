@@ -10,7 +10,8 @@ export const Route = createFileRoute('/_authenticated/search-results')({
 });
 
 function SearchResults() {
-    const { results } = useSearch();
+    const { results, selectedIngredients } = useSearch();
+    console.log("selectedIngredients: ", selectedIngredients)
 
     if (!results) {
         return (
@@ -21,12 +22,12 @@ function SearchResults() {
     }
 
     return (
-        <div className="p-2 max-w-xl m-auto">
+        <div className="p-2">
             <Button onClick={() => window.history.back()}>
                 Back
             </Button>
-            <h2 className="text-center text-xl p-4">Search Results</h2>
-            <Table>
+            <h2 className="text-center p-4 text-xl">Recipes Containing '{selectedIngredients.map(ingredient => ingredient.label).join("' and/or '")}'</h2>
+            <Table className="max-w-xl m-auto">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px]">Id</TableHead>

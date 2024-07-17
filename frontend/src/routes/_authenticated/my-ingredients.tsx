@@ -22,7 +22,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { sanitizeString } from '../../lib/utils'
 import { type Ingredient } from '../../lib/types'
 
-export const Route = createFileRoute('/_authenticated/ingredients')({
+export const Route = createFileRoute('/_authenticated/my-ingredients')({
     component: Ingredients
 })
 
