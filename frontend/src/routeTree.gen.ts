@@ -18,7 +18,7 @@ import { Route as AuthenticatedSearchResultsImport } from './routes/_authenticat
 import { Route as AuthenticatedSearchImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedMyRecipesImport } from './routes/_authenticated/my-recipes'
-import { Route as AuthenticatedIngredientsImport } from './routes/_authenticated/ingredients'
+import { Route as AuthenticatedMyIngredientsImport } from './routes/_authenticated/my-ingredients'
 import { Route as AuthenticatedCreateRecipeImport } from './routes/_authenticated/create-recipe'
 import { Route as AuthenticatedCreateIngredientImport } from './routes/_authenticated/create-ingredient'
 import { Route as AuthenticatedRecipeRecipeIdImport } from './routes/_authenticated/recipe.$recipeId'
@@ -66,10 +66,12 @@ const AuthenticatedMyRecipesRoute = AuthenticatedMyRecipesImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
-const AuthenticatedIngredientsRoute = AuthenticatedIngredientsImport.update({
-  path: '/ingredients',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
+const AuthenticatedMyIngredientsRoute = AuthenticatedMyIngredientsImport.update(
+  {
+    path: '/my-ingredients',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
 
 const AuthenticatedCreateRecipeRoute = AuthenticatedCreateRecipeImport.update({
   path: '/create-recipe',
@@ -132,8 +134,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCreateRecipeImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/ingredients': {
-      preLoaderRoute: typeof AuthenticatedIngredientsImport
+    '/_authenticated/my-ingredients': {
+      preLoaderRoute: typeof AuthenticatedMyIngredientsImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/my-recipes': {
@@ -185,7 +187,7 @@ export const routeTree = rootRoute.addChildren([
   AuthenticatedRoute.addChildren([
     AuthenticatedCreateIngredientRoute,
     AuthenticatedCreateRecipeRoute,
-    AuthenticatedIngredientsRoute,
+    AuthenticatedMyIngredientsRoute,
     AuthenticatedMyRecipesRoute,
     AuthenticatedProfileRoute,
     AuthenticatedSearchRoute,

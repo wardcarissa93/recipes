@@ -65,16 +65,16 @@ function MyRecipes() {
                 <Button onClick={toggleSortOrder}>
                     {isAscendingOrder ? 'Sort Recipes Z-A' : 'Sort Recipes A-Z'}
                 </Button>
-                <Link to="/search" className="[&.active]:font-bold">
+                <Link to="/create-recipe" className="[&.active]:font-bold">
                     <Button>
-                        Search for Recipe
+                        Create Recipe
                     </Button>
                 </Link>
             </div>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-2/3">Title</TableHead>
+                        <TableHead className="w-2/3">Recipe</TableHead>
                         <TableHead className="w-1/6">Edit</TableHead>
                         <TableHead className="w-1/6">Delete</TableHead>
                     </TableRow>

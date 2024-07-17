@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { 
@@ -45,9 +45,9 @@ const searchBarStyles = {
 };
 
 function Search() {
-    const [selectedIngredients, setSelectedIngredients] = useState<IngredientOption[]>([]);
+    // const [selectedIngredients, setSelectedIngredients] = useState<IngredientOption[]>([]);
     const navigate = useNavigate();
-    const { setResults } = useSearch();
+    const { setResults, selectedIngredients, setSelectedIngredients } = useSearch();
 
     const { data } = useQuery(getAllIngredientsQueryOptions);
     const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
@@ -80,13 +80,13 @@ function Search() {
                     className="ingredient-name"
                     styles={searchBarStyles}
                 />
-                <Button
-                    onClick={handleSearch}
-                    className="mt-8 mx-auto flex"
-                >
-                    Search
-                </Button>
             </form>
+            <Button
+                onClick={handleSearch}
+                className="mt-8 mx-auto flex"
+            >
+                Search
+            </Button>
         </div>
     );
 }

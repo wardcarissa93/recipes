@@ -24,11 +24,8 @@ function NavBar() {
                 <Link to="/my-recipes" className="[&.active]:font-bold hover:text-indigo-400">
                     My Recipes
                 </Link>
-                <Link to="/create-recipe" className="[&.active]:font-bold hover:text-indigo-400">
-                    Create Recipe
-                </Link>
-                <Link to="/ingredients" className="[&.active]:font-bold hover:text-indigo-400">
-                    Ingredients
+                <Link to="/my-ingredients" className="[&.active]:font-bold hover:text-indigo-400">
+                    My Ingredients
                 </Link>
                 {/* <a href="/api/logout" className="hover:text-indigo-400">Logout</a> */}
             </div>

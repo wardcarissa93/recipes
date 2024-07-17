@@ -47,6 +47,7 @@ export type Recipe = {
     servings?: string;
     instructions?: string;
     url?: string;
+    ingredients?: string[];
 }
 
 export type RecipeIngredient = {
@@ -61,6 +62,6 @@ export type RecipeIngredient = {
 
 export type SearchResult = {
     id: number;
-    servings: number;
+    ingredients?: string[];
     title: string;
 }
