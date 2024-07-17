@@ -9,7 +9,7 @@ import {
  } from '../db/schema/recipeIngredients'
 import { ingredients as ingredientTable } from '../db/schema/ingredients'
 import { recipes as recipeTable } from '../db/schema/recipes'
-import { eq, desc, and, inArray } from 'drizzle-orm'
+import { eq, desc, and, inArray, sql } from 'drizzle-orm'
 
 import { createRecipeIngredientSchema } from '../sharedTypes'
 
@@ -89,14 +89,15 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
             .select({
                 id: recipeTable.id,
                 title: recipeTable.title,
-                servings: recipeTable.servings
+                ingredients: sql<string[]>`ARRAY_AGG(${ingredientTable.name})`
             })
-            .from(ingredientTable)
-            .fullJoin(recipeIngredientTable, eq(ingredientTable.id, recipeIngredientTable.ingredientId))
-            .fullJoin(recipeTable, eq(recipeIngredientTable.recipeId, recipeTable.id))
+            .from(recipeTable)
+            .fullJoin(recipeIngredientTable, eq(recipeTable.id, recipeIngredientTable.recipeId))
+            .fullJoin(ingredientTable, eq(recipeIngredientTable.ingredientId, ingredientTable.id))
             .where(and(eq(recipeIngredientTable.userId, user.id), inArray(ingredientTable.name, ingredientNames)))
             .groupBy(recipeTable.id)
             .then((res) => res);
+
         if (!recipes) {
             return c.notFound();
         }

@@ -74,7 +74,7 @@ function MyRecipes() {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-2/3">Title</TableHead>
+                        <TableHead className="w-2/3">Recipe</TableHead>
                         <TableHead className="w-1/6">Edit</TableHead>
                         <TableHead className="w-1/6">Delete</TableHead>
                     </TableRow>
