@@ -82,7 +82,7 @@ function CreateIngredient() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-indigo-300 font-bold">*</span></Label>
                             <p className="italic text-xs">Please use singular form only (no plurals) to prevent duplicates</p>
                             <Input
                                 id={field.name}

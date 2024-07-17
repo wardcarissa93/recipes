@@ -133,7 +133,7 @@ function CreateRecipe() {
             </Button>
             <h2 className="text-center p-4 text-xl">Create Recipe</h2>
             <form 
-                className='max-w-xl m-auto'
+                className='max-w-2xl m-auto'
                 onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -147,7 +147,7 @@ function CreateRecipe() {
                     }}
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Title <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Title <span className="text-indigo-300 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -292,7 +292,7 @@ function CreateRecipe() {
                     })}
                     children={((field) => (
                         <div className='my-2'>
-                            <Label htmlFor={field.name}>Instructions <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Instructions <span className="text-indigo-300 font-bold">*</span></Label>
                             <textarea
                                 id={field.name}
                                 name={field.name}
@@ -353,7 +353,7 @@ function CreateRecipe() {
                                         htmlFor={field.name}
                                         className="w-1/2"
                                     >
-                                        Ingredient Name <span className="text-yellow-300">*</span>
+                                        Ingredient Name <span className="text-indigo-300 font-bold">*</span>
                                     </Label>
                                     <Select<IngredientOption>
                                         options={ingredientOptions}
@@ -380,7 +380,7 @@ function CreateRecipe() {
                                         htmlFor={field.name}
                                         className="w-1/2"
                                     >
-                                        Quantity <span className="text-yellow-300">*</span>
+                                        Quantity <span className="text-indigo-300 font-bold">*</span>
                                     </Label>
                                     <Input
                                         id={field.name}
@@ -408,7 +408,7 @@ function CreateRecipe() {
                                         htmlFor={field.name}
                                         className="w-1/2"
                                     >
-                                        Unit <span className="text-yellow-300">*</span>
+                                        Unit <span className="text-indigo-300 font-bold">*</span>
                                     </Label>
                                     <Input
                                         id={field.name}
@@ -457,7 +457,7 @@ function CreateRecipe() {
                     </div>
                 ))}
                 <div className="flex-col align-center">
-                    <Button type="button" onClick={addIngredient} className="flex m-auto mb-8">
+                    <Button type="button" onClick={addIngredient} className="flex m-auto mt-2 mb-8">
                         Add Another Ingredient
                     </Button>
                     <form.Subscribe

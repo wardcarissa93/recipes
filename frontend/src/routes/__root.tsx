@@ -20,10 +20,7 @@ function NavBar() {
             <Link to="/search">
                 <h1 className="text-2xl font-bold">Search</h1>
             </Link>
-            <div className="flex gap-2">
-                <Link to="/about" className="[&.active]:font-bold">
-                    About
-                </Link>
+            <div className="flex gap-4">
                 <Link to="/my-recipes" className="[&.active]:font-bold">
                     My Recipes
                 </Link>
@@ -33,9 +30,7 @@ function NavBar() {
                 <Link to="/ingredients" className="[&.active]:font-bold">
                     Ingredients
                 </Link>
-                <Link to="/profile" className="[&.active]:font-bold">
-                    Profile
-                </Link>
+                <a href="/api/logout">Logout</a>
             </div>
         </div>
     )

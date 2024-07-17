@@ -157,7 +157,7 @@ function EditRecipeIngredient() {
                     name="name"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Ingredient Name <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Ingredient Name <span className="text-indigo-300 font-bold">*</span></Label>
                             <Select<IngredientOption>
                                         options={ingredientOptions}
                                         value={ingredientOptions.find(option => option.value === field.state.value)}
@@ -179,7 +179,7 @@ function EditRecipeIngredient() {
                     name="quantity"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Quantity <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Quantity <span className="text-indigo-300 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
@@ -199,7 +199,7 @@ function EditRecipeIngredient() {
                     name="unit"
                     children={((field) => (
                         <div className="my-2">
-                            <Label htmlFor={field.name}>Unit <span className="text-yellow-300">*</span></Label>
+                            <Label htmlFor={field.name}>Unit <span className="text-indigo-300 font-bold">*</span></Label>
                             <Input
                                 id={field.name}
                                 name={field.name}
