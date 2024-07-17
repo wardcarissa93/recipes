@@ -11,6 +11,7 @@ export const Route = createFileRoute('/_authenticated/profile')({
 
 function Profile() {
     const { isPending, error, data } = useQuery(userQueryOptions);
+    console.log("data.user.picture: ", data.user.picture)
 
     if (isPending) return "loading"
     if (error) return "not logged in"
@@ -21,12 +22,12 @@ function Profile() {
                 Back
             </Button>
             <div className="flex gap-4 p-4 justify-center items-center">
-                {data.user.picture && (
+                {/* {data.user.picture && (
                     <Avatar>
                         <AvatarImage src={data.user.picture} alt={sanitizeString(data.user.given_name)}/>
                     </Avatar>
-                )}
-                <h2>{sanitizeString(data.user.given_name)} {sanitizeString(data.user.family_name)} is currently logged in.</h2>
+                )} */}
+                <h2>'{sanitizeString(data.user.given_name)} {sanitizeString(data.user.family_name)}' is currently logged in.</h2>
             </div>
             <Button asChild className="mt-8 mx-auto flex w-[83px]">
                 <a href="/api/logout">Logout?</a>

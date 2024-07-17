@@ -4,7 +4,8 @@ import {
     Outlet 
 } from '@tanstack/react-router'
 import { Toaster } from '@/components/ui/sonner'
-import { type QueryClient } from "@tanstack/react-query"
+import { type QueryClient, useQuery } from "@tanstack/react-query"
+import { userQueryOptions } from "@/lib/api"
 
 interface MyRouterContext {
     queryClient: QueryClient
@@ -15,25 +16,32 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function NavBar() {
+    const { data } = useQuery(userQueryOptions);
+
     return (
         <div className="p-2 flex justify-between  m-auto items-baseline">
             <div className="flex gap-4">
-                <Link to="/search" className="[&.active]:font-bold hover:text-indigo-400">
+                <Link to="/search" className="[&.active]:font-bold [&.active]:text-indigo-400 hover:text-indigo-400">
                     Search
                 </Link>
-                <Link to="/my-recipes" className="[&.active]:font-bold hover:text-indigo-400">
+                <Link to="/my-recipes" className="[&.active]:font-bold [&.active]:text-indigo-400 hover:text-indigo-400">
                     My Recipes
                 </Link>
-                <Link to="/my-ingredients" className="[&.active]:font-bold hover:text-indigo-400">
+                <Link to="/my-ingredients" className="[&.active]:font-bold [&.active]:text-indigo-400 hover:text-indigo-400">
                     My Ingredients
                 </Link>
-                {/* <a href="/api/logout" className="hover:text-indigo-400">Logout</a> */}
             </div>
-            <div>
-                <Link to="/profile" className="[&.active]:font-bold hover:text-indigo-400">
-                    Profile
-                </Link>
-            </div>
+            {data ? (
+                <div className="flex gap-4">
+                    <p>Welcome, {data.user.given_name} {data.user.family_name}</p>
+                    <a href="/api/logout" className="hover:text-indigo-400">Logout</a>
+                </div>
+            ) : (
+                <div className="flex gap-4">
+                    <a href="/api/register" className="hover:text-indigo-400">Register</a>
+                    <a href="/api/login" className="hover:text-indigo-400">Login</a>
+                </div>
+            )}
         </div>
     )
 }
