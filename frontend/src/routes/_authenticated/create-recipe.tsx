@@ -432,12 +432,15 @@ function CreateRecipe() {
                             name={`ingredients[${index}].details`}
                             children={((field) => (
                                 <div className="flex justify-between m-2">
-                                    <Label 
-                                        htmlFor={field.name}
-                                        className='w-1/2'
-                                    >
-                                        Details
-                                    </Label>
+                                    <div className="w-1/2">
+                                        <Label 
+                                            htmlFor={field.name}
+                                            className='w-1/2'
+                                        >
+                                            Details
+                                        </Label>
+                                        <p className="italic text-xs">(eg. 'chopped', 'dried')</p>
+                                    </div>
                                     <Input
                                         id={field.name}
                                         name={field.name}

@@ -91,14 +91,14 @@ function RecipeDetails() {
                     ) : (
                         <div className="my-8">
                             <hr />
-                            <h3 className="text-center p-2 mt-2">Ingredients</h3>
+                            <h3 className="text-center p-2 my-4 text-lg font-bold">Ingredients</h3>
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 {sanitizedIngredients.map((ingredient: Ingredient) => (
                                     <div key={ingredient.name} className="flex items-center">
                                         <EditRecipeIngredientButton id={ingredient.id}/>
                                         <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
                                         <p className="ml-2 max-w-[250px]">
-                                            {ingredient.quantity} {ingredient.unit} {ingredient.name}
+                                            {(ingredient.quantity > 0) && ingredient.quantity} {ingredient.unit} {ingredient.name}
                                             {ingredient.details && (<span>, {ingredient.details}</span>)}
                                         </p>
                                     </div>
@@ -107,7 +107,7 @@ function RecipeDetails() {
                             <hr />
                         </div>
                     )}
-                    <h3 className="text-center mb-2">Instructions</h3>
+                    <h3 className="text-center mb-4 text-lg font-bold">Instructions</h3>
                     <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} className="p-2"/>
                     <div className="flex justify-between my-8">
                         <EditRecipeButton id={recipe.id} />
