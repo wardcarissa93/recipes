@@ -176,6 +176,7 @@ function AddRecipeIngredient() {
                     children={((field) => (
                         <div className="my-2">
                             <Label htmlFor={field.name}>Details</Label>
+                            <p className="italic text-xs">(eg. 'chopped', 'dried')</p>
                             <Input
                                 id={field.name}
                                 name={field.name}
