@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -11,7 +12,8 @@ export const Route = createFileRoute('/_authenticated/search-results')({
 
 function SearchResults() {
     const { results, selectedIngredients } = useSearch();
-    console.log("results: ", results)
+    const [currentPage, setCurrentPage] = useState(1);
+    const recipesPerPage = 8;
 
     if (!results || !results.recipes) {
         return (
@@ -27,6 +29,63 @@ function SearchResults() {
         ) || [];
     };
 
+    const indexOfLastRecipe = currentPage * recipesPerPage;
+    const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+    const currentRecipes = results.recipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+    const totalPages = Math.ceil(results.recipes.length / recipesPerPage);
+
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    }
+
+    // Function to render pagination buttons
+    const renderPagination = () => {
+        const pageNumbers = [];
+        let ellipsisLeft = false;
+        let ellipsisRight = false;
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                pageNumbers.push(i);
+            } else if (i < currentPage - 1 && !ellipsisLeft) {
+                pageNumbers.push('...');
+                ellipsisLeft = true;
+            } else if (i > currentPage + 1 && !ellipsisRight) {
+                pageNumbers.push('...');
+                ellipsisRight = true;
+            }
+        }
+
+        return pageNumbers.map((number, index) =>
+            typeof number === 'number' ? (
+                <Button
+                    key={index}
+                    onClick={() => paginate(number)}
+                    className={`mx-1 ${currentPage === number ? 'bg-gray-300' : ''}`}
+                >
+                    {number}
+                </Button>
+            ) : (
+                <Button
+                    key={index}
+                    onClick={() => handleEllipsisClick(index === 0 ? 'left' : 'right')}
+                    className="mx-1"
+                >
+                    ...
+                </Button>
+            )
+        );
+    };
+
+    const handleEllipsisClick = (direction: 'left' | 'right') => {
+        if (direction === 'left') {
+            setCurrentPage(prevPage => Math.max(prevPage - 3, 1));
+        } else {
+            setCurrentPage(prevPage => Math.min(prevPage + 3, totalPages));
+        }
+    };
+
+
     return (
         <div className="p-2">
             <Button onClick={() => window.history.back()}>
@@ -41,7 +100,7 @@ function SearchResults() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {results.recipes.map((recipe: SearchResult) => (
+                    {currentRecipes.map((recipe: SearchResult) => (
                         <TableRow key={recipe.id}>
                             <TableCell>
                                 <Link to={`/recipe/${recipe.id}`}>{sanitizeString(recipe.title)}</Link>
@@ -53,6 +112,9 @@ function SearchResults() {
                     ))}
                 </TableBody>
             </Table>
+            <div className="flex justify-center mt-8">
+                    {renderPagination()}
+            </div>
         </div>
     );
 }
