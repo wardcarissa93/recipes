@@ -55,9 +55,58 @@ function MyRecipes() {
     const indexOfLastRecipe = currentPage * recipesPerPage;
     const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
     const currentRecipes = sortedRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+    const totalPages = Math.ceil(sortedRecipes.length / recipesPerPage);
+
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     }
+
+    // Function to render pagination buttons
+    const renderPagination = () => {
+        const pageNumbers = [];
+        let ellipsisLeft = false;
+        let ellipsisRight = false;
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                pageNumbers.push(i);
+            } else if (i < currentPage - 1 && !ellipsisLeft) {
+                pageNumbers.push('...');
+                ellipsisLeft = true;
+            } else if (i > currentPage + 1 && !ellipsisRight) {
+                pageNumbers.push('...');
+                ellipsisRight = true;
+            }
+        }
+
+        return pageNumbers.map((number, index) =>
+            typeof number === 'number' ? (
+                <Button
+                    key={index}
+                    onClick={() => paginate(number)}
+                    className={`mx-1 ${currentPage === number ? 'bg-gray-300' : ''}`}
+                >
+                    {number}
+                </Button>
+            ) : (
+                <Button
+                    key={index}
+                    onClick={() => handleEllipsisClick(index === 0 ? 'left' : 'right')}
+                    className="mx-1"
+                >
+                    ...
+                </Button>
+            )
+        );
+    };
+    
+    const handleEllipsisClick = (direction: 'left' | 'right') => {
+        if (direction === 'left') {
+            setCurrentPage(prevPage => Math.max(prevPage - 3, 1));
+        } else {
+            setCurrentPage(prevPage => Math.min(prevPage + 3, totalPages));
+        }
+    };
     
     return (
         <div className="p-2 max-w-xl m-auto">
@@ -117,15 +166,7 @@ function MyRecipes() {
                 </TableBody>
             </Table>
             <div className="flex justify-center mt-8">
-                {Array.from({ length: Math.ceil(sortedRecipes.length / recipesPerPage) }, (_, index) => (
-                    <Button 
-                        key={index} 
-                        onClick={() => paginate(index + 1)}
-                        className={`mx-1 ${currentPage === index + 1 ? 'bg-gray-300' : ''}`}
-                    >
-                        {index + 1}
-                    </Button>
-                ))}
+                {renderPagination()}
             </div>
         </div>
     )
