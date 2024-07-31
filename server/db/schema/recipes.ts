@@ -1,5 +1,5 @@
 import { numeric, text, pgTable, serial, index, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
 export const recipes = pgTable(
@@ -57,7 +57,7 @@ export const insertRecipesSchema = createInsertSchema(recipes, {
         .nullable()
 });
 
-export const selectRecipesSchema = createSelectSchema(recipes);
+// export const selectRecipesSchema = createSelectSchema(recipes);
 
 export const updateRecipesSchema = z.object({
     title: z

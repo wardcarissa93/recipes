@@ -3,8 +3,10 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { sanitizeString } from '../../lib/utils'
 import { 
     deleteRecipeIngredient,
+    deleteRecipeCategory,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
+    getRecipeCategoriesByRecipeIdQueryOptions,
     deleteRecipe,
     getAllRecipesQueryOptions
  } from '@/lib/api';
@@ -20,6 +22,11 @@ type Ingredient = {
     details?: string | null
 }
 
+type Category = {
+    id: number,
+    categoryName: string
+}
+
 export const Route = createFileRoute('/_authenticated/recipe/$recipeId')({
     component: RecipeDetails
 });
@@ -29,6 +36,7 @@ function RecipeDetails() {
 
     const { isPending: recipePending, error: recipeError, data: recipeData } = useQuery(getRecipeByIdQueryOptions(recipeId));
     const { isPending: ingredientsPending, error: ingredientsError, data: ingredientsData } = useQuery(getRecipeIngredientsByRecipeIdQueryOptions(recipeId));
+    const { isPending: categoriesPending, error: categoriesError, data: categoriesData } = useQuery(getRecipeCategoriesByRecipeIdQueryOptions(recipeId));
 
     const recipe = recipeData?.recipe;
     const sanitizedTitle = recipe ? sanitizeString(recipe.title) : '';
@@ -56,10 +64,16 @@ function RecipeDetails() {
         details: ingredient.details ? sanitizeString(ingredient.details) : null
     }));
 
+    const sanitizedCategories = categoriesData?.recipeCategories.map((category: Category) => ({
+        ...category,
+        categoryName: sanitizeString(category.categoryName)
+    }));
+
     // const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;
 
     if (recipeError) return 'An error has occurred: ' + recipeError.message;
     if (ingredientsError) return 'An error has occurred: ' + ingredientsError.message;
+    if (categoriesError) return 'An error has occurred: ' + categoriesError.message;
 
     return (
         <div>
@@ -68,6 +82,28 @@ function RecipeDetails() {
                     <Button onClick={() => window.history.back()}>
                         Back
                     </Button>
+                    {(categoriesPending) ? (
+                        <div>
+                            <p>Ingredients loading...</p>
+                        </div>
+                    ) : (
+                        <div className="flex justify-between">
+                            <div className="flex mb-2 mt-4 gap-4 max-w-lg">
+                                <p className="text-bold mt-2">Category/ies: </p>
+                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                    {sanitizedCategories.map((category: Category) => (
+                                        <div key={category.categoryName} className="flex items-center">
+                                            <DeleteRecipeCategoryButton id={category.id} recipeId={recipeId} categoryName={category.categoryName} />
+                                            <p className="ml-2 max-w-[250px]">
+                                                {category.categoryName}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <AddRecipeCategoryButton id={recipe.id} />
+                        </div>
+                    )}
                     <div className="text-center p-4">
                         {sanitizedUrl ? (
                             <a href={sanitizedUrl} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold hover:text-indigo-400">
@@ -215,6 +251,25 @@ function AddRecipeIngredientButton({ id }: { id: number}) {
     )
 }
 
+function AddRecipeCategoryButton({ id }: { id: number}) {
+    const navigate = useNavigate();
+    const navigateToAddRecipeCategory = () => {
+        navigate({
+            to: "/add-recipe-category/$recipeId",
+            params: { recipeId: id.toString() }
+        });
+    };
+
+    return (
+        <Button
+            onClick={navigateToAddRecipeCategory}
+            className="mt-4"
+        >
+            Add Recipe to Another Category
+        </Button>
+    )
+}
+
 function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, recipeId: string, name: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
@@ -234,6 +289,43 @@ function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, reci
                 (existingRecipeIngredients) => ({
                     ...existingRecipeIngredients,
                     recipeIngredients: existingRecipeIngredients!.recipeIngredients.filter((e) => e.id !== id),
+                })
+            );
+        },
+    });
+
+    return (
+        <Button
+            disabled={mutation.isPending}
+            onClick={() => mutation.mutate({ id })}
+            variant="outline"
+            size="icon"
+            className="hover:bg-red-500"
+        >
+            {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
+        </Button>
+    );
+}
+
+function DeleteRecipeCategoryButton({ id, recipeId, categoryName }: { id: number, recipeId: string, categoryName: string }) {
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: deleteRecipeCategory,
+        onError: (error) => {
+            console.error('Error deleting category:', error);
+            toast("Error", {
+                description: error.message || `Failed to delete category: ${categoryName}`,
+            });
+        },
+        onSuccess: () => {
+            toast("Category Deleted", {
+                description: `Successfully deleted category: ${categoryName}`,
+            })
+            queryClient.setQueryData(
+                getRecipeCategoriesByRecipeIdQueryOptions(recipeId).queryKey,
+                (existingRecipeCategories) => ({
+                    ...existingRecipeCategories,
+                    recipeCategories: existingRecipeCategories!.recipeCategories.filter((e) => e.id !== id),
                 })
             );
         },
