@@ -8,6 +8,7 @@ import {
     updateRecipesSchema
 } from '../db/schema/recipes'
 import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
+import { recipeCategories as recipeCategoryTable } from '../db/schema/recipeCategories'
 import { eq, desc, and, exists } from 'drizzle-orm'
 
 import { createRecipeSchema } from '../sharedTypes'
@@ -94,6 +95,9 @@ export const recipesRoute = new Hono()
         await db
             .delete(recipeIngredientTable)
             .where(and(eq(recipeIngredientTable.userId, user.id), eq(recipeIngredientTable.recipeId, id)));
+        await db
+            .delete(recipeCategoryTable)
+            .where(and(eq(recipeCategoryTable.userId, user.id), eq(recipeCategoryTable.recipeId, id)));
         const recipe = await db
             .delete(recipeTable)
             .where(and(eq(recipeTable.userId, user.id), eq(recipeTable.id, id)))
