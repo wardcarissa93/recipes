@@ -23,9 +23,6 @@ export const recipeCategoriesRoute = new Hono()
             .fullJoin(categoryTable, eq(recipeCategoryTable.categoryId, categoryTable.id))
             .where(and(eq(recipeCategoryTable.userId, user.id), eq(recipeCategoryTable.recipeId, recipeId)))
             .then((res) => res);
-        if (!recipeCategories) {
-            return c.notFound();
-        }
         return c.json({ recipeCategories: recipeCategories });
     })
     .post("/", getUser, zValidator("json", createRecipeCategorySchema), async (c) => {
