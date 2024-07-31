@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { sanitizeString } from '../../lib/utils'
 import { 
     deleteRecipeIngredient,
+    deleteRecipeCategory,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
     getRecipeCategoriesByRecipeIdQueryOptions,
@@ -309,7 +310,7 @@ function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, reci
 function DeleteRecipeCategoryButton({ id, recipeId, categoryName }: { id: number, recipeId: string, categoryName: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
-        mutationFn: deleteRecipeIngredient,
+        mutationFn: deleteRecipeCategory,
         onError: (error) => {
             console.error('Error deleting category:', error);
             toast("Error", {
@@ -324,7 +325,7 @@ function DeleteRecipeCategoryButton({ id, recipeId, categoryName }: { id: number
                 getRecipeCategoriesByRecipeIdQueryOptions(recipeId).queryKey,
                 (existingRecipeCategories) => ({
                     ...existingRecipeCategories,
-                    recipeIngredients: existingRecipeCategories!.recipeCategories.filter((e) => e.id !== id),
+                    recipeCategories: existingRecipeCategories!.recipeCategories.filter((e) => e.id !== id),
                 })
             );
         },

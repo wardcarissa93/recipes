@@ -40,3 +40,16 @@ export const recipeCategoriesRoute = new Hono()
         c.status(201);
         return c.json(result);
     })
+    .delete("/:id{[0-9]+}", getUser, async (c) => {
+        const id = Number.parseInt(c.req.param("id"));
+        const user = c.var.user;
+        const recipeCategory = await db
+            .delete(recipeCategoryTable)
+            .where(and(eq(recipeCategoryTable.userId, user.id), eq(recipeCategoryTable.id, id)))
+            .returning()
+            .then((res) => res[0]);
+        if (!recipeCategory) {
+            return c.notFound();
+        }
+        return c.json({ recipeCategory: recipeCategory });
+    });
