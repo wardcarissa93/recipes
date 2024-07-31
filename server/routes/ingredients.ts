@@ -11,7 +11,7 @@ import {
     updateIngredientSchema
 } from '../db/schema/ingredients'
 import { recipeIngredients as recipeIngredientTable } from '../db/schema/recipeIngredients'
-import { eq, desc, and } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 
 import { createIngredientSchema } from '../sharedTypes'
 
@@ -22,8 +22,7 @@ export const ingredientsRoute = new Hono()
             .select()
             .from(ingredientTable)
             .where(eq(ingredientTable.userId, user.id))
-            .orderBy(ingredientTable.name)
-            .limit(100);
+            .orderBy(ingredientTable.name);
         return c.json({ ingredients: ingredients });
     })
     .post("/", getUser, zValidator("json", createIngredientSchema), async (c) => {

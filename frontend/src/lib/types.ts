@@ -30,6 +30,11 @@ export type IngredientOption = {
     value: string;
 }
 
+export type CategoryOption = {
+    label: string;
+    value: string;
+}
+
 export type NewRecipeIngredient = {
     name: string;
     quantity: number;

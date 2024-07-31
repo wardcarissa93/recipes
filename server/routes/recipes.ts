@@ -29,8 +29,7 @@ export const recipesRoute = new Hono()
                         .where(eq(recipeIngredientTable.recipeId, recipeTable.id))
                 )
             ))
-            .orderBy(recipeTable.title)
-            .limit(100);
+            .orderBy(recipeTable.title);
         return c.json({ recipes: recipes });
     })
     .post("/", getUser, zValidator("json", createRecipeSchema), async (c) => {

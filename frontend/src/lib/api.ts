@@ -7,7 +7,8 @@ import {
     type CreateRecipeIngredient,
     type EditIngredient,
     type EditRecipe,
-    type EditRecipeIngredient
+    type EditRecipeIngredient,
+    type CreateRecipeCategory
 } from '../../../server/sharedTypes'
 import { type ErrorResponse } from './types'
 
@@ -396,3 +397,91 @@ export async function deleteRecipeIngredient({ id }: { id: number }) {
         throw new Error("server error");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+export async function getAllCategories() {
+    const res = await api.categories.$get();
+    if (!res.ok) {
+        throw new Error("server error")
+    }
+    const data = await res.json();
+    return data;
+}
+
+export const getAllCategoriesQueryOptions = queryOptions({
+    queryKey: ["get-all-categories"],
+    queryFn: getAllCategories,
+    staleTime: 1000 * 60 * 5,
+});
+
+export async function getCategoryIdByName(categoryName: string) {
+    const res = await api.categories["categoryName/:categoryName"].$get({
+        param: { categoryName: categoryName }
+    });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data.category.id;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+export async function getRecipeCategoriesByRecipeId(recipeId: string) {
+    const res = await api.recipeCategories[`byRecipeId/:recipeId{[0-9]+}`].$get({ param: { recipeId: recipeId.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipeCategoriesByRecipeIdQueryOptions(recipeId: string) {
+    return queryOptions({
+        queryKey: ['get-recipe-categories-by-recipe-id', recipeId],
+        queryFn: () => getRecipeCategoriesByRecipeId(recipeId),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+export async function createRecipeCategory({ value }: { value: CreateRecipeCategory }) {
+    const res = await api.recipeCategories.$post({ json: value });
+    if (!res.ok) {
+        const errorResponse = await res.json();
+        const errorMessage = errorResponse.error?.issues?.map(issue => issue.message).join(', ') || "server error";
+        throw new Error(errorMessage);
+    }
+    const newRecipeCategory = await res.json();
+    return newRecipeCategory;
+}
+
+export const loadingCreateRecipeCategoryQueryOptions = queryOptions<{
+    recipeCategory?: CreateRecipeCategory;
+}>({
+    queryKey: ["loading-create-recipe-category"],
+    queryFn: async () => {
+        return {};
+    },
+    staleTime: Infinity,
+});

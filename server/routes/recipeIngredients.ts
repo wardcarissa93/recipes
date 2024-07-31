@@ -20,8 +20,7 @@ import { createRecipeIngredientSchema } from '../sharedTypes'
             .select()
             .from(recipeIngredientTable)
             .where(eq(recipeIngredientTable.userId, user.id))
-            .orderBy(desc(recipeIngredientTable.createdAt))
-            .limit(100);
+            .orderBy(desc(recipeIngredientTable.createdAt));
         return c.json({ recipeIngredients: recipeIngredients });
     })
     .post("/", getUser, zValidator("json", createRecipeIngredientSchema), async (c) => {
