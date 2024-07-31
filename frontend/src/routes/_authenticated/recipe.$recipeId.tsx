@@ -92,12 +92,12 @@ function RecipeDetails() {
                                 <p className="text-bold mt-2">Category/ies: </p>
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     {sanitizedCategories.map((category: Category) => (
-                                        <p key={category.categoryName} className="flex items-center">
+                                        <div key={category.categoryName} className="flex items-center">
                                             <DeleteRecipeCategoryButton id={category.id} recipeId={recipeId} categoryName={category.categoryName} />
                                             <p className="ml-2 max-w-[250px]">
                                                 {category.categoryName}
                                             </p>
-                                        </p>
+                                        </div>
                                     ))}
                                 </div>
                             </div>

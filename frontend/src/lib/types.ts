@@ -42,6 +42,10 @@ export type NewRecipeIngredient = {
     details: '';
 }
 
+export type NewRecipeCategory = {
+    categoryName: string;
+}
+
 export type Recipe = {
     id: number;
     title: string;

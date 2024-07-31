@@ -77,6 +77,8 @@
 
 .ingredient-name, .instructions-input, .description-input {
     color: black;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
 }
 
 #add-ingredient-button, 

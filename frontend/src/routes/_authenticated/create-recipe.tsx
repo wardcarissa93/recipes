@@ -7,37 +7,87 @@ import { useForm } from '@tanstack/react-form';
 import { 
     createRecipe,
     createRecipeIngredient,
+    createRecipeCategory,
     getIngredientIdByName,
+    getCategoryIdByName,
     getAllRecipesQueryOptions,
     getAllIngredientsQueryOptions,
+    getAllCategoriesQueryOptions,
     loadingCreateRecipeQueryOptions
 } from "@/lib/api";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
 import { sanitizeString } from '../../lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import {
     type IngredientOption,
-    type NewRecipeIngredient
+    type NewRecipeIngredient,
+    type CategoryOption,
+    type NewRecipeCategory
 } from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
 });
 
+const searchBarStyles = {
+    control: (provided) => ({
+        ...provided,
+        minHeight: '40px',
+        height: '40px',
+        boxShadow: 'none',
+        '&:hover': {
+            border: '2px solid #818cf8'
+        }
+    }),
+    valueContainer: (provided) => ({
+        ...provided,
+        height: '40px',
+        padding: '0 6px'
+    }),
+    input: (provided) => ({
+        ...provided,
+        margin: '0px'
+    }),
+    indicatorSeparator: () => ({
+        display: 'none'
+    }),
+    indicatorsContainer: (provided) => ({
+        ...provided,
+        height: '40px'
+    })
+};
+
 function CreateRecipe() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const [ingredients, setIngredients] = useState<NewRecipeIngredient[]>([{ name: '', quantity: 0, unit: '', details: '' }]);
+    const [categories, setCategories] = useState<NewRecipeCategory[]>([{ categoryName: '' }]);
+    const [selectedCategories, setSelectedCategories] = useState<CategoryOption[]>([]);
 
-    const { data } = useQuery(getAllIngredientsQueryOptions);
-    const ingredientList: string[] = data ? data.ingredients.map(ingredient => ingredient.name) : [];
+    const { data: ingredientsData } = useQuery(getAllIngredientsQueryOptions);
+    const ingredientList: string[] = ingredientsData ? ingredientsData.ingredients.map(ingredient => ingredient.name) : [];
     const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
         label: ingredient,
         value: ingredient,
     }));
+
+    const { data: categoriesData } = useQuery(getAllCategoriesQueryOptions);
+    const categoryList: string[] = categoriesData ? categoriesData.categories.map(category => category.categoryName) : [];
+    const categoryOptions: CategoryOption[] = categoryList.map((category) => ({
+        label: category,
+        value: category,
+    }))
+
+    // useEffect(() => {
+    //     const newCategories = selectedCategories.map(category => ({
+    //         categoryName: category.value
+    //     }));
+    //     setCategories(newCategories);
+    //     form.setFieldValue('categories', newCategories);
+    // }, [selectedCategories, form]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -50,6 +100,7 @@ function CreateRecipe() {
             servings: 0,
             instructions: '',
             url: '',
+            categories: categories,
             ingredients: ingredients
         },
         onSubmit: async ({ value }) => {
@@ -74,12 +125,17 @@ function CreateRecipe() {
                 unit: sanitizeString(ingredient.unit.trim()),
                 details: ingredient.details.trim() !== '' ? sanitizeString(ingredient.details.trim()) : null
             }));
+            const categories = value.categories.map(category => ({
+                categoryName: sanitizeString(category.categoryName.trim())
+            }));
+            console.log("CATEGORIES: ", categories)
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });
             
             try {
                 const newRecipe = await createRecipe({ value: recipe });
                 const createdRecipeIngredients = [];
+                const createdRecipeCategories = [];
                 for (const ingredient of ingredients) {
                     const ingredientId = await getIngredientIdByName(ingredient.name);
                     const newRecipeIngredient = await createRecipeIngredient({ value: {
@@ -90,6 +146,14 @@ function CreateRecipe() {
                         recipeId: newRecipe.id
                     } });
                     createdRecipeIngredients.push(newRecipeIngredient);
+                }
+                for (const category of categories) {
+                    const categoryId = await getCategoryIdByName(category.categoryName);
+                    const newRecipeCategory = await createRecipeCategory({ value: {
+                        recipeId: newRecipe.id,
+                        categoryId: categoryId
+                    } });
+                    createdRecipeCategories.push(newRecipeCategory);
                 }
                 queryClient.setQueryData(getAllRecipesQueryOptions.queryKey, {
                     ...existingRecipes,
@@ -107,6 +171,14 @@ function CreateRecipe() {
             }
         },
     });
+
+    useEffect(() => {
+        const newCategories = selectedCategories.map(category => ({
+            categoryName: category.value
+        }));
+        setCategories(newCategories);
+        form.setFieldValue('categories', newCategories);
+    }, [selectedCategories, form]);
 
     const addIngredient = () => {
         setIngredients([...ingredients, { name: '', quantity: 0, unit: '', details: '' }]);
@@ -323,6 +395,28 @@ function CreateRecipe() {
                                 onBlur={field.handleBlur}
                                 onChange={(e) => field.handleChange(e.target.value)}
                                 className="mt-2"
+                            />
+                            {field.state.meta.touchedErrors ? (
+                                <em className="text-red-500">{field.state.meta.touchedErrors}</em>
+                            ) : null}
+                        </div>
+                    ))}
+                />
+                <form.Field 
+                    name="categories"
+                    children={((field) => (
+                        <div className='my-2'>
+                            <Label htmlFor={field.name}>Categories</Label>
+                            <Select
+                                isMulti
+                                options={categoryOptions}
+                                value={selectedCategories}
+                                onChange={(selected) => {
+                                    setSelectedCategories(selected ? selected.map((option) => option) : []);
+                                }}
+                                // onChange={setSelectedCategories}
+                                className="ingredient-name"
+                                styles={searchBarStyles}
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em className="text-red-500">{field.state.meta.touchedErrors}</em>
