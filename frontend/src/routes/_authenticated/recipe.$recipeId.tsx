@@ -89,17 +89,21 @@ function RecipeDetails() {
                     ) : (
                         <div className="flex justify-between">
                             <div className="flex mb-2 mt-4 gap-4 max-w-lg">
-                                <p className="text-bold mt-2">Category/ies: </p>
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    {sanitizedCategories.map((category: Category) => (
-                                        <div key={category.categoryName} className="flex items-center">
-                                            <DeleteRecipeCategoryButton id={category.id} recipeId={recipeId} categoryName={category.categoryName} />
-                                            <p className="ml-2 max-w-[250px]">
-                                                {category.categoryName}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
+                                <p className="text-bold mt-2">Category(ies): </p>
+                                {(sanitizedCategories.length > 0) ? (
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        {sanitizedCategories.map((category) => (
+                                            <div key={category.categoryName} className="flex items-center">
+                                                <DeleteRecipeCategoryButton id={category.id} recipeId={recipeId} categoryName={category.categoryName} />
+                                                <p className="ml-2 max-w-[250px]">
+                                                    {category.categoryName}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="mt-2">None</p>
+                                )}
                             </div>
                             <AddRecipeCategoryButton id={recipe.id} />
                         </div>
