@@ -8,54 +8,84 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
     getAllRecipesQueryOptions,
+    getAllCategoriesQueryOptions,
     loadingCreateRecipeQueryOptions,
-    deleteRecipe
+    deleteRecipe,
+    getCategoryIdByName,
+    getRecipesByCategoryId
 } from '@/lib/api'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
+import Select from 'react-select';
 import { useNavigate } from '@tanstack/react-router'
-import { sanitizeString } from '../../lib/utils'
-import { type Recipe } from '../../lib/types'
+import { sanitizeString, searchBarStyles } from '../../lib/utils'
+import { 
+    type Recipe, 
+    type CategoryOption,
+    type FilteredRecipe
+} from '../../lib/types'
 
 export const Route = createFileRoute('/_authenticated/my-recipes')({
     component: MyRecipes
 })
 
 function MyRecipes() {
-    const { isPending, error, data } = useQuery(getAllRecipesQueryOptions);
+    const { isPending: recipePending, error: recipeError, data: recipeData } = useQuery(getAllRecipesQueryOptions);
+    const { error: categoriesError, data: categoriesData } = useQuery(getAllCategoriesQueryOptions);
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
-    const [isAscendingOrder, setIsAscendingOrder] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedCategory, setSelectedCategory] = useState<CategoryOption>();
+    const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>([]);
     const recipesPerPage = 8;
 
-    if (error) return 'An error has occurred: ' + error.message
+    console.log("selectedCategory: ", selectedCategory)
 
-    const sanitizedRecipes = data?.recipes.map((recipe: Recipe) => ({
-        ...recipe,
-        title: sanitizeString(recipe.title),
-    })) || [];
+    const categoryOptions: CategoryOption[] = categoriesData ? categoriesData.categories.map(category => ({
+        label: category.categoryName,
+        value: category.categoryName
+    })) : [];
 
-    const toggleSortOrder = () => {
-        setIsAscendingOrder(!isAscendingOrder);
-    };
-
-    const sortedRecipes = [...sanitizedRecipes].sort((a, b) => {
-        if (isAscendingOrder) {
-            return a.title.localeCompare(b.title);
-        } else {
-            return b.title.localeCompare(a.title);
+    useEffect(() => {
+        if (recipeData) {
+            const sanitizedRecipes = recipeData.recipes.map((recipe: Recipe) => ({
+                id: recipe.id,
+                title: sanitizeString(recipe.title)
+            }));
+            setCurrentRecipes(sanitizedRecipes);
         }
-    });
+    }, [recipeData]);
+
+    useEffect(() => {
+        const getCategoryId = async () => {
+            try {
+                if (selectedCategory) {
+                    const categoryId = await getCategoryIdByName(selectedCategory.label);
+                    console.log("categoryId: ", categoryId);
+                    const recipesInCategory = await getRecipesByCategoryId(categoryId);
+                    console.log("recipesInCategory: ", recipesInCategory);
+                    const filteredRecipes = recipesInCategory.recipeCategories.map((recipe: FilteredRecipe) => ({
+                        id: recipe.recipeId,
+                        title: recipe.title
+                    }));
+                    setCurrentRecipes(filteredRecipes);
+                }
+            } catch (error) {
+                console.error("Error fetching categoryId: ", error);
+            }
+        };
+
+        getCategoryId();
+    }, [selectedCategory]);
 
     const indexOfLastRecipe = currentPage * recipesPerPage;
     const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
-    const currentRecipes = sortedRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
-    const totalPages = Math.ceil(sortedRecipes.length / recipesPerPage);
+    const displayedRecipes = currentRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+    const totalPages = Math.ceil(currentRecipes.length / recipesPerPage);
 
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -107,13 +137,26 @@ function MyRecipes() {
             setCurrentPage(prevPage => Math.min(prevPage + 3, totalPages));
         }
     };
+
+    if (recipeError) return 'An error has occurred: ' + recipeError.message
+
+    if (categoriesError) return 'An error has occurred: ' + categoriesError.message
     
     return (
         <div className="p-2 max-w-xl m-auto">
             <div className="flex justify-between">
-                <Button onClick={toggleSortOrder}>
-                    {isAscendingOrder ? 'Sort Recipes Z-A' : 'Sort Recipes A-Z'}
-                </Button>
+                <div className="flex gap-4">
+                    <p className="mt-2 text-sm">Filter by Category: </p>
+                    <form className="w-[250px]">
+                        <Select
+                            options={categoryOptions}
+                            value={selectedCategory}
+                            onChange={(selectedOption) => setSelectedCategory(selectedOption as CategoryOption)}
+                            className="ingredient-name"
+                            styles={searchBarStyles}
+                        />
+                    </form>
+                </div>
                 <Link to="/create-recipe" className="[&.active]:font-bold">
                     <Button>
                         Create Recipe
@@ -140,7 +183,7 @@ function MyRecipes() {
                             </TableCell>
                         </TableRow>
                     )}
-                    {isPending 
+                    {recipePending 
                     ? Array(3).fill(0).map((_, i) => (
                         <TableRow key={i}>
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
@@ -148,7 +191,7 @@ function MyRecipes() {
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     )) 
-                    : currentRecipes.map((recipe) => (
+                    : displayedRecipes.map((recipe) => (
                         <TableRow key={recipe.id}>
                             <TableCell>
                                 <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
