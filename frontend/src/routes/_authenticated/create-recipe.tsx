@@ -459,7 +459,7 @@ function CreateRecipe() {
                                             }
                                         }}
                                         placeholder="Select Ingredient"
-                                        className="ingredient-name w-1/2"
+                                        className="ingredient-name w-1/2 text-sm"
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em className="text-red-500">{field.state.meta.touchedErrors}</em>

@@ -59,6 +59,17 @@ export type Recipe = {
     ingredients?: string[];
 }
 
+export type FilteredRecipe = {
+    id: number;
+    recipeId: number;
+    title: string;
+}
+
+// export type Category = {
+//     id: number;
+//     categoryName: string;
+// }
+
 export type RecipeIngredient = {
     id: number;
     ingredientId: number;

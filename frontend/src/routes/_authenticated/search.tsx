@@ -8,41 +8,12 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useSearch } from '@/context/useSearch';
 import Select from 'react-select';
-import { sanitizeString } from '../../lib/utils';
+import { sanitizeString, searchBarStyles } from '../../lib/utils';
 import { type IngredientOption } from '../../lib/types';
 
 export const Route = createFileRoute('/_authenticated/search')({
     component: Search
 });
-
-
-const searchBarStyles = {
-    control: (provided) => ({
-        ...provided,
-        minHeight: '40px',
-        height: '40px',
-        boxShadow: 'none',
-        '&:hover': {
-            border: '2px solid #818cf8'
-        }
-    }),
-    valueContainer: (provided) => ({
-        ...provided,
-        height: '40px',
-        padding: '0 6px'
-    }),
-    input: (provided) => ({
-        ...provided,
-        margin: '0px'
-    }),
-    indicatorSeparator: () => ({
-        display: 'none'
-    }),
-    indicatorsContainer: (provided) => ({
-        ...provided,
-        height: '40px'
-    })
-};
 
 function Search() {
     // const [selectedIngredients, setSelectedIngredients] = useState<IngredientOption[]>([]);

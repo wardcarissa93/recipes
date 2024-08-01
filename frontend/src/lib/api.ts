@@ -465,6 +465,23 @@ export function getRecipeCategoriesByRecipeIdQueryOptions(recipeId: string) {
     })
 }
 
+export async function getRecipesByCategoryId(categoryId: string) {
+    const res = await api.recipeCategories[`byCategoryId/:categoryId{[0-9]+}`].$get({ param: { categoryId: categoryId.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipesByCategoryIdQueryOptions(categoryId: string) {
+    return queryOptions({
+        queryKey: ['get-recipe-categories-by-category-id', categoryId],
+        queryFn: () => getRecipesByCategoryId(categoryId),
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
 export async function createRecipeCategory({ value }: { value: CreateRecipeCategory }) {
     const res = await api.recipeCategories.$post({ json: value });
     if (!res.ok) {

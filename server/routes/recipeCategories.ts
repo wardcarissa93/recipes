@@ -25,6 +25,21 @@ export const recipeCategoriesRoute = new Hono()
             .then((res) => res);
         return c.json({ recipeCategories: recipeCategories });
     })
+    .get("/byCategoryId/:categoryId{[0-9]+}", getUser, async (c) => {
+        const categoryId = Number.parseInt(c.req.param("categoryId"));
+        const user = c.var.user;
+        const recipeCategories = await db
+            .select({
+                id: recipeCategoryTable.id,
+                recipeId: recipeCategoryTable.recipeId,
+                title: recipesTable.title
+            })
+            .from(recipeCategoryTable)
+            .fullJoin(recipesTable, eq(recipeCategoryTable.recipeId, recipesTable.id))
+            .where(and(eq(recipeCategoryTable.userId, user.id), eq(recipeCategoryTable.categoryId, categoryId)))
+            .then((res) => res);
+        return c.json({ recipeCategories: recipeCategories });
+    })
     .post("/", getUser, zValidator("json", createRecipeCategorySchema), async (c) => {
         const recipeCategory = await c.req.valid("json");
         const user = c.var.user;
