@@ -101,10 +101,10 @@ function MyRecipes() {
             if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
                 pageNumbers.push(i);
             } else if (i < currentPage - 1 && !ellipsisLeft) {
-                pageNumbers.push('...');
+                pageNumbers.push('left-ellipsis');
                 ellipsisLeft = true;
             } else if (i > currentPage + 1 && !ellipsisRight) {
-                pageNumbers.push('...');
+                pageNumbers.push('right-ellipsis');
                 ellipsisRight = true;
             }
         }
@@ -121,7 +121,7 @@ function MyRecipes() {
             ) : (
                 <Button
                     key={index}
-                    onClick={() => handleEllipsisClick(index === 0 ? 'left' : 'right')}
+                    onClick={() => handleEllipsisClick(number === 'left-ellipsis' ? 'left' : 'right')}
                     className="mx-1"
                 >
                     ...
