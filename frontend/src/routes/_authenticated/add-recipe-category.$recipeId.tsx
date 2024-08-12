@@ -115,7 +115,7 @@ function AddRecipeCategory() {
                                                 field.handleChange(selectedOption.value);
                                             }
                                         }}
-                                        placeholder="Select Ingredient"
+                                        placeholder="Select Category"
                                         className="ingredient-name mt-2 text-sm"
                                     />
                             {field.state.meta.touchedErrors ? (
