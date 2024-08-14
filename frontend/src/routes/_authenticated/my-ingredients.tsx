@@ -145,17 +145,23 @@ function Ingredients() {
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     ))
-                    : currentIngredients.map((ingredient) => (
-                        <TableRow key={ingredient.id}>
-                            <TableCell>{ingredient.name}</TableCell>
-                            <TableCell>
-                                <IngredientEditButton id={ingredient.id}/>
-                            </TableCell>
-                            <TableCell>
-                                <IngredientDeleteButton id={ingredient.id} name={ingredient.name}/>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    : (
+                        (currentIngredients.length === 0) ? 
+                            <p className="p-4 mt-2">
+                                No ingredients found.
+                            </p>
+                        : currentIngredients.map((ingredient) => (
+                            <TableRow key={ingredient.id}>
+                                <TableCell>{ingredient.name}</TableCell>
+                                <TableCell>
+                                    <IngredientEditButton id={ingredient.id}/>
+                                </TableCell>
+                                <TableCell>
+                                    <IngredientDeleteButton id={ingredient.id} name={ingredient.name}/>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
                 </TableBody>
             </Table>
             <div className="flex justify-center mt-8">

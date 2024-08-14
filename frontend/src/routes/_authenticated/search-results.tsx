@@ -100,7 +100,11 @@ function SearchResults() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentRecipes.map((recipe: SearchResult) => (
+                    {(currentRecipes.length === 0) ? 
+                        <p className="p-4 mt-2">
+                            No recipes found.
+                        </p>
+                    : currentRecipes.map((recipe: SearchResult) => (
                         <TableRow key={recipe.id}>
                             <TableCell>
                                 <Link to={`/recipe/${recipe.id}`}>{sanitizeString(recipe.title)}</Link>
