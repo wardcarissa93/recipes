@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     getAllIngredientsQueryOptions,
     loadingCreateIngredientQueryOptions,
@@ -16,6 +16,7 @@ import {
 } from '@/lib/api'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
@@ -29,29 +30,38 @@ export const Route = createFileRoute('/_authenticated/my-ingredients')({
 function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
-    const [isAscendingOrder, setIsAscendingOrder] = useState(true);
+    // const [isAscendingOrder, setIsAscendingOrder] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [filterText, setFilterText] = useState('');
+    const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>([]);
     const ingredientsPerPage = 8;
+
+    // if (error) return 'An error has occurred: ' + error.message
+
+    useEffect(() => {
+        const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
+            ...ingredient,
+            name: sanitizeString(ingredient.name),
+        })) || [];
+        const filtered = sanitizedIngredients.filter(ingredient => ingredient.name.includes(filterText.toLowerCase()));
+        setFilteredIngredients(filtered);
+        setCurrentPage(1);
+    }, [filterText, data?.ingredients])
 
     if (error) return 'An error has occurred: ' + error.message
 
-    const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
-        ...ingredient,
-        name: sanitizeString(ingredient.name),
-    })) || [];
+    // const toggleSortOrder = () => {
+    //     setIsAscendingOrder(!isAscendingOrder);
+    // };
 
-    const toggleSortOrder = () => {
-        setIsAscendingOrder(!isAscendingOrder);
-    };
-
-    const sortedIngredients = [...sanitizedIngredients].sort((a, b) => {
-        return isAscendingOrder ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-    });
+    // const sortedIngredients = [...sanitizedIngredients].sort((a, b) => {
+    //     return isAscendingOrder ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    // });
 
     const indexOfLastIngredient = currentPage * ingredientsPerPage;
     const indexOfFirstIngredient = indexOfLastIngredient - ingredientsPerPage;
-    const currentIngredients = sortedIngredients.slice(indexOfFirstIngredient, indexOfLastIngredient);
-    const totalPages = Math.ceil(sortedIngredients.length / ingredientsPerPage);
+    const currentIngredients = filteredIngredients.slice(indexOfFirstIngredient, indexOfLastIngredient);
+    const totalPages = Math.ceil(filteredIngredients.length / ingredientsPerPage);
 
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -106,12 +116,17 @@ function Ingredients() {
 
     return (
         <div className="p-2 max-w-xl m-auto">
-            <div className='flex justify-between'>
-                <Button onClick={toggleSortOrder}>
+            <div className='flex justify-between gap-8'>
+                {/* <Button onClick={toggleSortOrder}>
                     {isAscendingOrder ? 'Sort Ingredients Z-A' : 'Sort Ingredients A-Z'}
-                </Button>
+                </Button> */}
+                <Input 
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Search for ingredient by name"
+                />
                 <Link to="/create-ingredient" className="[&.active]:font-bold">
-                    <Button>
+                    <Button className="w-[140px]">
                         Create Ingredient
                     </Button>
                 </Link>
@@ -120,7 +135,7 @@ function Ingredients() {
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-2/3">Ingredient</TableHead>
-                        <TableHead className="w-1/6">Edit</TableHead>
+                        <TableHead className="w-1/6"><p className="px-2">Edit</p></TableHead>
                         <TableHead className="w-1/6">Delete</TableHead>
                     </TableRow>
                 </TableHeader>
