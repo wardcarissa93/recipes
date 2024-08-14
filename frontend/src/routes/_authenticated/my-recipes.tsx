@@ -56,6 +56,7 @@ function MyRecipes() {
                 id: recipe.id,
                 title: sanitizeString(recipe.title)
             }));
+            sanitizedRecipes.sort((a, b) => a.title.localeCompare(b.title));
             setCurrentRecipes(sanitizedRecipes);
         }
     }, [recipeData]);
