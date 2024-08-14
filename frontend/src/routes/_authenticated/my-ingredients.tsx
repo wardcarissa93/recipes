@@ -30,13 +30,10 @@ export const Route = createFileRoute('/_authenticated/my-ingredients')({
 function Ingredients() {
     const { isPending, error, data } = useQuery(getAllIngredientsQueryOptions);
     const { data: loadingCreateIngredient } = useQuery(loadingCreateIngredientQueryOptions);
-    // const [isAscendingOrder, setIsAscendingOrder] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [filterText, setFilterText] = useState('');
     const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>([]);
     const ingredientsPerPage = 8;
-
-    // if (error) return 'An error has occurred: ' + error.message
 
     useEffect(() => {
         const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
@@ -49,14 +46,6 @@ function Ingredients() {
     }, [filterText, data?.ingredients])
 
     if (error) return 'An error has occurred: ' + error.message
-
-    // const toggleSortOrder = () => {
-    //     setIsAscendingOrder(!isAscendingOrder);
-    // };
-
-    // const sortedIngredients = [...sanitizedIngredients].sort((a, b) => {
-    //     return isAscendingOrder ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-    // });
 
     const indexOfLastIngredient = currentPage * ingredientsPerPage;
     const indexOfFirstIngredient = indexOfLastIngredient - ingredientsPerPage;
@@ -116,20 +105,17 @@ function Ingredients() {
 
     return (
         <div className="p-2 max-w-xl m-auto">
-            <div className='flex justify-between gap-8'>
-                {/* <Button onClick={toggleSortOrder}>
-                    {isAscendingOrder ? 'Sort Ingredients Z-A' : 'Sort Ingredients A-Z'}
-                </Button> */}
-                <Input 
-                    value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)}
-                    placeholder="Search for ingredient by name"
-                />
+            <div className='flex justify-between gap-8 mb-4'>
                 <Link to="/create-ingredient" className="[&.active]:font-bold">
                     <Button className="w-[140px]">
                         Create Ingredient
                     </Button>
                 </Link>
+                <Input 
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Search for ingredient by name"
+                />
             </div>
             <Table>
                 <TableHeader>

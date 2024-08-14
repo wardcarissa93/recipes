@@ -19,6 +19,7 @@ import {
 } from '@/lib/api'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import Select from 'react-select';
@@ -40,7 +41,9 @@ function MyRecipes() {
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState<CategoryOption>();
-    const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>([]);
+    // const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>([]);
+    const [filterText, setFilterText] = useState('');
+    const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
     const recipesPerPage = 8;
 
     console.log("selectedCategory: ", selectedCategory)
@@ -51,42 +54,43 @@ function MyRecipes() {
     })) : [];
 
     useEffect(() => {
-        if (recipeData) {
-            const sanitizedRecipes = recipeData.recipes.map((recipe: Recipe) => ({
-                id: recipe.id,
-                title: sanitizeString(recipe.title)
-            }));
-            sanitizedRecipes.sort((a, b) => a.title.localeCompare(b.title));
-            setCurrentRecipes(sanitizedRecipes);
-        }
-    }, [recipeData]);
-
-    useEffect(() => {
-        const getCategoryId = async () => {
-            try {
+        const filterRecipes = async () => {
+            if (recipeData) {
+                let sanitizedRecipes = recipeData.recipes.map((recipe: Recipe) => ({
+                    id: recipe.id,
+                    title: sanitizeString(recipe.title)
+                }));
+    
                 if (selectedCategory) {
-                    const categoryId = await getCategoryIdByName(selectedCategory.label);
-                    console.log("categoryId: ", categoryId);
-                    const recipesInCategory = await getRecipesByCategoryId(categoryId);
-                    console.log("recipesInCategory: ", recipesInCategory);
-                    const filteredRecipes = recipesInCategory.recipeCategories.map((recipe: FilteredRecipe) => ({
-                        id: recipe.recipeId,
-                        title: recipe.title
-                    }));
-                    setCurrentRecipes(filteredRecipes);
+                    try {
+                        const categoryId = await getCategoryIdByName(selectedCategory.label);
+                        const recipesInCategory = await getRecipesByCategoryId(categoryId);
+                        sanitizedRecipes = recipesInCategory.recipeCategories.map((recipe: FilteredRecipe) => ({
+                            id: recipe.recipeId,
+                            title: sanitizeString(recipe.title)
+                        }));
+                    } catch (error) {
+                        console.error("Error fetching categoryId: ", error);
+                    }
                 }
-            } catch (error) {
-                console.error("Error fetching categoryId: ", error);
+    
+                sanitizedRecipes.sort((a, b) => a.title.localeCompare(b.title));
+    
+                const filtered = sanitizedRecipes.filter(recipe => 
+                    recipe.title.toLowerCase().includes(filterText.toLowerCase())
+                );
+    
+                setFilteredRecipes(filtered);
             }
         };
-
-        getCategoryId();
-    }, [selectedCategory]);
+    
+        filterRecipes();
+    }, [recipeData, filterText, selectedCategory]);    
 
     const indexOfLastRecipe = currentPage * recipesPerPage;
     const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
-    const displayedRecipes = currentRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
-    const totalPages = Math.ceil(currentRecipes.length / recipesPerPage);
+    const displayedRecipes = filteredRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+    const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
 
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -142,27 +146,34 @@ function MyRecipes() {
     if (recipeError) return 'An error has occurred: ' + recipeError.message
 
     if (categoriesError) return 'An error has occurred: ' + categoriesError.message
+
+    console.log("displayedRecipes: ", displayedRecipes)
     
     return (
         <div className="p-2 max-w-xl m-auto">
-            <div className="flex justify-between">
-                <div className="flex gap-4">
-                    <p className="mt-2 text-sm">Filter by Category: </p>
-                    <form className="w-[250px]">
-                        <Select
-                            options={categoryOptions}
-                            value={selectedCategory}
-                            onChange={(selectedOption) => setSelectedCategory(selectedOption as CategoryOption)}
-                            className="ingredient-name"
-                            styles={searchBarStyles}
-                        />
-                    </form>
-                </div>
+            <div className="flex justify-between gap-8 mb-4">
                 <Link to="/create-recipe" className="[&.active]:font-bold">
                     <Button className="w-[140px]">
                         Create Recipe
                     </Button>
                 </Link>
+                <Input 
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Search for recipe by title"
+                />
+            </div>
+            <div className="flex justify-between mb-2">
+                <p className="mt-2 ml-4 text-sm">Filter by Category: </p>
+                <form className="w-[388px]">
+                    <Select
+                        options={categoryOptions}
+                        value={selectedCategory}
+                        onChange={(selectedOption) => setSelectedCategory(selectedOption as CategoryOption)}
+                        className="ingredient-name"
+                        styles={searchBarStyles}
+                    />
+                </form>
             </div>
             <Table>
                 <TableHeader>
@@ -192,21 +203,27 @@ function MyRecipes() {
                             <TableCell><Skeleton className="h-4"></Skeleton></TableCell>
                         </TableRow>
                     )) 
-                    : displayedRecipes.map((recipe) => (
-                        <TableRow key={recipe.id}>
-                            <TableCell>
-                                <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
-                                    {recipe.title}
-                                </Link>
-                            </TableCell>
-                            <TableCell>
-                                <RecipeEditButton id={recipe.id}/>
-                            </TableCell>
-                            <TableCell>
-                                <RecipeDeleteButton id={recipe.id} title={recipe.title}/>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    : (
+                        (displayedRecipes.length === 0) ? 
+                            <p className="p-4 mt-2">
+                                No recipes found.
+                            </p>
+                        : displayedRecipes.map((recipe) => (
+                            <TableRow key={recipe.id}>
+                                <TableCell>
+                                    <Link to="/recipe/$recipeId" params={{ recipeId: recipe.id.toLocaleString() }}>
+                                        {recipe.title}
+                                    </Link>
+                                </TableCell>
+                                <TableCell>
+                                    <RecipeEditButton id={recipe.id}/>
+                                </TableCell>
+                                <TableCell>
+                                    <RecipeDeleteButton id={recipe.id} title={recipe.title}/>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
                 </TableBody>
             </Table>
             <div className="flex justify-center mt-8">
