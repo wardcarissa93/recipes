@@ -114,7 +114,7 @@ function Ingredients() {
                 <Input 
                     value={filterText}
                     onChange={(e) => setFilterText(e.target.value)}
-                    placeholder="Search for ingredient by name"
+                    placeholder="Search for ingredient by name..."
                 />
             </div>
             <Table>
@@ -186,6 +186,7 @@ function IngredientEditButton({ id }: { id: number }) {
             onClick={handleEdit} 
             variant="outline"
             size="icon"
+            className="border-indigo-400"
         >
             <Edit className="h-4 w-4" />
         </Button>
@@ -225,7 +226,7 @@ function IngredientDeleteButton({ id, name }: { id: number, name: string }) {
             onClick={handleDelete} 
             variant="outline"
             size="icon"
-            className="hover:bg-red-500"
+            className="border-red-500 hover:bg-red-500"
         >
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>

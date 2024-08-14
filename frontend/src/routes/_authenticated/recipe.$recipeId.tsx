@@ -49,7 +49,7 @@ function RecipeDetails() {
             const formattedDescription = recipe.description.replace(/\n/g, '<br>');
             sanitizedDescription = sanitizeString(formattedDescription);
         }
-        const formattedInstructions = recipe.instructions.replace(/\n/g, '<br>');
+        const formattedInstructions = recipe.instructions.replace(/\n/g, '<br><span></span>');
         sanitizedInstructions = sanitizeString(formattedInstructions);
         if (recipe.url) {
             sanitizedUrl = sanitizeString(recipe.url);
@@ -148,7 +148,7 @@ function RecipeDetails() {
                         </div>
                     )}
                     <h3 className="text-center mb-4 text-lg font-bold">Instructions</h3>
-                    <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} className="p-2"/>
+                    <p dangerouslySetInnerHTML={{ __html: sanitizedInstructions }} className="p-2 max-w-xl m-auto recipe-instructions"/>
                     <div className="flex justify-between my-8">
                         <EditRecipeButton id={recipe.id} />
                         <AddRecipeIngredientButton id={recipe.id}/>
@@ -231,6 +231,7 @@ function EditRecipeIngredientButton({ id }: { id: number }) {
             onClick={navigateToEditRecipeIngredient}
             variant="outline"
             size="icon"
+            className="border-indigo-400 mr-2"
         >
             <Edit className="h-4 w-4"/>
         </Button>
@@ -304,7 +305,7 @@ function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, reci
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
-            className="hover:bg-red-500"
+            className="hover:bg-red-500 border-red-500"
         >
             {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
         </Button>
@@ -341,7 +342,7 @@ function DeleteRecipeCategoryButton({ id, recipeId, categoryName }: { id: number
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
-            className="hover:bg-red-500"
+            className="hover:bg-red-500 border-red-500"
         >
             {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
         </Button>
