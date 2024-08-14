@@ -159,7 +159,7 @@ function MyRecipes() {
                     </form>
                 </div>
                 <Link to="/create-recipe" className="[&.active]:font-bold">
-                    <Button>
+                    <Button className="w-[140px]">
                         Create Recipe
                     </Button>
                 </Link>
@@ -168,7 +168,7 @@ function MyRecipes() {
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-2/3">Recipe</TableHead>
-                        <TableHead className="w-1/6">Edit</TableHead>
+                        <TableHead className="w-1/6"><p className="px-2">Edit</p></TableHead>
                         <TableHead className="w-1/6">Delete</TableHead>
                     </TableRow>
                 </TableHeader>
