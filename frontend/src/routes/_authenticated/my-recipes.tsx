@@ -41,7 +41,6 @@ function MyRecipes() {
     const { data: loadingCreateRecipe } = useQuery(loadingCreateRecipeQueryOptions);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState<CategoryOption>();
-    // const [currentRecipes, setCurrentRecipes] = useState<Recipe[]>([]);
     const [filterText, setFilterText] = useState('');
     const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
     const recipesPerPage = 8;
