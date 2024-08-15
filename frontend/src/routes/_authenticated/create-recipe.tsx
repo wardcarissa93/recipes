@@ -40,11 +40,14 @@ function CreateRecipe() {
     const [selectedCategories, setSelectedCategories] = useState<CategoryOption[]>([]);
 
     const { data: ingredientsData } = useQuery(getAllIngredientsQueryOptions);
-    const ingredientList: string[] = ingredientsData ? ingredientsData.ingredients.map(ingredient => ingredient.name) : [];
+    const ingredientList: string[] = ingredientsData
+        ? ingredientsData.ingredients.map(ingredient => ingredient.name).sort()
+        : [];
     const ingredientOptions: IngredientOption[] = ingredientList.map((ingredient) => ({
         label: ingredient,
         value: ingredient,
-    }));
+        }));
+
 
     const { data: categoriesData } = useQuery(getAllCategoriesQueryOptions);
     const categoryList: string[] = categoriesData ? categoriesData.categories.map(category => category.categoryName) : [];
