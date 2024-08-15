@@ -18,7 +18,7 @@ import {
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
-import { sanitizeString } from '../../lib/utils';
+import { sanitizeString, categorySelectStyles } from '../../lib/utils';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import {
@@ -31,34 +31,6 @@ import {
 export const Route = createFileRoute('/_authenticated/create-recipe')({
     component: CreateRecipe
 });
-
-const searchBarStyles = {
-    control: (provided) => ({
-        ...provided,
-        minHeight: '40px',
-        height: '40px',
-        boxShadow: 'none',
-        '&:hover': {
-            border: '2px solid #818cf8'
-        }
-    }),
-    valueContainer: (provided) => ({
-        ...provided,
-        height: '40px',
-        padding: '0 6px'
-    }),
-    input: (provided) => ({
-        ...provided,
-        margin: '0px'
-    }),
-    indicatorSeparator: () => ({
-        display: 'none'
-    }),
-    indicatorsContainer: (provided) => ({
-        ...provided,
-        height: '40px'
-    })
-};
 
 function CreateRecipe() {
     const queryClient = useQueryClient();
@@ -80,14 +52,6 @@ function CreateRecipe() {
         label: category,
         value: category,
     }))
-
-    // useEffect(() => {
-    //     const newCategories = selectedCategories.map(category => ({
-    //         categoryName: category.value
-    //     }));
-    //     setCategories(newCategories);
-    //     form.setFieldValue('categories', newCategories);
-    // }, [selectedCategories, form]);
 
     const form = useForm({
         validatorAdapter: zodValidator,
@@ -416,7 +380,7 @@ function CreateRecipe() {
                                 }}
                                 // onChange={setSelectedCategories}
                                 className="ingredient-name"
-                                styles={searchBarStyles}
+                                styles={categorySelectStyles}
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em className="text-red-500">{field.state.meta.touchedErrors}</em>
