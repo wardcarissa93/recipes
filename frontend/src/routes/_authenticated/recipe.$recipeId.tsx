@@ -84,7 +84,7 @@ function RecipeDetails() {
                     </Button>
                     {(categoriesPending) ? (
                         <div>
-                            <p>Ingredients loading...</p>
+                            <p>Categories loading...</p>
                         </div>
                     ) : (
                         <div className="flex justify-between">
@@ -108,7 +108,7 @@ function RecipeDetails() {
                             <AddRecipeCategoryButton id={recipe.id} />
                         </div>
                     )}
-                    <div className="text-center p-4">
+                    <div className="text-center p-4 mt-8">
                         {sanitizedUrl ? (
                             <a href={sanitizedUrl} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold hover:text-indigo-400">
                             {sanitizedTitle}
@@ -154,7 +154,7 @@ function RecipeDetails() {
                         <AddRecipeIngredientButton id={recipe.id}/>
                         <DeleteRecipeButton id={recipe.id} title={recipe.title} />
                     </div>
-                    <Button onClick={() => window.history.back()} className="m-auto flex">
+                    <Button onClick={() => window.history.back()} className="mx-auto my-16 flex">
                         Back
                     </Button>
                 </div>

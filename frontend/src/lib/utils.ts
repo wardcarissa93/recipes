@@ -10,7 +10,7 @@ export function sanitizeString(input: string): string {
   return DOMPurify.sanitize(input);
 }
 
-export const searchBarStyles = {
+export const categorySelectStyles = {
   control: (provided) => ({
       ...provided,
       minHeight: '40px',

@@ -24,7 +24,7 @@ import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import Select from 'react-select';
 import { useNavigate } from '@tanstack/react-router'
-import { sanitizeString, searchBarStyles } from '../../lib/utils'
+import { sanitizeString, categorySelectStyles } from '../../lib/utils'
 import { 
     type Recipe, 
     type CategoryOption,
@@ -159,7 +159,7 @@ function MyRecipes() {
                 <Input 
                     value={filterText}
                     onChange={(e) => setFilterText(e.target.value)}
-                    placeholder="Search for recipe by title..."
+                    placeholder="Search for recipe by title"
                 />
             </div>
             <div className="flex justify-between mb-2">
@@ -170,7 +170,7 @@ function MyRecipes() {
                         value={selectedCategory}
                         onChange={(selectedOption) => setSelectedCategory(selectedOption as CategoryOption)}
                         className="ingredient-name"
-                        styles={searchBarStyles}
+                        styles={categorySelectStyles}
                     />
                 </form>
             </div>
@@ -246,7 +246,6 @@ function RecipeEditButton({ id }: { id: number }) {
             onClick={handleEdit}
             variant="outline"
             size="icon"
-            className="border-indigo-400"
         >
             <Edit className="h-4 w-4"/>
         </Button>
@@ -283,7 +282,7 @@ function RecipeDeleteButton({ id, title }: { id: number, title: string }) {
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
-            className="hover:bg-red-500 border-red-500"
+            className="hover:bg-red-500"
         >
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>
