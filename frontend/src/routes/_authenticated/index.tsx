@@ -11,12 +11,12 @@ export const Route = createFileRoute('/_authenticated/')({
       <div className="p-2">
           <h1 className="text-5xl font-bold text-indigo-400 text-center mt-32 mb-20">Recipe Box</h1>
           <Link to="/my-recipes">
-              <Button className="mx-auto flex">
+              <Button className="mx-auto flex w-[128px]">
                   My Recipes
               </Button>
           </Link>
           <Link to="/my-ingredients">
-              <Button className="mt-8 mx-auto flex">
+              <Button className="mt-8 mx-auto flex w-[128px]">
                   My Ingredients
               </Button>
           </Link>
