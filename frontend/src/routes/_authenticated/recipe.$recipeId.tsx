@@ -56,13 +56,22 @@ function RecipeDetails() {
         }
     }
 
-    const sanitizedIngredients = ingredientsData?.recipeIngredients.map((ingredient: Ingredient) => ({
-        ...ingredient,
-        name: sanitizeString(ingredient.name),
-        quantity: ingredient.quantity,
-        unit: sanitizeString(ingredient.unit),
-        details: ingredient.details ? sanitizeString(ingredient.details) : null
-    }));
+    // const sanitizedIngredients = ingredientsData?.recipeIngredients.map((ingredient: Ingredient) => ({
+    //     ...ingredient,
+    //     name: sanitizeString(ingredient.name),
+    //     quantity: ingredient.quantity,
+    //     unit: sanitizeString(ingredient.unit),
+    //     details: ingredient.details ? sanitizeString(ingredient.details) : null
+    // }));
+    const sanitizedIngredients = ingredientsData?.recipeIngredients
+        .map((ingredient: Ingredient) => ({
+            ...ingredient,
+            name: sanitizeString(ingredient.name),
+            quantity: ingredient.quantity,
+            unit: sanitizeString(ingredient.unit),
+            details: ingredient.details ? sanitizeString(ingredient.details) : null
+        }))
+        .sort((a, b) => a.id - b.id);
 
     const sanitizedCategories = categoriesData?.recipeCategories.map((category: Category) => ({
         ...category,
