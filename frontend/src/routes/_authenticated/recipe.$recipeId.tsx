@@ -138,7 +138,7 @@ function RecipeDetails() {
                                         <EditRecipeIngredientButton id={ingredient.id}/>
                                         <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
                                         <p className="ml-2 max-w-[250px]">
-                                            {(ingredient.quantity > 0) && ingredient.quantity} {ingredient.unit} {ingredient.name}
+                                            {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
                                             {ingredient.details && (<span>, {ingredient.details}</span>)}
                                         </p>
                                     </div>
