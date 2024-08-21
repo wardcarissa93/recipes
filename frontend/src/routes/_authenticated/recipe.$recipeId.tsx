@@ -32,6 +32,7 @@ export const Route = createFileRoute('/_authenticated/recipe/$recipeId')({
 });
 
 function RecipeDetails() {
+    const navigate = useNavigate();
     const { recipeId } = Route.useParams();
 
     const { isPending: recipePending, error: recipeError, data: recipeData } = useQuery(getRecipeByIdQueryOptions(recipeId));
@@ -55,14 +56,6 @@ function RecipeDetails() {
             sanitizedUrl = sanitizeString(recipe.url);
         }
     }
-
-    // const sanitizedIngredients = ingredientsData?.recipeIngredients.map((ingredient: Ingredient) => ({
-    //     ...ingredient,
-    //     name: sanitizeString(ingredient.name),
-    //     quantity: ingredient.quantity,
-    //     unit: sanitizeString(ingredient.unit),
-    //     details: ingredient.details ? sanitizeString(ingredient.details) : null
-    // }));
     const sanitizedIngredients = ingredientsData?.recipeIngredients
         .map((ingredient: Ingredient) => ({
             ...ingredient,
@@ -78,8 +71,6 @@ function RecipeDetails() {
         categoryName: sanitizeString(category.categoryName)
     }));
 
-    // const ingredients: Ingredient[] = ingredientsData?.recipeIngredients;
-
     if (recipeError) return 'An error has occurred: ' + recipeError.message;
     if (ingredientsError) return 'An error has occurred: ' + ingredientsError.message;
     if (categoriesError) return 'An error has occurred: ' + categoriesError.message;
@@ -88,7 +79,7 @@ function RecipeDetails() {
         <div>
             {(!recipePending) && (
                 <div className="p-2 max-w-3xl m-auto">
-                    <Button onClick={() => window.history.back()}>
+                    <Button onClick={() => navigate({ to: '/my-recipes' })}>
                         Back
                     </Button>
                     {(categoriesPending) ? (
