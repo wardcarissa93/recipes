@@ -45,7 +45,6 @@ function MyRecipes() {
     const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
     const recipesPerPage = 8;
 
-    console.log("selectedCategory: ", selectedCategory)
 
     const categoryOptions: CategoryOption[] = categoriesData ? categoriesData.categories.map(category => ({
         label: category.categoryName,
@@ -146,7 +145,6 @@ function MyRecipes() {
 
     if (categoriesError) return 'An error has occurred: ' + categoriesError.message
 
-    console.log("displayedRecipes: ", displayedRecipes)
     
     return (
         <div className="p-2 max-w-xl m-auto">

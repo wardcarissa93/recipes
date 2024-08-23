@@ -11,7 +11,6 @@ export const Route = createFileRoute('/_authenticated/profile')({
 
 function Profile() {
     const { isPending, error, data } = useQuery(userQueryOptions);
-    console.log("data.user.picture: ", data.user.picture)
 
     if (isPending) return "loading"
     if (error) return "not logged in"

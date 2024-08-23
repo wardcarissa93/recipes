@@ -10,6 +10,21 @@ export function sanitizeString(input: string): string {
   return DOMPurify.sanitize(input);
 }
 
+export function formatTime(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  if (hours > 0 && mins > 0) {
+      return `${hours} hr ${mins} min`;
+  } else if (hours > 0) {
+      return `${hours} hr`;
+  } else if (mins > 0) {
+      return `${mins} min`;
+  } else {
+      return 'N/A';
+  }
+}
+
 export const categorySelectStyles = {
   control: (provided) => ({
       ...provided,
