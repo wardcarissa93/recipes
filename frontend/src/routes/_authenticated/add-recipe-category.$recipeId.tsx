@@ -19,6 +19,7 @@ import {
     type FetchedRecipe,
     type CategoryOption
 } from '../../lib/types'
+import { singleSelectStyles } from '@/lib/utils'
 
 export const Route = createFileRoute('/_authenticated/add-recipe-category/$recipeId')({
     component: AddRecipeCategory
@@ -117,6 +118,7 @@ function AddRecipeCategory() {
                                         }}
                                         placeholder="Select Category"
                                         className="ingredient-name mt-2 text-sm"
+                                        styles={singleSelectStyles}
                                     />
                             {field.state.meta.touchedErrors ? (
                                 <em className="text-red-500">{field.state.meta.touchedErrors}</em>
