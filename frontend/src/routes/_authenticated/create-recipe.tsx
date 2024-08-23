@@ -95,7 +95,6 @@ function CreateRecipe() {
             const categories = value.categories.map(category => ({
                 categoryName: sanitizeString(category.categoryName.trim())
             }));
-            console.log("CATEGORIES: ", categories)
 
             queryClient.setQueryData(loadingCreateRecipeQueryOptions.queryKey, { recipe: recipe });
             

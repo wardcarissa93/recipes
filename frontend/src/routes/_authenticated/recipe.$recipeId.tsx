@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { sanitizeString } from '../../lib/utils'
+import { sanitizeString, formatTime } from '../../lib/utils'
 import { 
     deleteRecipeIngredient,
     deleteRecipeCategory,
@@ -120,9 +120,9 @@ function RecipeDetails() {
                     </div>
                     <p className="text-center my-4">Servings: {recipe.servings ? (recipe.servings) : "N/A"}</p>
                     <div className="flex justify-between max-w-lg m-auto">
-                        <p>Prep Time: {recipe.prepTime ? (recipe.prepTime + " min") : "N/A"}</p>
-                        <p>Cook Time: {recipe.cookTime ? (recipe.cookTime + " min") : "N/A"}</p>
-                        <p>Total Time: {recipe.totalTime ? (recipe.totalTime + " min") : "N/A"}</p>
+                        <p>Prep Time: {recipe.prepTime ? (formatTime(recipe.prepTime)) : "N/A"}</p>
+                        <p>Cook Time: {recipe.cookTime ? (formatTime(recipe.cookTime)) : "N/A"}</p>
+                        <p>Total Time: {recipe.totalTime ? (formatTime(recipe.totalTime)) : "N/A"}</p>
                     </div>
                     {(ingredientsPending) ? (
                         <div>
