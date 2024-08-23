@@ -18,7 +18,7 @@ import {
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createRecipeSchema } from '../../../../server/sharedTypes';
-import { sanitizeString, categorySelectStyles } from '../../lib/utils';
+import { sanitizeString, singleSelectStyles, multiSelectStyles } from '../../lib/utils';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import {
@@ -380,9 +380,8 @@ function CreateRecipe() {
                                 onChange={(selected) => {
                                     setSelectedCategories(selected ? selected.map((option) => option) : []);
                                 }}
-                                // onChange={setSelectedCategories}
                                 className="ingredient-name"
-                                styles={categorySelectStyles}
+                                styles={multiSelectStyles}
                             />
                             {field.state.meta.touchedErrors ? (
                                 <em className="text-red-500">{field.state.meta.touchedErrors}</em>
@@ -426,6 +425,7 @@ function CreateRecipe() {
                                         }}
                                         placeholder="Select Ingredient"
                                         className="ingredient-name w-1/2 text-sm"
+                                        styles={singleSelectStyles}
                                     />
                                     {field.state.meta.touchedErrors ? (
                                         <em className="text-red-500">{field.state.meta.touchedErrors}</em>

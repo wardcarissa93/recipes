@@ -79,7 +79,7 @@ function Ingredients() {
                 <Button
                     key={index}
                     onClick={() => paginate(number)}
-                    className={`mx-1 ${currentPage === number ? 'bg-gray-300' : ''}`}
+                    className={`mx-1 ${currentPage === number ? 'bg-slate-400' : ''}`}
                 >
                     {number}
                 </Button>

@@ -16,7 +16,7 @@ import {
     loadingCreateRecipeIngredientQueryOptions
 } from '@/lib/api'
 import Select from 'react-select'
-import { sanitizeString } from '../../lib/utils'
+import { sanitizeString, singleSelectStyles } from '../../lib/utils'
 import {
     type FetchedRecipe,
     type IngredientOption
@@ -125,6 +125,7 @@ function AddRecipeIngredient() {
                                         }}
                                         placeholder="Select Ingredient"
                                         className="ingredient-name mt-2 text-sm"
+                                        styles={singleSelectStyles}
                                     />
                             {field.state.meta.touchedErrors ? (
                                 <em className="text-red-500">{field.state.meta.touchedErrors}</em>

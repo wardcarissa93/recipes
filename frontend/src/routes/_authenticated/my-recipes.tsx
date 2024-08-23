@@ -24,7 +24,7 @@ import { Trash, Edit } from 'lucide-react'
 import { toast } from 'sonner';
 import Select from 'react-select';
 import { useNavigate } from '@tanstack/react-router'
-import { sanitizeString, categorySelectStyles } from '../../lib/utils'
+import { sanitizeString, singleSelectStyles } from '../../lib/utils'
 import { 
     type Recipe, 
     type CategoryOption,
@@ -168,7 +168,14 @@ function MyRecipes() {
                         value={selectedCategory}
                         onChange={(selectedOption) => setSelectedCategory(selectedOption as CategoryOption)}
                         className="ingredient-name"
-                        styles={categorySelectStyles}
+                        styles={singleSelectStyles}
+                        theme={(theme) => ({
+                            ...theme,
+                            colors: {
+                                ...theme.colors,
+                                primary: '#818cf8',
+                            },
+                        })}
                     />
                 </form>
             </div>

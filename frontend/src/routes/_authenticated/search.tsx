@@ -27,9 +27,12 @@ const searchBarStyles: StylesConfig<IngredientOption, true> = {
         maxHeight: '200px',
         overflowY: 'auto',
         width: '575px',
+        fontSize: '0.875rem',
+        lineHeight: '1.25rem',
+        backgroundColor: '#f1f5f9',
         borderColor: state.isFocused ? '#818cf8' : provided.borderColor,
         borderWidth: state.isFocused ? '2px' : provided.borderWidth,
-        boxShadow: state.isFocused ? `0 0 0 1px #818cf8` : provided.boxShadow,
+        boxShadow: 'none',
     }),
     valueContainer: (provided) => ({
         ...provided,
