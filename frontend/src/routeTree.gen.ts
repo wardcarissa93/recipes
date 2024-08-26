@@ -25,6 +25,7 @@ import { Route as AuthenticatedRecipeRecipeIdImport } from './routes/_authentica
 import { Route as AuthenticatedEditRecipeRecipeIdImport } from './routes/_authenticated/edit-recipe.$recipeId'
 import { Route as AuthenticatedEditRecipeIngredientRecipeIngredientIdImport } from './routes/_authenticated/edit-recipe-ingredient.$recipeIngredientId'
 import { Route as AuthenticatedEditIngredientIngredientIdImport } from './routes/_authenticated/edit-ingredient.$ingredientId'
+import { Route as AuthenticatedDeleteIngredientIngredientIdImport } from './routes/_authenticated/delete-ingredient.$ingredientId'
 import { Route as AuthenticatedAddRecipeIngredientRecipeIdImport } from './routes/_authenticated/add-recipe-ingredient.$recipeId'
 import { Route as AuthenticatedAddRecipeCategoryRecipeIdImport } from './routes/_authenticated/add-recipe-category.$recipeId'
 
@@ -109,6 +110,12 @@ const AuthenticatedEditIngredientIngredientIdRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedDeleteIngredientIngredientIdRoute =
+  AuthenticatedDeleteIngredientIngredientIdImport.update({
+    path: '/delete-ingredient/$ingredientId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedAddRecipeIngredientRecipeIdRoute =
   AuthenticatedAddRecipeIngredientRecipeIdImport.update({
     path: '/add-recipe-ingredient/$recipeId',
@@ -173,6 +180,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAddRecipeIngredientRecipeIdImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/delete-ingredient/$ingredientId': {
+      preLoaderRoute: typeof AuthenticatedDeleteIngredientIngredientIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/edit-ingredient/$ingredientId': {
       preLoaderRoute: typeof AuthenticatedEditIngredientIngredientIdImport
       parentRoute: typeof AuthenticatedImport
@@ -206,6 +217,7 @@ export const routeTree = rootRoute.addChildren([
     AuthenticatedIndexRoute,
     AuthenticatedAddRecipeCategoryRecipeIdRoute,
     AuthenticatedAddRecipeIngredientRecipeIdRoute,
+    AuthenticatedDeleteIngredientIngredientIdRoute,
     AuthenticatedEditIngredientIngredientIdRoute,
     AuthenticatedEditRecipeIngredientRecipeIngredientIdRoute,
     AuthenticatedEditRecipeRecipeIdRoute,
