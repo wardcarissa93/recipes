@@ -11,14 +11,12 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import {
     getAllIngredientsQueryOptions,
-    loadingCreateIngredientQueryOptions,
-    deleteIngredient
+    loadingCreateIngredientQueryOptions
 } from '@/lib/api'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Trash, Edit } from 'lucide-react'
-import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router'
 import { sanitizeString } from '../../lib/utils'
 import { type Ingredient } from '../../lib/types'
@@ -160,7 +158,7 @@ function Ingredients() {
                                     <EditIngredientButton id={ingredient.id}/>
                                 </TableCell>
                                 <TableCell>
-                                    <DeleteIngredientButton id={ingredient.id} name={ingredient.name}/>
+                                    <DeleteIngredientButton id={ingredient.id}/>
                                 </TableCell>
                             </TableRow>
                         ))
@@ -196,42 +194,24 @@ function EditIngredientButton({ id }: { id: number }) {
     )
 }
 
-function DeleteIngredientButton({ id, name }: { id: number, name: string }) {
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: deleteIngredient,
-        onError: (error) => {
-            console.error('Error deleting ingredient:', error);
-            toast("Error", {
-                description: error.message || `Failed to delete ingredient '${name}'`,
-            });
-        },
-        onSuccess: () => {
-            toast("Ingredient Deleted", {
-                description: `Successfully deleted ingredient '${name}'`,
-            })
-            queryClient.setQueryData(
-                getAllIngredientsQueryOptions.queryKey,
-                (existingIngredients) => ({
-                    ...existingIngredients,
-                    ingredients: existingIngredients!.ingredients.filter((e) => e.id !== id),
-                })
-            );
-        },
-    });
+function DeleteIngredientButton({ id }: { id: number }) {
+    const navigate = useNavigate();
 
-    const handleDelete = () => {
-        mutation.mutate({ id });
+    const confirmDelete = () => {
+        navigate({
+            to: `/delete-ingredient/$ingredientId`,
+            params: { ingredientId: id.toString() }
+        });
     };
 
     return (
         <Button
-            onClick={handleDelete} 
+            onClick={confirmDelete} 
             variant="outline"
             size="icon"
             className="border-red-500 hover:bg-red-500"
         >
-            {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
+            <Trash className="h-4 w-4" />
         </Button>
     )
 }
