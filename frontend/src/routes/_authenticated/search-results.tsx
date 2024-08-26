@@ -61,7 +61,7 @@ function SearchResults() {
                 <Button
                     key={index}
                     onClick={() => paginate(number)}
-                    className={`mx-1 ${currentPage === number ? 'bg-gray-300' : ''}`}
+                    className={`mx-1 ${currentPage === number ? 'bg-gray-300 text-gray-600 hover:bg-gray-300' : ''}`}
                 >
                     {number}
                 </Button>

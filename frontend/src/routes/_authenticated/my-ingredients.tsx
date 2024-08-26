@@ -36,10 +36,13 @@ function Ingredients() {
     const ingredientsPerPage = 8;
 
     useEffect(() => {
-        const sanitizedIngredients = data?.ingredients.map((ingredient: Ingredient) => ({
-            ...ingredient,
-            name: sanitizeString(ingredient.name),
-        })) || [];
+        const sanitizedIngredients = data?.ingredients
+            .map((ingredient: Ingredient) => ({
+                ...ingredient,
+                name: sanitizeString(ingredient.name),
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name))
+            || [];
         const filtered = sanitizedIngredients.filter(ingredient => ingredient.name.includes(filterText.toLowerCase()));
         setFilteredIngredients(filtered);
         setCurrentPage(1);
@@ -79,7 +82,7 @@ function Ingredients() {
                 <Button
                     key={index}
                     onClick={() => paginate(number)}
-                    className={`mx-1 ${currentPage === number ? 'bg-slate-400' : ''}`}
+                    className={`mx-1 ${currentPage === number ? 'bg-gray-300 text-gray-600 hover:bg-gray-300' : ''}`}
                 >
                     {number}
                 </Button>
@@ -154,10 +157,10 @@ function Ingredients() {
                             <TableRow key={ingredient.id}>
                                 <TableCell>{ingredient.name}</TableCell>
                                 <TableCell>
-                                    <IngredientEditButton id={ingredient.id}/>
+                                    <EditIngredientButton id={ingredient.id}/>
                                 </TableCell>
                                 <TableCell>
-                                    <IngredientDeleteButton id={ingredient.id} name={ingredient.name}/>
+                                    <DeleteIngredientButton id={ingredient.id} name={ingredient.name}/>
                                 </TableCell>
                             </TableRow>
                         ))
@@ -171,7 +174,7 @@ function Ingredients() {
     )
 }
 
-function IngredientEditButton({ id }: { id: number }) {
+function EditIngredientButton({ id }: { id: number }) {
     const navigate = useNavigate();
 
     const handleEdit = () => {
@@ -193,7 +196,7 @@ function IngredientEditButton({ id }: { id: number }) {
     )
 }
 
-function IngredientDeleteButton({ id, name }: { id: number, name: string }) {
+function DeleteIngredientButton({ id, name }: { id: number, name: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteIngredient,
