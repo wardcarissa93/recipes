@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { sanitizeString, formatTime } from '../../lib/utils'
@@ -56,15 +57,26 @@ function RecipeDetails() {
             sanitizedUrl = sanitizeString(recipe.url);
         }
     }
-    const sanitizedIngredients = ingredientsData?.recipeIngredients
-        .map((ingredient: Ingredient) => ({
-            ...ingredient,
-            name: sanitizeString(ingredient.name),
-            quantity: ingredient.quantity,
-            unit: sanitizeString(ingredient.unit),
-            details: ingredient.details ? sanitizeString(ingredient.details) : null
-        }))
-        .sort((a, b) => a.id - b.id);
+
+    const [leftColumnIngredients, setLeftColumnIngredients] = useState<Ingredient[]>([]);
+    const [rightColumnIngredients, setRightColumnIngredients] = useState<Ingredient[]>([]);
+
+    useEffect(() => {
+        if (ingredientsData?.recipeIngredients) {
+            const sanitizedIngredients = ingredientsData.recipeIngredients
+                .map((ingredient: Ingredient) => ({
+                    ...ingredient, 
+                    name: sanitizeString(ingredient.name),
+                    quantity: ingredient.quantity,
+                    unit: sanitizeString(ingredient.unit),
+                    details: ingredient.details ? sanitizeString(ingredient.details) : null
+                }))
+                .sort((a, b) => a.id - b.id);
+            const midIndex = Math.ceil(sanitizedIngredients.length / 2);
+            setLeftColumnIngredients(sanitizedIngredients.slice(0, midIndex));
+            setRightColumnIngredients(sanitizedIngredients.slice(midIndex));
+        }
+    }, [ingredientsData]);
 
     const sanitizedCategories = categoriesData?.recipeCategories.map((category: Category) => ({
         ...category,
@@ -132,17 +144,31 @@ function RecipeDetails() {
                         <div className="my-8">
                             <hr />
                             <h3 className="text-center p-2 my-4 text-lg font-bold">Ingredients</h3>
-                            <div className="grid grid-cols-2 gap-4 mb-4">
-                                {sanitizedIngredients.map((ingredient: Ingredient) => (
-                                    <div key={ingredient.name} className="flex items-center">
-                                        <EditRecipeIngredientButton id={ingredient.id}/>
-                                        <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
-                                        <p className="ml-2 max-w-[250px]">
-                                            {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
-                                            {ingredient.details && (<span>, {ingredient.details}</span>)}
-                                        </p>
-                                    </div>
-                                ))}
+                            <div className="flex gap-8 mb-4">
+                                <div>
+                                    {leftColumnIngredients.map((ingredient: Ingredient) => (
+                                        <div key={ingredient.name} className="flex items-center mb-2">
+                                            <EditRecipeIngredientButton id={ingredient.id}/>
+                                            <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
+                                            <p className="ml-2 max-w-[250px]">
+                                                {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
+                                                {ingredient.details && (<span>, {ingredient.details}</span>)}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div>
+                                    {rightColumnIngredients.map((ingredient: Ingredient) => (
+                                        <div key={ingredient.name} className="flex items-center mb-2">
+                                            <EditRecipeIngredientButton id={ingredient.id}/>
+                                            <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
+                                            <p className="ml-2 max-w-[250px]">
+                                                {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
+                                                {ingredient.details && (<span>, {ingredient.details}</span>)}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                             <hr />
                         </div>

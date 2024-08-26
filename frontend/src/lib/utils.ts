@@ -36,6 +36,7 @@ export const multiSelectStyles: StylesConfig<IngredientOption, true> = {
       fontSize: '0.875rem',
       lineHeight: '1.25rem',
       backgroundColor: '#f1f5f9',
+      borderRadius: '4px',
       '&:hover': {
         border: '2px solid #818cf8'
       }
