@@ -117,7 +117,7 @@ function MyRecipes() {
                 <Button
                     key={index}
                     onClick={() => paginate(number)}
-                    className={`mx-1 ${currentPage === number ? 'bg-gray-300' : ''}`}
+                    className={`mx-1 ${currentPage === number ? 'bg-gray-300 text-gray-600 hover:bg-gray-300' : ''}`}
                 >
                     {number}
                 </Button>
@@ -220,10 +220,10 @@ function MyRecipes() {
                                     </Link>
                                 </TableCell>
                                 <TableCell>
-                                    <RecipeEditButton id={recipe.id}/>
+                                    <EditRecipeButton id={recipe.id}/>
                                 </TableCell>
                                 <TableCell>
-                                    <RecipeDeleteButton id={recipe.id} title={recipe.title}/>
+                                    <DeleteRecipeButton id={recipe.id} title={recipe.title}/>
                                 </TableCell>
                             </TableRow>
                         ))
@@ -237,7 +237,7 @@ function MyRecipes() {
     )
 }
 
-function RecipeEditButton({ id }: { id: number }) {
+function EditRecipeButton({ id }: { id: number }) {
     const navigate = useNavigate();
     const handleEdit = () => {
         navigate({
@@ -251,13 +251,14 @@ function RecipeEditButton({ id }: { id: number }) {
             onClick={handleEdit}
             variant="outline"
             size="icon"
+            className="border-indigo-400"
         >
             <Edit className="h-4 w-4"/>
         </Button>
     )
 }
 
-function RecipeDeleteButton({ id, title }: { id: number, title: string }) {
+function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteRecipe,
@@ -287,7 +288,7 @@ function RecipeDeleteButton({ id, title }: { id: number, title: string }) {
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
-            className="hover:bg-red-500"
+            className="border-red-500 hover:bg-red-500"
         >
             {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
         </Button>

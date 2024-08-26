@@ -71,17 +71,19 @@ function RecipeDetails() {
                     unit: sanitizeString(ingredient.unit),
                     details: ingredient.details ? sanitizeString(ingredient.details) : null
                 }))
-                .sort((a, b) => a.id - b.id);
+                .sort((a: Ingredient, b: Ingredient) => a.id - b.id);
             const midIndex = Math.ceil(sanitizedIngredients.length / 2);
             setLeftColumnIngredients(sanitizedIngredients.slice(0, midIndex));
             setRightColumnIngredients(sanitizedIngredients.slice(midIndex));
         }
     }, [ingredientsData]);
 
-    const sanitizedCategories = categoriesData?.recipeCategories.map((category: Category) => ({
-        ...category,
-        categoryName: sanitizeString(category.categoryName)
-    }));
+    const sanitizedCategories = categoriesData?.recipeCategories
+        .map((category: Category) => ({
+            ...category,
+            categoryName: sanitizeString(category.categoryName)
+        }))
+        .sort((a: Category, b: Category) => a.categoryName.localeCompare(b.categoryName));
 
     if (recipeError) return 'An error has occurred: ' + recipeError.message;
     if (ingredientsError) return 'An error has occurred: ' + ingredientsError.message;
@@ -144,13 +146,13 @@ function RecipeDetails() {
                         <div className="my-8">
                             <hr />
                             <h3 className="text-center p-2 my-4 text-lg font-bold">Ingredients</h3>
-                            <div className="flex gap-8 mb-4">
+                            <div className="flex justify-center gap-8 mb-4">
                                 <div>
                                     {leftColumnIngredients.map((ingredient: Ingredient) => (
                                         <div key={ingredient.name} className="flex items-center mb-2">
                                             <EditRecipeIngredientButton id={ingredient.id}/>
                                             <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
-                                            <p className="ml-2 max-w-[250px]">
+                                            <p className="ml-2">
                                                 {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
                                                 {ingredient.details && (<span>, {ingredient.details}</span>)}
                                             </p>
@@ -257,7 +259,7 @@ function EditRecipeIngredientButton({ id }: { id: number }) {
             onClick={navigateToEditRecipeIngredient}
             variant="outline"
             size="icon"
-            className="border-indigo-400 mr-2"
+            className="border-indigo-400 mr-2 min-h-[40px] min-w-[40px]"
         >
             <Edit className="h-4 w-4"/>
         </Button>
@@ -331,7 +333,7 @@ function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, reci
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
-            className="hover:bg-red-500 border-red-500"
+            className="hover:bg-red-500 border-red-500 min-h-[40px] min-w-[40px]"
         >
             {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
         </Button>
@@ -368,7 +370,7 @@ function DeleteRecipeCategoryButton({ id, recipeId, categoryName }: { id: number
             onClick={() => mutation.mutate({ id })}
             variant="outline"
             size="icon"
-            className="hover:bg-red-500 border-red-500"
+            className="hover:bg-red-500 border-red-500 min-h-[40px] min-w-[40px]"
         >
             {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
         </Button>
