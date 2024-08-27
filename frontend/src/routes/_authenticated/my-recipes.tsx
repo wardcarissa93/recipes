@@ -7,23 +7,20 @@ import {
     TableRow
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { 
     getAllRecipesQueryOptions,
     getAllCategoriesQueryOptions,
     loadingCreateRecipeQueryOptions,
-    deleteRecipe,
     getCategoryIdByName,
     getRecipesByCategoryId
 } from '@/lib/api'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Trash, Edit } from 'lucide-react'
-import { toast } from 'sonner';
 import Select from 'react-select';
-import { useNavigate } from '@tanstack/react-router'
 import { sanitizeString, singleSelectStyles } from '../../lib/utils'
 import { 
     type Recipe, 
@@ -223,7 +220,7 @@ function MyRecipes() {
                                     <EditRecipeButton id={recipe.id}/>
                                 </TableCell>
                                 <TableCell>
-                                    <DeleteRecipeButton id={recipe.id} title={recipe.title}/>
+                                    <DeleteRecipeButton id={recipe.id}/>
                                 </TableCell>
                             </TableRow>
                         ))
@@ -258,39 +255,24 @@ function EditRecipeButton({ id }: { id: number }) {
     )
 }
 
-function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: deleteRecipe,
-        onError: (error) => {
-            console.error('Error deleting recipe: ', error);
-            toast("Error", {
-                description: error.message || `Failed to delete recipe '${title}'`,
-            });
-        },
-        onSuccess: () => {
-            toast("Recipe Deleted", {
-                description: `Successfully deleted recipe: '${title}'`,
-            })
-            queryClient.setQueryData(
-                getAllRecipesQueryOptions.queryKey,
-                (existingRecipes) => ({
-                    ...existingRecipes,
-                    recipes: existingRecipes!.recipes.filter((e) => e.id !== id),
-                })
-            );
-        },
-    });
+function DeleteRecipeButton({ id }: { id: number }) {
+    const navigate = useNavigate();
+    
+    const confirmDelete = () => {
+        navigate({
+            to: `/delete-recipe/$recipeId`,
+            params: { recipeId: id.toString() }
+        });
+    };
 
     return (
         <Button
-            disabled={mutation.isPending}
-            onClick={() => mutation.mutate({ id })}
+            onClick={confirmDelete}
             variant="outline"
             size="icon"
             className="border-red-500 hover:bg-red-500"
         >
-            {mutation.isPending ? "..." : <Trash className="h-4 w-4" />}
+            <Trash className="h-4 w-4"/>
         </Button>
-    );
+    )
 }

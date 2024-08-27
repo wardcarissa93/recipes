@@ -22,7 +22,7 @@ function NavBar() {
         <div className="p-2 flex justify-between  m-auto items-baseline">
             <div className="flex gap-4">
                 <Link to="/search" className="[&.active]:font-bold [&.active]:text-indigo-400 hover:text-indigo-400">
-                    Search
+                    Search by Ingredient
                 </Link>
                 <Link to="/my-recipes" className="[&.active]:font-bold [&.active]:text-indigo-400 hover:text-indigo-400">
                     My Recipes

@@ -6,9 +6,7 @@ import {
     deleteRecipeCategory,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
-    getRecipeCategoriesByRecipeIdQueryOptions,
-    deleteRecipe,
-    getAllRecipesQueryOptions
+    getRecipeCategoriesByRecipeIdQueryOptions
  } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Trash, Edit } from 'lucide-react';
@@ -179,7 +177,7 @@ function RecipeDetails() {
                     <div className="flex justify-between my-8">
                         <EditRecipeButton id={recipe.id} />
                         <AddRecipeIngredientButton id={recipe.id}/>
-                        <DeleteRecipeButton id={recipe.id} title={recipe.title} />
+                        <DeleteRecipeButton id={recipe.id}/>
                     </div>
                     <Button onClick={() => window.history.back()} className="mx-auto my-16 flex">
                         Back
@@ -208,38 +206,22 @@ function EditRecipeButton({ id }: { id: number }) {
     )
 }
 
-function DeleteRecipeButton({ id, title }: { id: number, title: string }) {
+function DeleteRecipeButton({ id }: { id: number }) {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: deleteRecipe,
-        onError: (error) => {
-            console.error('Error deleting recipe: ', error);
-            toast("Error", {
-                description: error.message || `Failed to delete recipe '${title}'`,
-            });
-        },
-        onSuccess: () => {
-            toast("Recipe Deleted", {
-                description: `Successfully deleted recipe '${title}'`,
-            })
-            queryClient.setQueryData(
-                getAllRecipesQueryOptions.queryKey,
-                (existingRecipes) => ({
-                    ...existingRecipes,
-                    recipes: existingRecipes!.recipes.filter((e) => e.id !== id),
-                })
-            );
-            navigate({to: '/my-recipes'});
-        },
-    });
+    
+    const confirmDelete = () => {
+        navigate({
+            to: `/delete-recipe/$recipeId`,
+            params: { recipeId: id.toString() }
+        })
+    }
 
     return (
         <Button
-            onClick={() => mutation.mutate({ id })}
+            onClick={confirmDelete}
             className="w-[150px] hover:bg-red-500"
         >
-            {mutation.isPending ? "..." : <p>Delete Recipe</p>}
+            Delete Recipe
         </Button>
     );
 }
