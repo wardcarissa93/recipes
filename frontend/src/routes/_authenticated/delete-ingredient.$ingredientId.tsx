@@ -24,7 +24,7 @@ function DeleteIngredient() {
 
     const [ingredientName, setIngredientName] = useState('');
     useEffect(() => {
-        const fetchIngredient = async () => {
+        const fetchIngredientName = async () => {
             try {
                 const fetchedIngredient: FetchedIngredient = await getIngredientById(ingredientId);
                 const sanitizedIngredientName = sanitizeString(fetchedIngredient.ingredient.name);
@@ -34,7 +34,7 @@ function DeleteIngredient() {
             }
         };
 
-        fetchIngredient();
+        fetchIngredientName();
     });
 
     return (

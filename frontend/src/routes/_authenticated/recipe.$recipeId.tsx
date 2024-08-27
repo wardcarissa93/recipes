@@ -3,7 +3,6 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { sanitizeString, formatTime } from '../../lib/utils'
 import { 
-    deleteRecipeIngredient,
     deleteRecipeCategory,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
@@ -149,9 +148,9 @@ function RecipeDetails() {
                             <div className="flex justify-center gap-8 mb-4">
                                 <div>
                                     {leftColumnIngredients.map((ingredient: Ingredient) => (
-                                        <div key={ingredient.name} className="flex items-center mb-2">
+                                        <div key={ingredient.id} className="flex items-center mb-2">
                                             <EditRecipeIngredientButton id={ingredient.id}/>
-                                            <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
+                                            <DeleteRecipeIngredientButton id={ingredient.id}/>
                                             <p className="ml-2">
                                                 {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
                                                 {ingredient.details && (<span>, {ingredient.details}</span>)}
@@ -161,9 +160,9 @@ function RecipeDetails() {
                                 </div>
                                 <div>
                                     {rightColumnIngredients.map((ingredient: Ingredient) => (
-                                        <div key={ingredient.name} className="flex items-center mb-2">
+                                        <div key={ingredient.id} className="flex items-center mb-2">
                                             <EditRecipeIngredientButton id={ingredient.id}/>
-                                            <DeleteRecipeIngredientButton id={ingredient.id} recipeId={recipeId} name={ingredient.name} />
+                                            <DeleteRecipeIngredientButton id={ingredient.id}/>
                                             <p className="ml-2 max-w-[250px]">
                                                 {(ingredient.quantity > 0) && ingredient.quantity} {(ingredient.unit !== "individual") && ingredient.unit} {ingredient.name}
                                                 {ingredient.details && (<span>, {ingredient.details}</span>)}
@@ -303,39 +302,24 @@ function AddRecipeCategoryButton({ id }: { id: number}) {
     )
 }
 
-function DeleteRecipeIngredientButton({ id, recipeId, name }: { id: number, recipeId: string, name: string }) {
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: deleteRecipeIngredient,
-        onError: (error) => {
-            console.error('Error deleting ingredient:', error);
-            toast("Error", {
-                description: error.message || `Failed to delete ingredient: ${name}`,
-            });
-        },
-        onSuccess: () => {
-            toast("Ingredient Deleted", {
-                description: `Successfully deleted ingredient: ${name}`,
-            })
-            queryClient.setQueryData(
-                getRecipeIngredientsByRecipeIdQueryOptions(recipeId).queryKey,
-                (existingRecipeIngredients) => ({
-                    ...existingRecipeIngredients,
-                    recipeIngredients: existingRecipeIngredients!.recipeIngredients.filter((e) => e.id !== id),
-                })
-            );
-        },
-    });
+function DeleteRecipeIngredientButton({ id }) {
+    const navigate = useNavigate();
+
+    const confirmDelete = () => {
+        navigate({
+            to: `/delete-recipe-ingredient/$recipeIngredientId`,
+            params: { recipeIngredientId: id.toString() }
+        });
+    };
 
     return (
         <Button
-            disabled={mutation.isPending}
-            onClick={() => mutation.mutate({ id })}
+            onClick={confirmDelete}
             variant="outline"
             size="icon"
             className="hover:bg-red-500 border-red-500 min-h-[40px] min-w-[40px]"
         >
-            {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
+            <Trash className='h-4 w-4' />
         </Button>
     );
 }

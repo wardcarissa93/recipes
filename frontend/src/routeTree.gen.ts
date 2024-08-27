@@ -25,6 +25,7 @@ import { Route as AuthenticatedRecipeRecipeIdImport } from './routes/_authentica
 import { Route as AuthenticatedEditRecipeRecipeIdImport } from './routes/_authenticated/edit-recipe.$recipeId'
 import { Route as AuthenticatedEditRecipeIngredientRecipeIngredientIdImport } from './routes/_authenticated/edit-recipe-ingredient.$recipeIngredientId'
 import { Route as AuthenticatedEditIngredientIngredientIdImport } from './routes/_authenticated/edit-ingredient.$ingredientId'
+import { Route as AuthenticatedDeleteRecipeIngredientRecipeIngredientIdImport } from './routes/_authenticated/delete-recipe-ingredient.$recipeIngredientId'
 import { Route as AuthenticatedDeleteIngredientIngredientIdImport } from './routes/_authenticated/delete-ingredient.$ingredientId'
 import { Route as AuthenticatedAddRecipeIngredientRecipeIdImport } from './routes/_authenticated/add-recipe-ingredient.$recipeId'
 import { Route as AuthenticatedAddRecipeCategoryRecipeIdImport } from './routes/_authenticated/add-recipe-category.$recipeId'
@@ -110,6 +111,12 @@ const AuthenticatedEditIngredientIngredientIdRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedDeleteRecipeIngredientRecipeIngredientIdRoute =
+  AuthenticatedDeleteRecipeIngredientRecipeIngredientIdImport.update({
+    path: '/delete-recipe-ingredient/$recipeIngredientId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedDeleteIngredientIngredientIdRoute =
   AuthenticatedDeleteIngredientIngredientIdImport.update({
     path: '/delete-ingredient/$ingredientId',
@@ -184,6 +191,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDeleteIngredientIngredientIdImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/delete-recipe-ingredient/$recipeIngredientId': {
+      preLoaderRoute: typeof AuthenticatedDeleteRecipeIngredientRecipeIngredientIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/edit-ingredient/$ingredientId': {
       preLoaderRoute: typeof AuthenticatedEditIngredientIngredientIdImport
       parentRoute: typeof AuthenticatedImport
@@ -218,6 +229,7 @@ export const routeTree = rootRoute.addChildren([
     AuthenticatedAddRecipeCategoryRecipeIdRoute,
     AuthenticatedAddRecipeIngredientRecipeIdRoute,
     AuthenticatedDeleteIngredientIngredientIdRoute,
+    AuthenticatedDeleteRecipeIngredientRecipeIngredientIdRoute,
     AuthenticatedEditIngredientIngredientIdRoute,
     AuthenticatedEditRecipeIngredientRecipeIngredientIdRoute,
     AuthenticatedEditRecipeRecipeIdRoute,
