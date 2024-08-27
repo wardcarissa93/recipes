@@ -436,6 +436,22 @@ export async function getCategoryIdByName(categoryName: string) {
     return data.category.id;
 }
 
+export async function getCategoryById(id: string) {
+    const res = await api.categories[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getCategoryByIdQueryOptions(id: string) {
+    return queryOptions({
+        queryKey: ['get-category-by-id', id],
+        queryFn: () => getCategoryById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
 
 
 
@@ -447,6 +463,30 @@ export async function getCategoryIdByName(categoryName: string) {
 
 
 
+
+
+
+
+
+
+
+
+export async function getRecipeCategoryById(id: string) {
+    const res = await api.recipeCategories[`:id{[0-9]+}`].$get({ param: { id: id.toString() } });
+    if (!res.ok) {
+        throw new Error("server error");
+    }
+    const data = await res.json();
+    return data;
+}
+
+export function getRecipeCategoryByIdQueryOptions(id: string) {
+    return queryOptions({
+        queryKey: ['get-recipe-category-by-id', id],
+        queryFn: () => getRecipeCategoryById(id),
+        staleTime: 1000 * 60 * 5,
+    })
+}
 
 export async function getRecipeCategoriesByRecipeId(recipeId: string) {
     const res = await api.recipeCategories[`byRecipeId/:recipeId{[0-9]+}`].$get({ param: { recipeId: recipeId.toString() } });

@@ -11,6 +11,18 @@ export const categoriesRoute = new Hono()
             .orderBy(categoryTable.categoryName);
         return c.json({ categories: categories });
     })
+    .get("/:id{[0-9]+}", async (c) => {
+        const id = Number.parseInt(c.req.param("id"));
+        const category = await db
+            .select()
+            .from(categoryTable)
+            .where(eq(categoryTable.id, id))
+            .then((res) => res[0]);
+        if (!category) {
+            return c.notFound();
+        }
+        return c.json({ category: category })
+    })
     .get("/categoryName/:categoryName", async (c) => {
         const categoryName = c.req.param("categoryName");
         const category = await db

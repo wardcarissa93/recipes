@@ -10,6 +10,19 @@ import { eq, desc, and, exists } from 'drizzle-orm'
 import { createRecipeCategorySchema } from '../sharedTypes';
 
 export const recipeCategoriesRoute = new Hono()
+    .get("/:id{[0-9]+}", getUser, async (c) => {
+        const id = Number.parseInt(c.req.param("id"));
+        const user = c.var.user;
+        const recipeCategory = await db
+            .select()
+            .from(recipeCategoryTable)
+            .where(and(eq(recipeCategoryTable.userId, user.id), eq(recipeCategoryTable.id, id)))
+            .then((res) => res[0]);
+        if (!recipeCategory) {
+            return c.notFound();
+        }
+        return c.json({ recipeCategory: recipeCategory })
+    })
     .get("/byRecipeId/:recipeId{[0-9]+}", getUser, async (c) => {
         const recipeId = Number.parseInt(c.req.param("recipeId"));
         const user = c.var.user;
