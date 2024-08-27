@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { sanitizeString, formatTime } from '../../lib/utils'
 import { 
-    deleteRecipeCategory,
     getRecipeByIdQueryOptions,
     getRecipeIngredientsByRecipeIdQueryOptions,
     getRecipeCategoriesByRecipeIdQueryOptions
  } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Trash, Edit } from 'lucide-react';
-import { toast } from 'sonner';
+import { type Category } from '../../lib/types'
 
 type Ingredient = {
     id: number,
@@ -18,11 +17,6 @@ type Ingredient = {
     quantity: number,
     unit: string,
     details?: string | null
-}
-
-type Category = {
-    id: number,
-    categoryName: string
 }
 
 export const Route = createFileRoute('/_authenticated/recipe/$recipeId')({
@@ -103,9 +97,9 @@ function RecipeDetails() {
                                 <p className="text-bold mt-2">Category(ies): </p>
                                 {(sanitizedCategories.length > 0) ? (
                                     <div className="grid grid-cols-2 gap-4 mb-4">
-                                        {sanitizedCategories.map((category) => (
+                                        {sanitizedCategories.map((category: Category) => (
                                             <div key={category.categoryName} className="flex items-center">
-                                                <DeleteRecipeCategoryButton id={category.id} recipeId={recipeId} categoryName={category.categoryName} />
+                                                <DeleteRecipeCategoryButton id={category.id}/>
                                                 <p className="ml-2 max-w-[250px]">
                                                     {category.categoryName}
                                                 </p>
@@ -284,7 +278,7 @@ function AddRecipeCategoryButton({ id }: { id: number}) {
     )
 }
 
-function DeleteRecipeIngredientButton({ id }) {
+function DeleteRecipeIngredientButton({ id }: {id: number}) {
     const navigate = useNavigate();
 
     const confirmDelete = () => {
@@ -306,39 +300,24 @@ function DeleteRecipeIngredientButton({ id }) {
     );
 }
 
-function DeleteRecipeCategoryButton({ id, recipeId, categoryName }: { id: number, recipeId: string, categoryName: string }) {
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: deleteRecipeCategory,
-        onError: (error) => {
-            console.error('Error deleting category:', error);
-            toast("Error", {
-                description: error.message || `Failed to delete category: ${categoryName}`,
-            });
-        },
-        onSuccess: () => {
-            toast("Category Deleted", {
-                description: `Successfully deleted category: ${categoryName}`,
-            })
-            queryClient.setQueryData(
-                getRecipeCategoriesByRecipeIdQueryOptions(recipeId).queryKey,
-                (existingRecipeCategories) => ({
-                    ...existingRecipeCategories,
-                    recipeCategories: existingRecipeCategories!.recipeCategories.filter((e) => e.id !== id),
-                })
-            );
-        },
-    });
+function DeleteRecipeCategoryButton({ id }: { id: number }) {
+    const navigate = useNavigate();
+
+    const confirmDelete = () => {
+        navigate({
+            to: `/delete-recipe-category/$recipeCategoryId`,
+            params: { recipeCategoryId: id.toString() }
+        });
+    };
 
     return (
         <Button
-            disabled={mutation.isPending}
-            onClick={() => mutation.mutate({ id })}
+            onClick={confirmDelete}
             variant="outline"
             size="icon"
             className="hover:bg-red-500 border-red-500 min-h-[40px] min-w-[40px]"
         >
-            {mutation.isPending ? "..." : <Trash className='h-4 w-4' />}
+            <Trash className='h-4 w-4' />
         </Button>
     );
 }

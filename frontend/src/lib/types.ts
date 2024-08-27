@@ -18,6 +18,14 @@ export type FetchedRecipeIngredient = {
     recipeIngredient: RecipeIngredient
 }
 
+export type FetchedRecipeCategory = {
+    recipeCategory: RecipeCategory
+}
+
+export type FetchedCategory = {
+    category: Category
+}
+
 export type Ingredient = {
     id: number,
     userId: string,
@@ -65,10 +73,10 @@ export type FilteredRecipe = {
     title: string;
 }
 
-// export type Category = {
-//     id: number;
-//     categoryName: string;
-// }
+export type Category = {
+    id: number;
+    categoryName: string;
+}
 
 export type RecipeIngredient = {
     id: number;
@@ -84,4 +92,11 @@ export type SearchResult = {
     id: number;
     ingredients?: string[];
     title: string;
+}
+
+
+export type RecipeCategory = {
+    id: number;
+    recipeId: number;
+    categoryId: number;
 }
